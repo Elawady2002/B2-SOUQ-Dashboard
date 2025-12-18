@@ -168,11 +168,12 @@ export default function Home() {
                 reverse: true,
                 grid: {
                     display: true,
-                    color: 'rgba(0,0,0,0.04)',
+                    color: 'rgba(148, 163, 184, 0.4)',
                     drawBorder: false,
+                    borderDash: [4, 4],
                 },
                 ticks: {
-                    color: '#64748b',
+                    color: '#94a3b8',
                     font: { family: 'Cairo', size: 11 }
                 }
             },
@@ -181,12 +182,12 @@ export default function Home() {
                 min: 0,
                 max: 100,
                 grid: {
-                    color: 'rgba(0,0,0,0.04)',
+                    display: false,
                     drawBorder: false,
                 },
                 ticks: {
-                    color: '#64748b',
-                    font: { family: 'Cairo', size: 11 },
+                    color: '#475569',
+                    font: { family: 'Cairo', size: 12, weight: '600' },
                     stepSize: 20,
                 }
             }
