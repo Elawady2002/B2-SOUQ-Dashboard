@@ -153,12 +153,12 @@ export default function Home() {
             legend: {
                 position: 'top',
                 rtl: true,
-                align: 'start',
+                align: 'center',
                 labels: {
                     color: '#1e293b',
                     usePointStyle: true,
                     pointStyle: 'circle',
-                    padding: 20,
+                    padding: 25,
                     font: { family: 'Cairo', size: 12, weight: '500' }
                 }
             }
@@ -177,7 +177,7 @@ export default function Home() {
                 }
             },
             y: {
-                position: 'left',
+                position: 'right',
                 min: 0,
                 max: 100,
                 grid: {
