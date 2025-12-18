@@ -28,7 +28,7 @@ import { Line, Doughnut } from 'react-chartjs-2';
 
 // Import card images
 import CardImage from '../assets/image/card.png';
-import CardsImage from '../assets/image/cards.svg';
+import CardsImage from '../assets/image/card.png';
 
 // Import wallet icons
 import FrameIcon from '../assets/icons/Frame.svg';
