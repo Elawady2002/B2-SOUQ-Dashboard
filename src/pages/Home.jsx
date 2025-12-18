@@ -108,28 +108,40 @@ const bestProducts = [
 ];
 
 export default function Home() {
-    const [chartPeriod, setChartPeriod] = useState('شهري');
+    const [chartPeriod, setChartPeriod] = useState('سنوي');
 
-    // Sales chart data
+    // Sales chart data - matching the reference design exactly
     const salesChartData = {
-        labels: ['يناير', 'فبراير', 'مارس', 'ابريل', 'مايو', 'يونيو', 'يوليو'],
+        labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
         datasets: [
             {
-                label: 'المبيعات',
-                data: [40000, 35000, 42000, 48000, 45000, 52000, 58000],
+                label: 'مدفوع',
+                data: [35, 28, 45, 50, 42, 38, 30, 35, 42, 55, 48, 85],
                 borderColor: '#3b82f6',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                backgroundColor: 'rgba(59, 130, 246, 0.15)',
                 fill: true,
                 tension: 0.4,
                 pointRadius: 0,
+                borderWidth: 2.5,
             },
             {
-                label: 'الأرباح',
-                data: [30000, 28000, 35000, 38000, 35000, 42000, 48000],
-                borderColor: '#10b981',
+                label: 'غير مدفوع',
+                data: [25, 32, 48, 45, 38, 30, 28, 32, 45, 52, 50, 55],
+                borderColor: '#94a3b8',
+                backgroundColor: 'transparent',
+                borderDash: [5, 5],
+                tension: 0.4,
+                pointRadius: 0,
+                borderWidth: 2,
+            },
+            {
+                label: 'مسترد',
+                data: [8, 12, 25, 32, 28, 18, 10, 15, 22, 35, 30, 45],
+                borderColor: '#ef4444',
                 backgroundColor: 'transparent',
                 tension: 0.4,
                 pointRadius: 0,
+                borderWidth: 2.5,
             },
         ],
     };
@@ -141,26 +153,41 @@ export default function Home() {
             legend: {
                 position: 'top',
                 rtl: true,
-                align: 'end',
+                align: 'start',
                 labels: {
-                    color: '#64748b',
+                    color: '#1e293b',
                     usePointStyle: true,
-                    padding: 15,
-                    font: { family: 'Cairo', size: 11 }
+                    pointStyle: 'circle',
+                    padding: 20,
+                    font: { family: 'Cairo', size: 12, weight: '500' }
                 }
             }
         },
         scales: {
             x: {
-                grid: { display: false },
-                ticks: { color: '#94a3b8', font: { family: 'Cairo', size: 10 } }
+                reverse: true,
+                grid: {
+                    display: true,
+                    color: 'rgba(0,0,0,0.04)',
+                    drawBorder: false,
+                },
+                ticks: {
+                    color: '#64748b',
+                    font: { family: 'Cairo', size: 11 }
+                }
             },
             y: {
-                grid: { color: 'rgba(0,0,0,0.05)' },
+                position: 'left',
+                min: 0,
+                max: 100,
+                grid: {
+                    color: 'rgba(0,0,0,0.04)',
+                    drawBorder: false,
+                },
                 ticks: {
-                    color: '#94a3b8',
-                    font: { family: 'Cairo', size: 10 },
-                    callback: (value) => value.toLocaleString('ar-EG')
+                    color: '#64748b',
+                    font: { family: 'Cairo', size: 11 },
+                    stepSize: 20,
                 }
             }
         }
@@ -265,7 +292,7 @@ export default function Home() {
                     <div className="card-header">
                         <h3 className="card-title">المبيعات</h3>
                         <div className="chart-filters">
-                            {['يومي', 'اسبوعي', 'شهري'].map((period) => (
+                            {['يومي', 'شهري', 'سنوي'].map((period) => (
                                 <button
                                     key={period}
                                     className={`chart-filter-btn ${chartPeriod === period ? 'active' : ''}`}
@@ -276,7 +303,7 @@ export default function Home() {
                             ))}
                         </div>
                     </div>
-                    <div className="chart-container" style={{ height: 250 }}>
+                    <div className="chart-container" style={{ height: 320 }}>
                         <Line data={salesChartData} options={chartOptions} />
                     </div>
                 </div>

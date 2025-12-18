@@ -929,27 +929,32 @@ a:hover {
 
 .chart-filters {
   display: flex;
-  gap: var(--spacing-xs);
-  flex-wrap: wrap;
+  gap: 0;
+  background: #f1f5f9;
+  border-radius: var(--radius-full);
+  padding: 4px;
 }
 
 .chart-filter-btn {
-  padding: 6px 12px;
+  padding: 8px 16px;
   border-radius: var(--radius-full);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   font-weight: 500;
   background: transparent;
-  border: 1px solid var(--border-color);
+  border: none;
   color: var(--text-secondary);
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
-.chart-filter-btn:hover,
+.chart-filter-btn:hover {
+  color: var(--text-primary);
+}
+
 .chart-filter-btn.active {
-  background: var(--accent-primary);
-  border-color: var(--accent-primary);
-  color: white;
+  background: white;
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .tabs {
