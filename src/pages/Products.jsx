@@ -4,9 +4,6 @@ import {
     Plus,
     Search,
     Filter,
-    Eye,
-    Edit,
-    Trash2,
     CheckCircle,
     Clock,
     XCircle,
@@ -21,6 +18,11 @@ import {
     Image
 } from 'lucide-react';
 
+// Custom action icons
+import DeleteIcon from '../assets/icons/delete.svg';
+import EditIcon from '../assets/icons/edit.svg';
+import EyesIcon from '../assets/icons/eyes.svg';
+
 const products = [
     {
         id: 1,
@@ -32,7 +34,7 @@ const products = [
         shipping: 'شحن المنصة',
         sales: 145,
         status: 'active',
-        image: null
+        image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=100&h=100&fit=crop'
     },
     {
         id: 2,
@@ -44,7 +46,7 @@ const products = [
         shipping: 'شحن ذاتي',
         sales: 98,
         status: 'low_stock',
-        image: null
+        image: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=100&h=100&fit=crop'
     },
     {
         id: 3,
@@ -56,7 +58,7 @@ const products = [
         shipping: 'شحن المنصة',
         sales: 76,
         status: 'out_of_stock',
-        image: null
+        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop'
     },
     {
         id: 4,
@@ -68,7 +70,7 @@ const products = [
         shipping: 'شحن المنصة',
         sales: 234,
         status: 'pending_review',
-        image: null
+        image: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=100&h=100&fit=crop'
     },
     {
         id: 5,
@@ -80,9 +82,10 @@ const products = [
         shipping: 'شحن ذاتي',
         sales: 312,
         status: 'rejected',
-        image: null
+        image: 'https://images.unsplash.com/photo-1601593346740-925612772716?w=100&h=100&fit=crop'
     },
 ];
+
 
 const statusConfig = {
     active: { label: 'نشط', color: 'success', icon: CheckCircle },
@@ -223,17 +226,30 @@ export default function Products() {
                                     <tr key={product.id}>
                                         <td>
                                             <div className="flex items-center gap-md">
-                                                <div style={{
-                                                    width: '50px',
-                                                    height: '50px',
-                                                    background: 'var(--bg-secondary)',
-                                                    borderRadius: 'var(--radius-md)',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center'
-                                                }}>
-                                                    <Package size={20} style={{ color: 'var(--text-muted)' }} />
-                                                </div>
+                                                {product.image ? (
+                                                    <img
+                                                        src={product.image}
+                                                        alt={product.name}
+                                                        style={{
+                                                            width: '50px',
+                                                            height: '50px',
+                                                            borderRadius: 'var(--radius-md)',
+                                                            objectFit: 'cover'
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <div style={{
+                                                        width: '50px',
+                                                        height: '50px',
+                                                        background: 'var(--bg-secondary)',
+                                                        borderRadius: 'var(--radius-md)',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center'
+                                                    }}>
+                                                        <Package size={20} style={{ color: 'var(--text-muted)' }} />
+                                                    </div>
+                                                )}
                                                 <span style={{ fontWeight: '500' }}>{product.name}</span>
                                             </div>
                                         </td>
@@ -260,22 +276,22 @@ export default function Products() {
                                             </span>
                                         </td>
                                         <td>
-                                            <div className="flex items-center gap-sm">
+                                            <div className="flex items-center gap-md">
                                                 <button
-                                                    className="btn btn-secondary btn-sm"
-                                                    title="تحليل الأداء"
+                                                    style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4 }}
+                                                    title="عرض"
                                                     onClick={() => {
                                                         setSelectedProduct(product);
                                                         setShowAnalytics(true);
                                                     }}
                                                 >
-                                                    <TrendingUp size={14} />
+                                                    <img src={EyesIcon} alt="عرض" style={{ width: 20, height: 20 }} />
                                                 </button>
-                                                <button className="btn btn-secondary btn-sm" title="تعديل">
-                                                    <Edit size={14} />
+                                                <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4 }} title="تعديل">
+                                                    <img src={EditIcon} alt="تعديل" style={{ width: 20, height: 20 }} />
                                                 </button>
-                                                <button className="btn btn-danger btn-sm" title="حذف">
-                                                    <Trash2 size={14} />
+                                                <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4 }} title="حذف">
+                                                    <img src={DeleteIcon} alt="حذف" style={{ width: 20, height: 20 }} />
                                                 </button>
                                             </div>
                                         </td>
@@ -297,7 +313,12 @@ export default function Products() {
                                 <X size={18} />
                             </button>
                         </div>
-                        <div className="modal-body">
+                        <div className="modal-body" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                            <style>{`
+                                .modal-body::-webkit-scrollbar {
+                                    display: none;
+                                }
+                            `}</style>
                             <h4 style={{ marginBottom: 'var(--spacing-md)', color: 'var(--accent-primary)' }}>أ. بيانات أساسية</h4>
                             <div className="grid grid-cols-2" style={{ gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-xl)' }}>
                                 <div className="form-group">

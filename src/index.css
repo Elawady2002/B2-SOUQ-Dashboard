@@ -2,6 +2,7 @@
    Seller Dashboard - B2 Style Design System
    Arabic RTL - Light Theme - Fully Responsive
    ===================================== */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
 
 /* CSS Variables - Design Tokens */
 :root {
@@ -83,6 +84,40 @@
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
   --transition-slow: 350ms ease;
+}
+
+/* Responsive Scaling for Laptops (Max Width 1500px) */
+@media (max-width: 1500px) {
+  :root {
+    /* Scale Typography */
+    --font-size-xs: 10px;
+    --font-size-sm: 11px;
+    --font-size-base: 13px;
+    --font-size-lg: 14px;
+    --font-size-xl: 16px;
+    --font-size-2xl: 18px;
+    --font-size-3xl: 24px;
+    --font-size-4xl: 28px;
+
+    /* Scale Spacing */
+    --spacing-xs: 3px;
+    --spacing-sm: 6px;
+    --spacing-md: 12px;
+    --spacing-lg: 18px;
+    --spacing-xl: 24px;
+    --spacing-2xl: 36px;
+
+    /* Scale Radius & Sizing */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+
+    /* Layout Adjustments */
+    --sidebar-width: 60px;
+    --sidebar-expanded: 220px;
+    --header-height: 56px;
+  }
 }
 
 /* Reset & Base Styles */
@@ -529,8 +564,19 @@ a:hover {
 
 /* Page Content */
 .page-content {
-  padding: var(--spacing-lg);
+  padding: var(--spacing-xl);
+  padding-left: 32px;
+  padding-right: 16px;
   overflow-x: hidden;
+  width: 100%;
+}
+
+.main-content {
+  flex: 1;
+  margin-right: var(--sidebar-width);
+  min-height: 100vh;
+  /* width is auto by default which fills available space (100% - margin) */
+  transition: margin-right var(--transition-base);
 }
 
 .page-header {
@@ -612,6 +658,8 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-md);
+  flex-direction: row-reverse;
+  /* Icon on left, Label on right in RTL */
 }
 
 .stats-card-icon {
@@ -628,7 +676,8 @@ a:hover {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
   font-weight: 500;
-  text-align: left;
+  text-align: right;
+  /* Label text aligned to right */
 }
 
 /* Main row with value and change */
@@ -636,7 +685,9 @@ a:hover {
   margin-top: var(--spacing-md);
   margin-bottom: var(--spacing-sm);
   align-items: flex-end;
+  /* Value on left, change on right - inherits row-reverse from parent */
 }
+
 
 .stats-card-value-group {
   display: flex;
@@ -645,7 +696,7 @@ a:hover {
 }
 
 .stats-card-value {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1.1;
@@ -728,16 +779,16 @@ a:hover {
 
 .table th,
 .table td {
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-lg) var(--spacing-lg);
   text-align: right;
   border-bottom: 1px solid var(--border-color);
   white-space: nowrap;
 }
 
 .table th {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   background: var(--bg-input);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -748,7 +799,7 @@ a:hover {
 }
 
 .table td {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   color: var(--text-primary);
 }
 
@@ -952,9 +1003,10 @@ a:hover {
 }
 
 .chart-filter-btn.active {
-  background: white;
-  color: var(--text-primary);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: var(--accent-primary);
+  color: white;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+  font-weight: 600;
 }
 
 .tabs {
