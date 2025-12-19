@@ -1,281 +1,719 @@
+import { useState } from 'react';
 import {
     Store,
-    Image,
-    FileText,
-    Clock,
-    Edit,
-    Upload,
-    Star,
-    CheckCircle,
-    Shield
+    Camera,
+    Globe,
+    Phone,
+    Mail,
+    MapPin,
+    Users,
+    History,
+    CreditCard,
+    ChevronLeft,
+    MessageCircle
 } from 'lucide-react';
 
+// Import social media icons
+import FacebookIconSvg from '../assets/icons/Socials.svg';
+import XIconSvg from '../assets/icons/Socials-1.svg';
+import InstagramIconSvg from '../assets/icons/Socials-2.svg';
+import TikTokIconSvg from '../assets/icons/Socials-3.svg';
+
 export default function StoreProfile() {
+    const [isStoreOpen, setIsStoreOpen] = useState(true);
+    const [storeName, setStoreName] = useState('متجر الأناقة');
+    const [storeNameEn, setStoreNameEn] = useState('Elegance store');
+    const [storeDescription, setStoreDescription] = useState('وجهتكم الأولى للأزياء العصرية والمنتجات الراقية نقدم أفضل الماركات العالمية بأسعار منافسة');
+    const [facebook, setFacebook] = useState('facebook.com/');
+    const [twitter, setTwitter] = useState('X.com/');
+    const [instagram, setInstagram] = useState('instagram.com/');
+    const [tiktok, setTiktok] = useState('tiktok.com/');
+    const [phone1, setPhone1] = useState('01037728582');
+    const [phone2, setPhone2] = useState('01037728582');
+    const [email, setEmail] = useState('example@gmail.com');
+    const [city, setCity] = useState('أسوان');
+    const [address, setAddress] = useState('56 شارع عبد السلام عارف بأسوان');
+    const [website, setWebsite] = useState('merchant-saas.com');
+
     return (
-        <div>
-            {/* Page Header */}
-            <div className="page-header">
-                <h2 className="page-title">ملف المتجر</h2>
-                <p className="page-subtitle">الواجهة العامة التي يراها العملاء</p>
-            </div>
+        <div style={{ display: 'flex', flexDirection: 'row-reverse', gap: '24px' }}>
+            {/* Right Sidebar - Quick Actions */}
+            <div style={{ width: '280px', flexShrink: 0 }}>
+                {/* Store Status Card */}
+                <div className="card" style={{ marginBottom: '16px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>حالة المتجر</h3>
 
-            {/* Store Header Card */}
-            <div className="card mb-xl" style={{ position: 'relative', overflow: 'hidden' }}>
-                {/* Banner */}
-                <div style={{
-                    height: '200px',
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
-                    margin: 'calc(var(--spacing-lg) * -1)',
-                    marginBottom: '0'
-                }}>
-                    <button className="btn btn-secondary btn-sm" style={{
-                        position: 'absolute',
-                        top: 'var(--spacing-md)',
-                        left: 'var(--spacing-md)'
-                    }}>
-                        <Upload size={14} />
-                        تغيير البانر
-                    </button>
-                </div>
-
-                {/* Store Info */}
-                <div style={{
-                    display: 'flex',
-                    gap: 'var(--spacing-lg)',
-                    alignItems: 'flex-end',
-                    marginTop: '-50px',
-                    padding: '0 var(--spacing-lg)',
-                    paddingBottom: 'var(--spacing-lg)'
-                }}>
-                    {/* Logo */}
                     <div style={{
-                        width: '120px',
-                        height: '120px',
-                        background: 'var(--bg-secondary)',
-                        borderRadius: 'var(--radius-lg)',
-                        border: '4px solid var(--bg-card)',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0
+                        justifyContent: 'space-between',
+                        marginBottom: '16px'
                     }}>
-                        <Store size={48} style={{ color: 'var(--accent-primary)' }} />
+                        <div>
+                            <p style={{ fontSize: '14px', fontWeight: 500 }}>وضع الصيانة</p>
+                            <p style={{ fontSize: '12px', color: '#94a3b8' }}>تعطيل التصفح والطلبات</p>
+                        </div>
+                        <label style={{
+                            position: 'relative',
+                            width: '44px',
+                            height: '24px',
+                            cursor: 'pointer'
+                        }}>
+                            <input
+                                type="checkbox"
+                                checked={!isStoreOpen}
+                                onChange={(e) => setIsStoreOpen(!e.target.checked)}
+                                style={{ display: 'none' }}
+                            />
+                            <span style={{
+                                position: 'absolute',
+                                inset: 0,
+                                background: !isStoreOpen ? '#2563eb' : '#e2e8f0',
+                                borderRadius: '12px',
+                                transition: 'all 0.3s'
+                            }}>
+                                <span style={{
+                                    position: 'absolute',
+                                    top: '2px',
+                                    left: !isStoreOpen ? '22px' : '2px',
+                                    width: '20px',
+                                    height: '20px',
+                                    background: 'white',
+                                    borderRadius: '50%',
+                                    transition: 'all 0.3s',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                }}></span>
+                            </span>
+                        </label>
                     </div>
 
-                    {/* Info */}
-                    <div style={{ flex: 1 }}>
-                        <div className="flex items-center gap-md mb-sm">
-                            <h2 style={{ fontSize: '24px', fontWeight: '700' }}>متجر التقنية المتقدمة</h2>
-                            <span className="badge badge-primary">
-                                <Shield size={12} />
-                                متجر موثق
-                            </span>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '8px 12px',
+                        background: isStoreOpen ? '#d1fae5' : '#fee2e2',
+                        borderRadius: '8px'
+                    }}>
+                        <span style={{
+                            width: '8px',
+                            height: '8px',
+                            borderRadius: '50%',
+                            background: isStoreOpen ? '#10b981' : '#ef4444'
+                        }}></span>
+                        <span style={{
+                            fontSize: '14px',
+                            color: isStoreOpen ? '#065f46' : '#991b1b',
+                            fontWeight: 500
+                        }}>
+                            {isStoreOpen ? 'المتجر نشط' : 'المتجر معطل'}
+                        </span>
+                    </div>
+                </div>
+
+                {/* Social Links Card */}
+                <div className="card" style={{ marginBottom: '16px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>الروابط الاجتماعية</h3>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: '10px 12px',
+                            background: '#f8fafc',
+                            borderRadius: '8px',
+                            border: '1px solid #e2e8f0'
+                        }}>
+                            <input
+                                type="text"
+                                value={facebook}
+                                onChange={(e) => setFacebook(e.target.value)}
+                                style={{
+                                    flex: 1,
+                                    border: 'none',
+                                    background: 'transparent',
+                                    fontSize: '14px',
+                                    outline: 'none'
+                                }}
+                            />
+                            <img src={FacebookIconSvg} alt="Facebook" style={{ width: '24px', height: '24px' }} />
                         </div>
-                        <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--spacing-sm)' }}>
-                            متخصصون في بيع أحدث الأجهزة الإلكترونية والاكسسوارات بأفضل الأسعار
-                        </p>
-                        <div className="flex items-center gap-lg" style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
-                            <span className="flex items-center gap-sm">
-                                <Star size={16} style={{ color: 'var(--warning)' }} />
-                                4.8 (2,450 تقييم)
-                            </span>
-                            <span>• إلكترونيات واكسسوارات</span>
-                            <span>• تاريخ التسجيل: يناير 2023</span>
+
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: '10px 12px',
+                            background: '#f8fafc',
+                            borderRadius: '8px',
+                            border: '1px solid #e2e8f0'
+                        }}>
+                            <input
+                                type="text"
+                                value={twitter}
+                                onChange={(e) => setTwitter(e.target.value)}
+                                style={{
+                                    flex: 1,
+                                    border: 'none',
+                                    background: 'transparent',
+                                    fontSize: '14px',
+                                    outline: 'none'
+                                }}
+                            />
+                            <img src={XIconSvg} alt="X" style={{ width: '24px', height: '24px' }} />
+                        </div>
+
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: '10px 12px',
+                            background: '#f8fafc',
+                            borderRadius: '8px',
+                            border: '1px solid #e2e8f0'
+                        }}>
+                            <input
+                                type="text"
+                                value={instagram}
+                                onChange={(e) => setInstagram(e.target.value)}
+                                style={{
+                                    flex: 1,
+                                    border: 'none',
+                                    background: 'transparent',
+                                    fontSize: '14px',
+                                    outline: 'none'
+                                }}
+                            />
+                            <img src={InstagramIconSvg} alt="Instagram" style={{ width: '24px', height: '24px' }} />
+                        </div>
+
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: '10px 12px',
+                            background: '#f8fafc',
+                            borderRadius: '8px',
+                            border: '1px solid #e2e8f0'
+                        }}>
+                            <input
+                                type="text"
+                                value={tiktok}
+                                onChange={(e) => setTiktok(e.target.value)}
+                                style={{
+                                    flex: 1,
+                                    border: 'none',
+                                    background: 'transparent',
+                                    fontSize: '14px',
+                                    outline: 'none'
+                                }}
+                            />
+                            <img src={TikTokIconSvg} alt="TikTok" style={{ width: '24px', height: '24px' }} />
                         </div>
                     </div>
+                </div>
 
-                    <button className="btn btn-primary">
-                        <Edit size={18} />
-                        تعديل الملف
+                {/* Quick Actions */}
+                <div className="card">
+                    <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>العمليات السريعة</h3>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <button style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '12px 16px',
+                            background: '#f8fafc',
+                            border: 'none',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            width: '100%'
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div style={{
+                                    width: '36px',
+                                    height: '36px',
+                                    background: '#dbeafe',
+                                    borderRadius: '8px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    color: '#2563eb'
+                                }}>
+                                    <Users size={18} />
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                    <p style={{ fontSize: '14px', fontWeight: 500 }}>إدارة فريق العمل</p>
+                                    <p style={{ fontSize: '12px', color: '#94a3b8' }}>وإضافة أو حذف موظفين</p>
+                                </div>
+                            </div>
+                            <ChevronLeft size={18} color="#94a3b8" />
+                        </button>
+
+                        <button style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '12px 16px',
+                            background: '#f8fafc',
+                            border: 'none',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            width: '100%'
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div style={{
+                                    width: '36px',
+                                    height: '36px',
+                                    background: '#d1fae5',
+                                    borderRadius: '8px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    color: '#059669'
+                                }}>
+                                    <History size={18} />
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                    <p style={{ fontSize: '14px', fontWeight: 500 }}>سجل النشاطات</p>
+                                    <p style={{ fontSize: '12px', color: '#94a3b8' }}>سجل الدخول والتعديلات</p>
+                                </div>
+                            </div>
+                            <ChevronLeft size={18} color="#94a3b8" />
+                        </button>
+
+                        <button style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '12px 16px',
+                            background: '#f8fafc',
+                            border: 'none',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            width: '100%'
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div style={{
+                                    width: '36px',
+                                    height: '36px',
+                                    background: '#fef3c7',
+                                    borderRadius: '8px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    color: '#d97706'
+                                }}>
+                                    <CreditCard size={18} />
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                    <p style={{ fontSize: '14px', fontWeight: 500 }}>إعدادات الدفع</p>
+                                    <p style={{ fontSize: '12px', color: '#94a3b8' }}>طرق الدفع والإعدادات</p>
+                                </div>
+                            </div>
+                            <ChevronLeft size={18} color="#94a3b8" />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Support Card */}
+                <div style={{
+                    marginTop: '16px',
+                    padding: '24px',
+                    background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                    borderRadius: '16px',
+                    color: 'white',
+                    position: 'relative',
+                    overflow: 'hidden'
+                }}>
+                    <div style={{
+                        position: 'absolute',
+                        bottom: '-20px',
+                        left: '-20px',
+                        width: '100px',
+                        height: '100px',
+                        background: 'rgba(255,255,255,0.1)',
+                        borderRadius: '50%'
+                    }}></div>
+                    <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px', color: 'white' }}>تحتاج إلى مساعدة ؟</h3>
+                    <p style={{ fontSize: '13px', color: 'white', opacity: 0.9, marginBottom: '16px', lineHeight: 1.6 }}>
+                        فريق الدعم المباشر جاهز لمساعدتك في إعداد متجرك خطوة بخطوة
+                    </p>
+                    <button style={{
+                        background: 'white',
+                        color: '#2563eb',
+                        border: 'none',
+                        padding: '10px 20px',
+                        borderRadius: '8px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                    }}>
+                        <MessageCircle size={16} />
+                        تواصل معنا
                     </button>
                 </div>
             </div>
 
             {/* Main Content */}
-            <div className="grid grid-cols-2">
-                {/* Store Identity */}
-                <div className="card">
-                    <div className="card-header">
-                        <div className="flex items-center gap-md">
-                            <div style={{
-                                width: '40px',
-                                height: '40px',
-                                background: 'rgba(99, 102, 241, 0.15)',
-                                borderRadius: 'var(--radius-md)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: 'var(--accent-primary)'
-                            }}>
-                                <Store size={20} />
-                            </div>
-                            <h3 className="card-title">الهوية الأساسية</h3>
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-md">
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--spacing-sm) 0', borderBottom: '1px solid var(--border-color)' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>اسم المتجر</span>
-                            <span style={{ fontWeight: '500', fontSize: '14px' }}>متجر التقنية المتقدمة</span>
-                        </div>
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--spacing-sm) 0', borderBottom: '1px solid var(--border-color)' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>الفئة الرئيسية</span>
-                            <span style={{ fontWeight: '500', fontSize: '14px' }}>إلكترونيات</span>
-                        </div>
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--spacing-sm) 0', borderBottom: '1px solid var(--border-color)' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>الفئات الفرعية</span>
-                            <span style={{ fontWeight: '500', fontSize: '14px' }}>هواتف، اكسسوارات، سماعات</span>
-                        </div>
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--spacing-sm) 0', borderBottom: '1px solid var(--border-color)' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>متوسط التقييمات</span>
-                            <span className="flex items-center gap-sm" style={{ fontWeight: '500', fontSize: '14px', color: 'var(--warning)' }}>
-                                <Star size={16} />
-                                4.8
-                            </span>
-                        </div>
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--spacing-sm) 0' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>العلامة التجارية</span>
-                            <span style={{ fontWeight: '500', fontSize: '14px' }}>TechAdvanced™</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Store Images */}
-                <div className="card">
-                    <div className="card-header">
-                        <div className="flex items-center gap-md">
-                            <div style={{
-                                width: '40px',
-                                height: '40px',
-                                background: 'var(--info-bg)',
-                                borderRadius: 'var(--radius-md)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: 'var(--info)'
-                            }}>
-                                <Image size={20} />
-                            </div>
-                            <h3 className="card-title">صور وبنرات المتجر</h3>
-                        </div>
-                        <button className="btn btn-secondary btn-sm">
-                            <Upload size={14} />
-                            رفع صورة
+            <div style={{ flex: 1 }}>
+                {/* Page Header */}
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginBottom: '24px'
+                }}>
+                    <h2 style={{ fontSize: '24px', fontWeight: 700 }}>إعدادات ملف المتجر</h2>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                        <button style={{
+                            padding: '10px 20px',
+                            background: 'white',
+                            border: '1px solid #e2e8f0',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            fontWeight: 500
+                        }}>
+                            معاينة الصفحة
+                        </button>
+                        <button className="btn btn-primary" style={{
+                            padding: '10px 20px'
+                        }}>
+                            حفظ التغييرات
                         </button>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--spacing-md)' }}>
-                        {[1, 2, 3, 4, 5, 6].map((i) => (
-                            <div key={i} style={{
-                                aspectRatio: '16/9',
-                                background: 'var(--bg-secondary)',
-                                borderRadius: 'var(--radius-md)',
+                </div>
+
+                {/* Banner & Logo Section */}
+                <div className="card" style={{ marginBottom: '24px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>شعار وغلاف الموقع</h3>
+
+                    <div style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
+                        {/* Logo Upload */}
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{
+                                width: '100px',
+                                height: '100px',
+                                borderRadius: '50%',
+                                border: '3px dashed #2563eb',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                border: '2px dashed var(--border-color)'
+                                background: '#eff6ff',
+                                cursor: 'pointer',
+                                marginBottom: '8px'
                             }}>
-                                <Image size={24} style={{ color: 'var(--text-muted)' }} />
+                                <Camera size={32} color="#2563eb" />
                             </div>
-                        ))}
+                            <p style={{ fontSize: '12px', color: '#2563eb', fontWeight: 500 }}>رفع الشعار</p>
+                        </div>
+
+                        {/* Banner Upload */}
+                        <div style={{ flex: 1 }}>
+                            <div style={{
+                                height: '150px',
+                                background: 'linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%)',
+                                borderRadius: '12px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundImage: 'url(https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800)',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                position: 'relative'
+                            }}>
+                                <button style={{
+                                    position: 'absolute',
+                                    bottom: '12px',
+                                    left: '12px',
+                                    background: 'white',
+                                    border: 'none',
+                                    padding: '8px 16px',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '13px',
+                                    fontWeight: 500,
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                }}>
+                                    تغيير
+                                </button>
+                            </div>
+                            <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '8px' }}>1400 * 400 بكسل</p>
+                        </div>
                     </div>
                 </div>
 
-                {/* Store Policies */}
-                <div className="card">
-                    <div className="card-header">
-                        <div className="flex items-center gap-md">
+                {/* Basic Identity */}
+                <div className="card" style={{ marginBottom: '24px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>الهوية الأساسية</h3>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#64748b' }}>
+                                اسم المتجر (اللغة العربية)
+                            </label>
+                            <input
+                                type="text"
+                                value={storeName}
+                                onChange={(e) => setStoreName(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '12px 16px',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '8px',
+                                    fontSize: '14px'
+                                }}
+                            />
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#64748b' }}>
+                                اسم المتجر (اللغة الانجليزية)
+                            </label>
+                            <input
+                                type="text"
+                                value={storeNameEn}
+                                onChange={(e) => setStoreNameEn(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '12px 16px',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '8px',
+                                    fontSize: '14px'
+                                }}
+                            />
+                        </div>
+                    </div>
+
+                    <div style={{ marginTop: '16px' }}>
+                        <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#64748b' }}>
+                            وصف المتجر
+                        </label>
+                        <textarea
+                            value={storeDescription}
+                            onChange={(e) => setStoreDescription(e.target.value)}
+                            rows={4}
+                            style={{
+                                width: '100%',
+                                padding: '12px 16px',
+                                border: '1px solid #e2e8f0',
+                                borderRadius: '8px',
+                                fontSize: '14px',
+                                resize: 'vertical'
+                            }}
+                        />
+                        <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px', textAlign: 'left' }}>500/0</p>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }}>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: '12px 16px',
+                            background: '#f8fafc',
+                            borderRadius: '8px',
+                            border: '1px solid #e2e8f0'
+                        }}>
+                            <Globe size={18} color="#94a3b8" />
+                            <input
+                                type="text"
+                                value={website}
+                                onChange={(e) => setWebsite(e.target.value)}
+                                style={{
+                                    flex: 1,
+                                    border: 'none',
+                                    background: 'transparent',
+                                    fontSize: '14px',
+                                    outline: 'none'
+                                }}
+                            />
+                        </div>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '12px 16px',
+                            background: '#f8fafc',
+                            borderRadius: '8px',
+                            border: '1px solid #e2e8f0',
+                            fontSize: '14px'
+                        }}>
+                            {storeNameEn}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Contact Information */}
+                <div className="card" style={{ marginBottom: '24px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>معلومات التواصل والموقع</h3>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#64748b' }}>
+                                رقم الهاتف
+                            </label>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '12px',
+                                padding: '12px 16px',
+                                background: '#f8fafc',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0'
+                            }}>
+                                <Phone size={18} color="#94a3b8" />
+                                <input
+                                    type="tel"
+                                    value={phone1}
+                                    onChange={(e) => setPhone1(e.target.value)}
+                                    style={{
+                                        flex: 1,
+                                        border: 'none',
+                                        background: 'transparent',
+                                        fontSize: '14px',
+                                        outline: 'none'
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#64748b' }}>
+                                رقم الهاتف (بديل للأعمال)
+                            </label>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '12px',
+                                padding: '12px 16px',
+                                background: '#f8fafc',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0'
+                            }}>
+                                <Phone size={18} color="#94a3b8" />
+                                <input
+                                    type="tel"
+                                    value={phone2}
+                                    onChange={(e) => setPhone2(e.target.value)}
+                                    style={{
+                                        flex: 1,
+                                        border: 'none',
+                                        background: 'transparent',
+                                        fontSize: '14px',
+                                        outline: 'none'
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style={{ marginTop: '16px' }}>
+                        <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#64748b' }}>
+                            البريد الإلكتروني
+                        </label>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: '12px 16px',
+                            background: '#f8fafc',
+                            borderRadius: '8px',
+                            border: '1px solid #e2e8f0'
+                        }}>
+                            <Mail size={18} color="#94a3b8" />
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                style={{
+                                    flex: 1,
+                                    border: 'none',
+                                    background: 'transparent',
+                                    fontSize: '14px',
+                                    outline: 'none'
+                                }}
+                            />
+                        </div>
+                    </div>
+
+                    <h4 style={{ fontSize: '14px', fontWeight: 600, marginTop: '24px', marginBottom: '16px' }}>عنوان المستودع الرئيسي</h4>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#64748b' }}>
+                                المدينة
+                            </label>
+                            <input
+                                type="text"
+                                value={city}
+                                onChange={(e) => setCity(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '12px 16px',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '8px',
+                                    fontSize: '14px'
+                                }}
+                            />
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#64748b' }}>
+                                العنوان التفصيلي
+                            </label>
+                            <input
+                                type="text"
+                                value={address}
+                                onChange={(e) => setAddress(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '12px 16px',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '8px',
+                                    fontSize: '14px'
+                                }}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Map */}
+                    <div style={{ marginTop: '16px' }}>
+                        <div style={{
+                            height: '200px',
+                            background: '#e5e7eb',
+                            borderRadius: '12px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'relative',
+                            backgroundImage: 'url(https://maps.googleapis.com/maps/api/staticmap?center=24.7136,46.6753&zoom=14&size=600x300&maptype=roadmap&key=demo)',
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        }}>
                             <div style={{
                                 width: '40px',
                                 height: '40px',
-                                background: 'var(--warning-bg)',
-                                borderRadius: 'var(--radius-md)',
+                                background: '#ef4444',
+                                borderRadius: '50%',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                color: 'var(--warning)'
+                                boxShadow: '0 4px 12px rgba(239, 68, 68, 0.4)'
                             }}>
-                                <FileText size={20} />
+                                <MapPin size={20} color="white" />
                             </div>
-                            <h3 className="card-title">سياسات المتجر</h3>
                         </div>
-                    </div>
-                    <div className="flex flex-col gap-md">
-                        {[
-                            { label: 'سياسة الشحن', value: 'شحن مجاني للطلبات فوق 500 ج.م' },
-                            { label: 'سياسة الإرجاع', value: 'إرجاع خلال 14 يوم' },
-                            { label: 'سياسة الضمان', value: 'ضمان سنة كاملة' },
-                            { label: 'سياسة الاستبدال', value: 'استبدال خلال 7 أيام' },
-                            { label: 'سياسة التغليف', value: 'تغليف آمن ومضمون' },
-                        ].map((policy, idx) => (
-                            <div key={idx} style={{
-                                padding: 'var(--spacing-md)',
-                                background: 'var(--bg-secondary)',
-                                borderRadius: 'var(--radius-md)'
-                            }}>
-                                <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>{policy.label}</p>
-                                <p style={{ fontWeight: '500', fontSize: '14px' }}>{policy.value}</p>
-                            </div>
-                        ))}
+                        <p style={{
+                            fontSize: '12px',
+                            color: '#64748b',
+                            marginTop: '8px',
+                            textAlign: 'center'
+                        }}>
+                            الرياض، المملكة العربية السعودية
+                        </p>
                     </div>
                 </div>
-
-                {/* Operation Settings */}
-                <div className="card">
-                    <div className="card-header">
-                        <div className="flex items-center gap-md">
-                            <div style={{
-                                width: '40px',
-                                height: '40px',
-                                background: 'var(--success-bg)',
-                                borderRadius: 'var(--radius-md)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: 'var(--success)'
-                            }}>
-                                <Clock size={20} />
-                            </div>
-                            <h3 className="card-title">إعدادات التشغيل</h3>
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-lg">
-                        <div>
-                            <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>أوقات العمل</p>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-sm)' }}>
-                                {['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'].map((day) => (
-                                    <span key={day} className="badge badge-success">{day}</span>
-                                ))}
-                                <span className="badge badge-danger">الجمعة (عطلة)</span>
-                            </div>
-                            <p style={{ fontSize: '14px', marginTop: '8px' }}>من 9:00 ص إلى 10:00 م</p>
-                        </div>
-                        <div>
-                            <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>مواعيد استلام الشحنات</p>
-                            <p style={{ fontSize: '14px' }}>من 10:00 ص إلى 4:00 م</p>
-                        </div>
-                        <div>
-                            <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>ساعات دعم العملاء</p>
-                            <p style={{ fontSize: '14px' }}>من 9:00 ص إلى 9:00 م</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Store Description */}
-            <div className="card mt-lg">
-                <div className="card-header">
-                    <h3 className="card-title">وصف المتجر</h3>
-                    <button className="btn btn-secondary btn-sm">
-                        <Edit size={14} />
-                        تعديل
-                    </button>
-                </div>
-                <p style={{ lineHeight: '1.8', color: 'var(--text-secondary)' }}>
-                    متجر التقنية المتقدمة هو وجهتك الأولى لشراء أحدث الأجهزة الإلكترونية والاكسسوارات في مصر.
-                    نحن نقدم مجموعة واسعة من الهواتف الذكية، السماعات، الساعات الذكية، والشواحن من أفضل العلامات التجارية العالمية.
-                    <br /><br />
-                    نلتزم بتقديم منتجات أصلية 100% مع ضمان شامل وخدمة عملاء متميزة. شحن سريع لجميع المحافظات وإمكانية الإرجاع والاستبدال.
-                </p>
             </div>
         </div>
     );

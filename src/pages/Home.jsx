@@ -55,7 +55,6 @@ const statsCards = [
         id: 1,
         label: 'عدد الطلبات',
         value: '1,277',
-        unit: 'طلب',
         change: '+12.5%',
         positive: true,
         color: '#3b82f6', // Blue
@@ -138,7 +137,7 @@ export default function Home() {
             {
                 label: 'غير مدفوع',
                 data: [25, 32, 48, 45, 38, 30, 28, 32, 45, 52, 50, 55],
-                borderColor: '#94a3b8',
+                borderColor: '#fbbf24',
                 backgroundColor: 'transparent',
                 borderDash: [5, 5],
                 tension: 0.4,
@@ -148,7 +147,7 @@ export default function Home() {
             {
                 label: 'مسترد',
                 data: [8, 12, 25, 32, 28, 18, 10, 15, 22, 35, 30, 45],
-                borderColor: '#ef4444',
+                borderColor: '#10b981',
                 backgroundColor: 'transparent',
                 tension: 0.4,
                 pointRadius: 0,
@@ -162,16 +161,7 @@ export default function Home() {
         maintainAspectRatio: false,
         plugins: {
             legend: {
-                position: 'top',
-                rtl: true,
-                align: 'center',
-                labels: {
-                    color: '#1e293b',
-                    usePointStyle: true,
-                    pointStyle: 'circle',
-                    padding: 25,
-                    font: { family: 'Cairo', size: 12, weight: '500' }
-                }
+                display: false
             }
         },
         scales: {
@@ -179,13 +169,16 @@ export default function Home() {
                 reverse: true,
                 grid: {
                     display: true,
-                    color: 'rgba(148, 163, 184, 0.4)',
+                    color: 'rgba(203, 213, 225, 0.5)',
                     drawBorder: false,
                     borderDash: [4, 4],
+                    drawTicks: false,
                 },
                 ticks: {
                     color: '#94a3b8',
-                    font: { family: 'Cairo', size: 11 }
+                    font: { family: 'Cairo', size: 11 },
+                    maxRotation: 0,
+                    autoSkip: false,
                 }
             },
             y: {
@@ -367,8 +360,16 @@ export default function Home() {
                     <div className="grid" style={{ gridTemplateColumns: '3fr 2fr', gap: 'var(--spacing-md)' }}>
                         {/* Sales Chart - Right (larger) */}
                         <div className="card" style={{ minHeight: 350 }}>
-                            <div className="card-header">
-                                <h3 className="card-title" style={{ fontSize: 20, fontWeight: 800, color: '#101828' }}>المبيعات</h3>
+                            {/* Row 1: Title (right) + Filters (left) */}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                marginBottom: 'var(--spacing-md)',
+                                paddingBottom: 'var(--spacing-md)',
+                                borderBottom: '1px solid #f1f5f9'
+                            }}>
+                                <h3 className="card-title" style={{ fontSize: 20, fontWeight: 800, color: '#101828', margin: 0 }}>المبيعات</h3>
                                 <div className="chart-filters" style={{ background: '#f5f7fa', padding: 4, borderRadius: 8 }}>
                                     {['يومي', 'شهري', 'سنوي'].map((period) => (
                                         <button
@@ -382,6 +383,29 @@ export default function Home() {
                                     ))}
                                 </div>
                             </div>
+
+                            {/* Row 2: Centered Legend */}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: 'var(--spacing-xl)',
+                                marginBottom: 'var(--spacing-lg)'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#10b981' }}></div>
+                                    <span style={{ fontSize: 14, fontWeight: 500, color: '#1e293b' }}>مسترد</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#fbbf24' }}></div>
+                                    <span style={{ fontSize: 14, fontWeight: 500, color: '#1e293b' }}>غير مدفوع</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#3b82f6' }}></div>
+                                    <span style={{ fontSize: 14, fontWeight: 500, color: '#1e293b' }}>مدفوع</span>
+                                </div>
+                            </div>
+
                             <div className="chart-container" style={{ height: 300 }}>
                                 <Line data={salesChartData} options={chartOptions} />
                             </div>
@@ -529,16 +553,6 @@ export default function Home() {
                         <div className="card-header">
                             <h3 className="card-title" style={{ fontSize: 18, fontWeight: 700, color: '#1e293b' }}>المنتجات المضافة حديثا</h3>
                             <div className="flex items-center gap-sm">
-                                <button className="btn btn-primary" style={{
-                                    fontSize: 13,
-                                    padding: '8px 16px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 6
-                                }}>
-                                    فلترة حسب
-                                    <span style={{ fontSize: 10 }}>▼</span>
-                                </button>
                                 <input
                                     type="text"
                                     placeholder="بحث..."
@@ -550,6 +564,16 @@ export default function Home() {
                                         minWidth: 180
                                     }}
                                 />
+                                <button className="btn btn-primary" style={{
+                                    fontSize: 13,
+                                    padding: '8px 16px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 6
+                                }}>
+                                    فلترة حسب
+                                    <span style={{ fontSize: 10 }}>▼</span>
+                                </button>
                             </div>
                         </div>
                         <div className="table-container">
@@ -591,9 +615,9 @@ export default function Home() {
                                             <td>{order.date}</td>
                                             <td>
                                                 <div className="flex gap-xs">
-                                                    <button className="btn btn-secondary btn-sm"><Eye size={12} /></button>
-                                                    <button className="btn btn-secondary btn-sm"><Edit size={12} /></button>
-                                                    <button className="btn btn-secondary btn-sm"><Trash2 size={12} /></button>
+                                                    <button className="action-btn action-btn-view"><Eye size={12} /></button>
+                                                    <button className="action-btn action-btn-edit"><Edit size={12} /></button>
+                                                    <button className="action-btn action-btn-delete"><Trash2 size={12} /></button>
                                                 </div>
                                             </td>
                                         </tr>

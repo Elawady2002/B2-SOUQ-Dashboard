@@ -85,41 +85,49 @@ export default function Ads() {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-4 mb-xl">
-                <div className="stats-card">
-                    <div className="stats-card-icon primary">
-                        <Eye size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">إجمالي المشاهدات</div>
-                        <div className="stats-card-value">20,400</div>
-                    </div>
-                </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon info">
-                        <Target size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">النقرات</div>
-                        <div className="stats-card-value">1,490</div>
+            <div className="grid grid-cols-4 mb-xl" style={{ gap: 'var(--spacing-md)' }}>
+                <div style={{ padding: '20px', background: '#eff6ff', borderRadius: 'var(--radius-lg)', border: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>إجمالي المشاهدات</div>
+                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#3b82f6', lineHeight: 1 }}>20,400</div>
+                        </div>
+                        <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-lg)', background: '#3b82f615', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#3b82f6' }}>
+                            <Eye size={22} />
+                        </div>
                     </div>
                 </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon success">
-                        <ShoppingCart size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">الطلبات</div>
-                        <div className="stats-card-value">85</div>
+                <div style={{ padding: '20px', background: '#faf5ff', borderRadius: 'var(--radius-lg)', border: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>النقرات</div>
+                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#8b5cf6', lineHeight: 1 }}>1,490</div>
+                        </div>
+                        <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-lg)', background: '#8b5cf615', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8b5cf6' }}>
+                            <Target size={22} />
+                        </div>
                     </div>
                 </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon warning">
-                        <TrendingUp size={24} />
+                <div style={{ padding: '20px', background: '#f0fdf4', borderRadius: 'var(--radius-lg)', border: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>الطلبات</div>
+                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#10b981', lineHeight: 1 }}>85</div>
+                        </div>
+                        <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-lg)', background: '#10b98115', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981' }}>
+                            <ShoppingCart size={22} />
+                        </div>
                     </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">العائد</div>
-                        <div className="stats-card-value">96,700 ج.م</div>
+                </div>
+                <div style={{ padding: '20px', background: '#fffbeb', borderRadius: 'var(--radius-lg)', border: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>العائد</div>
+                            <div style={{ fontSize: '28px', fontWeight: 700, color: '#f59e0b', lineHeight: 1 }}>96,700<span style={{ fontSize: '14px', color: '#64748b', marginRight: '4px' }}>ج.م</span></div>
+                        </div>
+                        <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-lg)', background: '#f59e0b15', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f59e0b' }}>
+                            <TrendingUp size={22} />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -192,7 +200,7 @@ export default function Ads() {
                                                     <Play size={14} />
                                                 </button>
                                             )}
-                                            <button className="btn btn-secondary btn-sm" title="التفاصيل">
+                                            <button className="action-btn action-btn-view" title="التفاصيل">
                                                 <Eye size={14} />
                                             </button>
                                         </div>

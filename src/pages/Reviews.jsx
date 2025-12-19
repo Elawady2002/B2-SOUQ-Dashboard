@@ -15,6 +15,7 @@ const reviews = [
     {
         id: 1,
         customer: 'أحمد محمد',
+        avatar: 'https://i.pravatar.cc/150?img=12',
         product: 'هاتف سامسونج Galaxy S24',
         rating: 5,
         comment: 'منتج ممتاز وجودة عالية جداً. الشحن كان سريع والتغليف محترم. أنصح بالشراء من هذا المتجر.',
@@ -25,6 +26,7 @@ const reviews = [
     {
         id: 2,
         customer: 'سارة أحمد',
+        avatar: 'https://i.pravatar.cc/150?img=5',
         product: 'سماعات AirPods Pro',
         rating: 4,
         comment: 'السماعات ممتازة لكن التوصيل تأخر يومين عن الموعد المحدد.',
@@ -34,6 +36,7 @@ const reviews = [
     {
         id: 3,
         customer: 'محمود علي',
+        avatar: 'https://i.pravatar.cc/150?img=33',
         product: 'شاحن لاسلكي',
         rating: 3,
         comment: 'المنتج جيد لكن الجودة أقل قليلاً مما توقعت.',
@@ -43,6 +46,7 @@ const reviews = [
     {
         id: 4,
         customer: 'فاطمة حسن',
+        avatar: 'https://i.pravatar.cc/150?img=9',
         product: 'ساعة Huawei GT4',
         rating: 5,
         comment: 'أفضل ساعة ذكية اشتريتها! شكراً للمتجر على الخدمة الممتازة.',
@@ -169,20 +173,17 @@ export default function Reviews() {
                     {reviews.map((review) => (
                         <div key={review.id} className="card">
                             <div className="flex items-start gap-lg">
-                                <div style={{
-                                    width: '50px',
-                                    height: '50px',
-                                    background: 'var(--accent-gradient)',
-                                    borderRadius: 'var(--radius-md)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    fontWeight: '600',
-                                    fontSize: '18px',
-                                    flexShrink: 0
-                                }}>
-                                    {review.customer.charAt(0)}
-                                </div>
+                                <img
+                                    src={review.avatar}
+                                    alt={review.customer}
+                                    style={{
+                                        width: '50px',
+                                        height: '50px',
+                                        borderRadius: 'var(--radius-md)',
+                                        objectFit: 'cover',
+                                        flexShrink: 0
+                                    }}
+                                />
                                 <div style={{ flex: 1 }}>
                                     <div className="flex items-center justify-between mb-sm">
                                         <div>
@@ -210,7 +211,7 @@ export default function Reviews() {
                                     )}
 
                                     {!review.replied && (
-                                        <button className="btn btn-secondary btn-sm" onClick={() => setReplyModal(review)}>
+                                        <button className="action-btn action-btn-edit" onClick={() => setReplyModal(review)}>
                                             <Reply size={14} />
                                             الرد على التقييم
                                         </button>

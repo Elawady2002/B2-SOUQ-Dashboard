@@ -12,7 +12,10 @@ import {
     User,
     Calendar,
     X,
-    Filter
+    Filter,
+    Store,
+    PackageCheck,
+    Home
 } from 'lucide-react';
 
 const orders = [
@@ -129,78 +132,210 @@ export default function Orders() {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-5 mb-xl">
-                <div className="stats-card">
-                    <div className="stats-card-icon info">
-                        <Package size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">طلبات جديدة</div>
-                        <div className="stats-card-value">24</div>
-                    </div>
-                </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon warning">
-                        <Clock size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">تحت التجهيز</div>
-                        <div className="stats-card-value">18</div>
-                    </div>
-                </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon primary">
-                        <Truck size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">في النقل</div>
-                        <div className="stats-card-value">42</div>
+            <div className="grid grid-cols-5 mb-xl" style={{ gap: 'var(--spacing-md)' }}>
+                <div style={{
+                    padding: '20px',
+                    background: '#eff6ff',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid #f1f5f9'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>طلبات جديدة</div>
+                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#3b82f6', lineHeight: 1 }}>24</div>
+                        </div>
+                        <div style={{
+                            width: '44px',
+                            height: '44px',
+                            borderRadius: 'var(--radius-lg)',
+                            background: '#3b82f615',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#3b82f6'
+                        }}>
+                            <Package size={22} />
+                        </div>
                     </div>
                 </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon success">
-                        <CheckCircle size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">مكتمل</div>
-                        <div className="stats-card-value">156</div>
+                <div style={{
+                    padding: '20px',
+                    background: '#fffbeb',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid #f1f5f9'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>تحت التجهيز</div>
+                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#f59e0b', lineHeight: 1 }}>18</div>
+                        </div>
+                        <div style={{
+                            width: '44px',
+                            height: '44px',
+                            borderRadius: 'var(--radius-lg)',
+                            background: '#f59e0b15',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#f59e0b'
+                        }}>
+                            <Clock size={22} />
+                        </div>
                     </div>
                 </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon danger">
-                        <XCircle size={24} />
+                <div style={{
+                    padding: '20px',
+                    background: '#f0f9ff',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid #f1f5f9'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>في النقل</div>
+                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#0ea5e9', lineHeight: 1 }}>42</div>
+                        </div>
+                        <div style={{
+                            width: '44px',
+                            height: '44px',
+                            borderRadius: 'var(--radius-lg)',
+                            background: '#0ea5e915',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#0ea5e9'
+                        }}>
+                            <Truck size={22} />
+                        </div>
                     </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">ملغي</div>
-                        <div className="stats-card-value">8</div>
+                </div>
+                <div style={{
+                    padding: '20px',
+                    background: '#f0fdf4',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid #f1f5f9'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>مكتمل</div>
+                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#10b981', lineHeight: 1 }}>156</div>
+                        </div>
+                        <div style={{
+                            width: '44px',
+                            height: '44px',
+                            borderRadius: 'var(--radius-lg)',
+                            background: '#10b98115',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#10b981'
+                        }}>
+                            <CheckCircle size={22} />
+                        </div>
+                    </div>
+                </div>
+                <div style={{
+                    padding: '20px',
+                    background: '#fef2f2',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid #f1f5f9'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>ملغي</div>
+                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#ef4444', lineHeight: 1 }}>8</div>
+                        </div>
+                        <div style={{
+                            width: '44px',
+                            height: '44px',
+                            borderRadius: 'var(--radius-lg)',
+                            background: '#ef444415',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#ef4444'
+                        }}>
+                            <XCircle size={22} />
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Shipping Types Info */}
-            <div className="card mb-lg">
-                <div className="card-header">
-                    <h3 className="card-title">أنماط الشحن</h3>
+            <div className="grid grid-cols-3 mb-lg" style={{ gap: 'var(--spacing-md)' }}>
+                <div style={{
+                    padding: '24px',
+                    background: '#f0fdf4',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid #f1f5f9'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                        <div style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: 'var(--radius-lg)',
+                            background: '#10b98115',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#10b981'
+                        }}>
+                            <PackageCheck size={24} />
+                        </div>
+                        <h4 style={{ color: '#10b981', fontSize: '16px', fontWeight: 600, margin: 0 }}>بيع وشحن عبر المنصة</h4>
+                    </div>
+                    <p style={{ fontSize: '13px', color: '#64748b', lineHeight: '1.7', margin: 0 }}>
+                        التاجر يسلم البضاعة لمخازن المنصة، والمنصة تتولى التجهيز والشحن والمرتجعات. تسوية الأرباح بعد خصم العمولة.
+                    </p>
                 </div>
-                <div className="grid grid-cols-3">
-                    <div style={{ padding: 'var(--spacing-md)', background: 'var(--success-bg)', borderRadius: 'var(--radius-md)' }}>
-                        <h4 style={{ color: 'var(--success)', marginBottom: 'var(--spacing-sm)' }}>بيع وشحن عبر المنصة</h4>
-                        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-                            التاجر يسلم البضاعة لمخازن المنصة، والمنصة تتولى كل شيء (التجهيز والشحن)
-                        </p>
+                <div style={{
+                    padding: '24px',
+                    background: '#eff6ff',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid #f1f5f9'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                        <div style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: 'var(--radius-lg)',
+                            background: '#3b82f615',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#3b82f6'
+                        }}>
+                            <Store size={24} />
+                        </div>
+                        <h4 style={{ color: '#3b82f6', fontSize: '16px', fontWeight: 600, margin: 0 }}>بيع مباشر + شحن المنصة</h4>
                     </div>
-                    <div style={{ padding: 'var(--spacing-md)', background: 'var(--info-bg)', borderRadius: 'var(--radius-md)' }}>
-                        <h4 style={{ color: 'var(--info)', marginBottom: 'var(--spacing-sm)' }}>بيع مباشر + شحن المنصة</h4>
-                        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-                            التاجر يستلم الطلب ويجهز، ثم المنصة تتولى النقل والتسليم
-                        </p>
+                    <p style={{ fontSize: '13px', color: '#64748b', lineHeight: '1.7', margin: 0 }}>
+                        التاجر يستلم الطلب ويجهز، ثم المنصة تتولى النقل والتسليم. التاجر مسئول عن التأخير والمنصة عن الفشل.
+                    </p>
+                </div>
+                <div style={{
+                    padding: '24px',
+                    background: '#fffbeb',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid #f1f5f9'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                        <div style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: 'var(--radius-lg)',
+                            background: '#f59e0b15',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#f59e0b'
+                        }}>
+                            <Home size={24} />
+                        </div>
+                        <h4 style={{ color: '#f59e0b', fontSize: '16px', fontWeight: 600, margin: 0 }}>بيع وشحن ذاتي</h4>
                     </div>
-                    <div style={{ padding: 'var(--spacing-md)', background: 'var(--warning-bg)', borderRadius: 'var(--radius-md)' }}>
-                        <h4 style={{ color: 'var(--warning)', marginBottom: 'var(--spacing-sm)' }}>بيع وشحن ذاتي</h4>
-                        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-                            التاجر يشحن بنفسه ويتحمل كامل المسئولية
-                        </p>
-                    </div>
+                    <p style={{ fontSize: '13px', color: '#64748b', lineHeight: '1.7', margin: 0 }}>
+                        التاجر يشحن بنفسه ويتحمل كامل المسئولية. المرتجعات تعود إليه مباشرة ولا رسوم شحن من المنصة.
+                    </p>
                 </div>
             </div>
 
@@ -244,38 +379,46 @@ export default function Orders() {
                                 const shipping = shippingTypes[order.shippingType];
                                 return (
                                     <tr key={order.id}>
-                                        <td style={{ fontFamily: 'monospace', fontWeight: '600' }}>{order.id}</td>
+                                        <td style={{ fontFamily: 'monospace', fontWeight: '600', fontSize: '13px', color: '#475569' }}>{order.id}</td>
                                         <td>
                                             <div>
-                                                <p style={{ fontWeight: '500' }}>{order.customer}</p>
-                                                <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{order.phone}</p>
+                                                <p style={{ fontWeight: '600', fontSize: '14px', color: '#1e293b' }}>{order.customer}</p>
+                                                <p style={{ fontSize: '12px', color: '#94a3b8' }}>{order.phone}</p>
                                             </div>
                                         </td>
                                         <td>
                                             {order.products.map((p, i) => (
-                                                <p key={i} style={{ fontSize: '13px' }}>{p.name} × {p.qty}</p>
+                                                <p key={i} style={{ fontSize: '13px', color: '#475569' }}>{p.name} × {p.qty}</p>
                                             ))}
                                         </td>
-                                        <td style={{ fontWeight: '600', color: 'var(--success)' }}>
+                                        <td style={{ fontWeight: '700', fontSize: '15px', color: '#10b981' }}>
                                             {order.total.toLocaleString('ar-EG')} ج.م
                                         </td>
                                         <td>
-                                            <span className={`badge badge-${shipping.color}`}>{shipping.label}</span>
+                                            <span style={{
+                                                padding: '6px 12px',
+                                                borderRadius: 'var(--radius-md)',
+                                                background: shipping.color === 'success' ? '#f0fdf4' : shipping.color === 'info' ? '#eff6ff' : '#fffbeb',
+                                                color: shipping.color === 'success' ? '#10b981' : shipping.color === 'info' ? '#3b82f6' : '#f59e0b',
+                                                fontSize: '12px',
+                                                fontWeight: 600
+                                            }}>{shipping.label}</span>
                                         </td>
                                         <td>
-                                            <span className={`badge badge-${status.color}`}>
-                                                <status.icon size={12} />
+                                            <span className={`badge badge-${status.color}`} style={{ fontSize: '13px' }}>
+                                                <status.icon size={14} />
                                                 {status.label}
                                             </span>
                                         </td>
-                                        <td style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{order.date}</td>
+                                        <td style={{ fontSize: '13px', color: '#64748b' }}>{order.date}</td>
                                         <td>
                                             <button
-                                                className="btn btn-secondary btn-sm"
+                                                className="action-btn action-btn-view"
                                                 onClick={() => setSelectedOrder(order)}
+                                                style={{ padding: '8px', minWidth: '40px' }}
+                                                title="عرض التفاصيل"
                                             >
-                                                <Eye size={14} />
-                                                عرض
+                                                <Eye size={18} />
                                             </button>
                                         </td>
                                     </tr>
@@ -297,18 +440,38 @@ export default function Orders() {
                             </button>
                         </div>
                         <div className="modal-body">
-                            {/* Status */}
-                            <div className="flex items-center justify-between mb-lg" style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                <span style={{ color: 'var(--text-muted)' }}>حالة الطلب</span>
-                                <span className={`badge badge-${statusConfig[selectedOrder.status].color}`} style={{ fontSize: '14px', padding: '8px 16px' }}>
-                                    {React.createElement(statusConfig[selectedOrder.status].icon, { size: 16 })}
-                                    {statusConfig[selectedOrder.status].label}
-                                </span>
+                            {/* Status & Shipping Type */}
+                            <div className="grid grid-cols-2 mb-lg" style={{ gap: 'var(--spacing-md)' }}>
+                                <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+                                    <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>حالة الطلب</span>
+                                    <div style={{ marginTop: '8px' }}>
+                                        <span className={`badge badge-${statusConfig[selectedOrder.status].color}`} style={{ fontSize: '14px', padding: '8px 16px' }}>
+                                            {React.createElement(statusConfig[selectedOrder.status].icon, { size: 16 })}
+                                            {statusConfig[selectedOrder.status].label}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+                                    <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>نوع الشحن</span>
+                                    <div style={{ marginTop: '8px' }}>
+                                        <span style={{
+                                            display: 'inline-flex',
+                                            padding: '8px 16px',
+                                            borderRadius: 'var(--radius-md)',
+                                            background: shippingTypes[selectedOrder.shippingType].color === 'success' ? '#f0fdf4' : shippingTypes[selectedOrder.shippingType].color === 'info' ? '#eff6ff' : '#fffbeb',
+                                            color: shippingTypes[selectedOrder.shippingType].color === 'success' ? '#10b981' : shippingTypes[selectedOrder.shippingType].color === 'info' ? '#3b82f6' : '#f59e0b',
+                                            fontSize: '13px',
+                                            fontWeight: 600
+                                        }}>
+                                            {shippingTypes[selectedOrder.shippingType].label}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Customer Info */}
                             <div className="mb-lg">
-                                <h4 style={{ marginBottom: 'var(--spacing-md)' }}>بيانات العميل</h4>
+                                <h4 style={{ marginBottom: 'var(--spacing-md)', fontSize: '15px', fontWeight: 600 }}>بيانات العميل</h4>
                                 <div className="grid grid-cols-2" style={{ gap: 'var(--spacing-md)' }}>
                                     <div className="flex items-center gap-md" style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
                                         <User size={18} style={{ color: 'var(--text-muted)' }} />
@@ -336,7 +499,7 @@ export default function Orders() {
 
                             {/* Products */}
                             <div className="mb-lg">
-                                <h4 style={{ marginBottom: 'var(--spacing-md)' }}>المنتجات</h4>
+                                <h4 style={{ marginBottom: 'var(--spacing-md)', fontSize: '15px', fontWeight: 600 }}>المنتجات</h4>
                                 {selectedOrder.products.map((product, idx) => (
                                     <div key={idx} className="flex items-center justify-between" style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', marginBottom: 'var(--spacing-sm)' }}>
                                         <div className="flex items-center gap-md">
@@ -365,18 +528,40 @@ export default function Orders() {
                             </div>
                         </div>
                         <div className="modal-footer">
-                            {selectedOrder.status === 'new' && (
+                            {/* Platform Full - No actions for merchant */}
+                            {selectedOrder.shippingType === 'platform_full' && (
+                                <div style={{ padding: '12px', background: '#f0fdf4', borderRadius: 'var(--radius-md)', width: '100%', textAlign: 'center' }}>
+                                    <p style={{ fontSize: '13px', color: '#10b981', margin: 0 }}>
+                                        <PackageCheck size={16} style={{ display: 'inline', marginLeft: '6px' }} />
+                                        المنصة تتولى كل شيء - لا إجراءات مطلوبة
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Platform Ship - Ready for shipping button */}
+                            {selectedOrder.shippingType === 'platform_ship' && selectedOrder.status === 'processing' && (
+                                <button className="btn btn-primary">
+                                    <Truck size={18} />
+                                    جاهز للشحن
+                                </button>
+                            )}
+
+                            {/* Self Ship - Mark as shipped */}
+                            {selectedOrder.shippingType === 'self_ship' && selectedOrder.status === 'processing' && (
+                                <button className="btn btn-success">
+                                    <CheckCircle size={18} />
+                                    تم الشحن
+                                </button>
+                            )}
+
+                            {/* Common actions */}
+                            {selectedOrder.status === 'new' && selectedOrder.shippingType !== 'platform_full' && (
                                 <button className="btn btn-warning">
                                     <Clock size={18} />
                                     بدء التجهيز
                                 </button>
                             )}
-                            {selectedOrder.status === 'processing' && (
-                                <button className="btn btn-primary">
-                                    <Truck size={18} />
-                                    تسليم للشحن
-                                </button>
-                            )}
+
                             <button className="btn btn-secondary" onClick={() => setSelectedOrder(null)}>
                                 إغلاق
                             </button>

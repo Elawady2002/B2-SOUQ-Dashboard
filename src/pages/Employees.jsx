@@ -4,289 +4,632 @@ import {
     Plus,
     Edit,
     Trash2,
-    Key,
     Eye,
+    Search,
+    Filter,
+    Download,
+    UserPlus,
     Shield,
+    Home,
+    Store,
     Package,
-    ShoppingCart,
-    Warehouse,
     Truck,
-    MessageSquare,
-    MoreVertical,
-    X
+    Tag,
+    RotateCcw,
+    Megaphone,
+    BarChart2,
+    FileText,
+    User,
+    Activity,
+    Headphones,
+    Star
 } from 'lucide-react';
+
+// Dashboard pages for role permissions
+const dashboardPages = [
+    { id: 'home', name: 'الرئيسية', icon: Home },
+    { id: 'store', name: 'المتجر', icon: Store },
+    { id: 'products', name: 'المنتجات', icon: Package },
+    { id: 'orders', name: 'الطلبات', icon: Truck },
+    { id: 'inventory', name: 'المخزون', icon: Tag },
+    { id: 'returns', name: 'المرتجعات', icon: RotateCcw },
+    { id: 'campaigns', name: 'الحملات', icon: Megaphone },
+    { id: 'ads', name: 'الإعلانات', icon: BarChart2 },
+    { id: 'reports', name: 'التقارير', icon: FileText },
+    { id: 'profile', name: 'ملفي', icon: User },
+    { id: 'employees', name: 'الموظفين', icon: Users },
+    { id: 'activity', name: 'سجل النشاط', icon: Activity },
+    { id: 'support', name: 'الدعم', icon: Headphones },
+    { id: 'reviews', name: 'التقييمات', icon: Star },
+];
 
 const employees = [
     {
         id: 1,
-        name: 'محمد أحمد',
-        email: 'mohamed@store.com',
-        phone: '+20 123 456 7890',
-        role: 'مسؤول المنتجات',
-        permissions: ['products', 'inventory'],
+        name: 'نورهان طه',
+        email: 'nourhan@gmail.com',
+        phone: '+201009432089',
+        role: 'مدير المتجر',
         status: 'active',
-        lastActive: 'منذ 5 دقائق'
+        avatar: 'https://i.pravatar.cc/150?img=1'
     },
     {
         id: 2,
-        name: 'سارة محمود',
-        email: 'sara@store.com',
-        phone: '+20 111 222 3333',
-        role: 'مسؤول الطلبات',
-        permissions: ['orders', 'shipping'],
+        name: 'محمد الدين',
+        email: 'mohameddin@gmail.com',
+        phone: '+201142940360',
+        role: 'مسؤولة المبيعات',
         status: 'active',
-        lastActive: 'منذ ساعة'
+        avatar: 'https://i.pravatar.cc/150?img=2'
     },
     {
         id: 3,
-        name: 'أحمد علي',
-        email: 'ahmed.ali@store.com',
-        phone: '+20 100 200 3000',
-        role: 'مسؤول الشحن',
-        permissions: ['shipping'],
+        name: 'طارق',
+        email: 'tarek7353@gmail.com',
+        phone: '+201111295586',
+        role: 'مدير المتجر',
         status: 'inactive',
-        lastActive: 'منذ 3 أيام'
+        avatar: 'https://i.pravatar.cc/150?img=3'
     },
     {
         id: 4,
-        name: 'فاطمة حسن',
-        email: 'fatma@store.com',
-        phone: '+20 155 666 7777',
-        role: 'مسؤول التواصل',
-        permissions: ['messages', 'reviews'],
+        name: 'حاتم علي',
+        email: 'hatemali@gmail.com',
+        phone: '+201001889194',
+        role: 'مدير المخزن',
         status: 'active',
-        lastActive: 'الآن'
+        avatar: 'https://i.pravatar.cc/150?img=4'
     },
 ];
 
-const roles = [
-    { id: 'products', label: 'مسؤول المنتجات', icon: Package, color: 'primary' },
-    { id: 'orders', label: 'مسؤول الطلبات', icon: ShoppingCart, color: 'info' },
-    { id: 'inventory', label: 'مسؤول المخزون', icon: Warehouse, color: 'warning' },
-    { id: 'shipping', label: 'مسؤول الشحن', icon: Truck, color: 'success' },
-    { id: 'messages', label: 'مسؤول التواصل', icon: MessageSquare, color: 'primary' },
-    { id: 'manager', label: 'مدير المتجر', icon: Shield, color: 'danger' },
-];
-
 export default function Employees() {
-    const [showModal, setShowModal] = useState(false);
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
+    const [showAddRoleModal, setShowAddRoleModal] = useState(false);
+    const [activeTab, setActiveTab] = useState('employees'); // 'employees' or 'roles'
+    const [searchQuery, setSearchQuery] = useState('');
+    const [rolePermissions, setRolePermissions] = useState(
+        dashboardPages.reduce((acc, page) => ({ ...acc, [page.id]: false }), {})
+    );
+
+    const togglePermission = (pageId) => {
+        setRolePermissions(prev => ({
+            ...prev,
+            [pageId]: !prev[pageId]
+        }));
+    };
+
 
     return (
         <div>
             {/* Page Header */}
-            <div className="page-header flex items-center justify-between">
+            <div className="page-header" style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: '24px'
+            }}>
                 <div>
-                    <h2 className="page-title">إدارة الموظفين</h2>
-                    <p className="page-subtitle">إضافة وإدارة صلاحيات موظفي المتجر</p>
+                    <h2 className="page-title">إدارة الفريق</h2>
+                    <p className="page-subtitle">إضافة وتعديل وإدارة فريقك</p>
                 </div>
-                <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-                    <Plus size={18} />
-                    إضافة موظف
+                <div style={{ display: 'flex', gap: '12px' }}>
+                    <button
+                        className="btn btn-secondary"
+                        onClick={() => setShowAddRoleModal(true)}
+                        style={{
+                            background: 'white',
+                            color: '#2563eb',
+                            border: '2px solid #2563eb',
+                            padding: '10px 20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                        }}
+                    >
+                        <Plus size={18} />
+                        إضافة دور جديد
+                    </button>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => setShowAddEmployeeModal(true)}
+                        style={{
+                            padding: '10px 20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                        }}
+                    >
+                        <Plus size={18} />
+                        إضافة موظف جديد
+                    </button>
+                </div>
+            </div>
+
+            {/* Tabs */}
+            <div style={{
+                display: 'flex',
+                gap: '32px',
+                borderBottom: '2px solid #e2e8f0',
+                marginBottom: '24px'
+            }}>
+                <button
+                    onClick={() => setActiveTab('employees')}
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        padding: '12px 0',
+                        fontSize: '15px',
+                        fontWeight: activeTab === 'employees' ? 600 : 400,
+                        color: activeTab === 'employees' ? '#2563eb' : '#64748b',
+                        borderBottom: activeTab === 'employees' ? '2px solid #2563eb' : 'none',
+                        marginBottom: '-2px',
+                        cursor: 'pointer'
+                    }}
+                >
+                    كل الموظفين
+                </button>
+                <button
+                    onClick={() => setActiveTab('roles')}
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        padding: '12px 0',
+                        fontSize: '15px',
+                        fontWeight: activeTab === 'roles' ? 600 : 400,
+                        color: activeTab === 'roles' ? '#2563eb' : '#64748b',
+                        borderBottom: activeTab === 'roles' ? '2px solid #2563eb' : 'none',
+                        marginBottom: '-2px',
+                        cursor: 'pointer'
+                    }}
+                >
+                    كل الأدوار
                 </button>
             </div>
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-4 mb-xl">
-                <div className="stats-card">
-                    <div className="stats-card-icon primary">
-                        <Users size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">إجمالي الموظفين</div>
-                        <div className="stats-card-value">4</div>
-                    </div>
+            {/* Search and Filters */}
+            <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '24px',
+                gap: '16px'
+            }}>
+                {/* Search */}
+                <div style={{
+                    flex: 1,
+                    maxWidth: '400px',
+                    position: 'relative'
+                }}>
+                    <Search
+                        size={18}
+                        style={{
+                            position: 'absolute',
+                            right: '12px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            color: '#94a3b8'
+                        }}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ابحث عن موظفين"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        style={{
+                            width: '100%',
+                            padding: '10px 40px 10px 12px',
+                            border: '1px solid #e2e8f0',
+                            borderRadius: '8px',
+                            fontSize: '14px'
+                        }}
+                    />
                 </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon success">
-                        <Users size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">نشط الآن</div>
-                        <div className="stats-card-value">3</div>
-                    </div>
-                </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon warning">
-                        <Shield size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">أنواع الأدوار</div>
-                        <div className="stats-card-value">6</div>
-                    </div>
-                </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon danger">
-                        <Users size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">غير نشط</div>
-                        <div className="stats-card-value">1</div>
-                    </div>
+
+                {/* Filter and Export Buttons */}
+                <div style={{ display: 'flex', gap: '12px' }}>
+                    <button
+                        className="btn btn-secondary"
+                        style={{
+                            background: 'white',
+                            border: '1px solid #e2e8f0',
+                            padding: '10px 16px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            color: '#475569'
+                        }}
+                    >
+                        <Filter size={16} />
+                        تصفية
+                    </button>
+                    <button
+                        className="btn btn-secondary"
+                        style={{
+                            background: 'white',
+                            border: '1px solid #e2e8f0',
+                            padding: '10px 16px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            color: '#475569'
+                        }}
+                    >
+                        <Download size={16} />
+                        تصدير البيانات
+                    </button>
                 </div>
             </div>
 
             {/* Employees Table */}
             <div className="card">
-                <div className="card-header">
-                    <h3 className="card-title">قائمة الموظفين</h3>
-                </div>
                 <div className="table-container">
                     <table className="table">
                         <thead>
                             <tr>
-                                <th>الموظف</th>
+                                <th>اسم الموظف</th>
+                                <th>الدور الوظيفي</th>
                                 <th>البريد الإلكتروني</th>
                                 <th>رقم الهاتف</th>
-                                <th>الدور</th>
                                 <th>الحالة</th>
-                                <th>آخر نشاط</th>
-                                <th>الإجراءات</th>
+                                <th>إجراءات</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {employees.map((employee) => (
-                                <tr key={employee.id}>
-                                    <td>
-                                        <div className="flex items-center gap-md">
-                                            <div style={{
-                                                width: '40px',
-                                                height: '40px',
-                                                background: 'var(--accent-gradient)',
-                                                borderRadius: 'var(--radius-md)',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                fontWeight: '600'
-                                            }}>
-                                                {employee.name.charAt(0)}
+                            {employees
+                                .filter(emp =>
+                                    emp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                    emp.email.toLowerCase().includes(searchQuery.toLowerCase())
+                                )
+                                .map((employee) => (
+                                    <tr key={employee.id}>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                                <img
+                                                    src={employee.avatar}
+                                                    alt={employee.name}
+                                                    style={{
+                                                        width: '40px',
+                                                        height: '40px',
+                                                        borderRadius: '50%',
+                                                        objectFit: 'cover'
+                                                    }}
+                                                />
+                                                <span style={{ fontWeight: '500', color: '#1e293b' }}>
+                                                    {employee.name}
+                                                </span>
                                             </div>
-                                            <span style={{ fontWeight: '500' }}>{employee.name}</span>
-                                        </div>
-                                    </td>
-                                    <td>{employee.email}</td>
-                                    <td style={{ direction: 'ltr', textAlign: 'right' }}>{employee.phone}</td>
-                                    <td>
-                                        <span className="badge badge-primary">{employee.role}</span>
-                                    </td>
-                                    <td>
-                                        <span className={`badge badge-${employee.status === 'active' ? 'success' : 'danger'}`}>
-                                            {employee.status === 'active' ? 'نشط' : 'غير نشط'}
-                                        </span>
-                                    </td>
-                                    <td style={{ color: 'var(--text-muted)' }}>{employee.lastActive}</td>
-                                    <td>
-                                        <div className="flex items-center gap-sm">
-                                            <button className="btn btn-secondary btn-sm" title="عرض">
-                                                <Eye size={14} />
-                                            </button>
-                                            <button className="btn btn-secondary btn-sm" title="تعديل">
-                                                <Edit size={14} />
-                                            </button>
-                                            <button className="btn btn-secondary btn-sm" title="إعادة كلمة المرور">
-                                                <Key size={14} />
-                                            </button>
-                                            <button className="btn btn-danger btn-sm" title="حذف">
-                                                <Trash2 size={14} />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                                        </td>
+                                        <td>
+                                            <span style={{ color: '#64748b' }}>{employee.role}</span>
+                                        </td>
+                                        <td>
+                                            <span style={{ color: '#64748b' }}>{employee.email}</span>
+                                        </td>
+                                        <td style={{ direction: 'ltr', textAlign: 'right' }}>
+                                            <span style={{ color: '#64748b' }}>{employee.phone}</span>
+                                        </td>
+                                        <td>
+                                            <span
+                                                style={{
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '6px',
+                                                    padding: '4px 12px',
+                                                    borderRadius: '6px',
+                                                    fontSize: '13px',
+                                                    fontWeight: '500',
+                                                    background: employee.status === 'active' ? '#d1fae5' : '#fee2e2',
+                                                    color: employee.status === 'active' ? '#065f46' : '#991b1b'
+                                                }}
+                                            >
+                                                <span style={{
+                                                    width: '6px',
+                                                    height: '6px',
+                                                    borderRadius: '50%',
+                                                    background: employee.status === 'active' ? '#10b981' : '#ef4444'
+                                                }}></span>
+                                                {employee.status === 'active' ? 'نشط' : 'غير نشط'}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                                <button
+                                                    className="action-btn action-btn-view"
+                                                    title="عرض"
+                                                >
+                                                    <Eye size={16} />
+                                                </button>
+                                                <button
+                                                    className="action-btn action-btn-edit"
+                                                    title="تعديل"
+                                                >
+                                                    <Edit size={16} />
+                                                </button>
+                                                <button
+                                                    className="action-btn action-btn-delete"
+                                                    title="حذف"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            {/* Roles & Permissions Section */}
-            <div className="card mt-lg">
-                <div className="card-header">
-                    <h3 className="card-title">الأدوار والصلاحيات</h3>
-                </div>
-                <div className="grid grid-cols-3">
-                    {roles.map((role) => (
-                        <div key={role.id} style={{
-                            padding: 'var(--spacing-lg)',
-                            background: 'var(--bg-secondary)',
-                            borderRadius: 'var(--radius-md)',
-                            border: '1px solid var(--border-color)'
-                        }}>
-                            <div className="flex items-center gap-md mb-md">
-                                <div className={`stats-card-icon ${role.color}`} style={{ width: '40px', height: '40px' }}>
-                                    <role.icon size={20} />
-                                </div>
-                                <h4 style={{ fontSize: '16px', fontWeight: '600' }}>{role.label}</h4>
-                            </div>
-                            <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                                {role.id === 'products' && 'إضافة وتعديل المنتجات، إدارة الفئات والأسعار'}
-                                {role.id === 'orders' && 'عرض الطلبات، تحديث الحالات، التواصل مع العملاء'}
-                                {role.id === 'inventory' && 'إدارة المخزون، تحديث الكميات، تتبع الحركات'}
-                                {role.id === 'shipping' && 'إدارة الشحنات، التواصل مع شركات التوصيل'}
-                                {role.id === 'messages' && 'الرد على الرسائل والتقييمات والأسئلة'}
-                                {role.id === 'manager' && 'جميع الصلاحيات ما عدا المعلومات المالية الحساسة'}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
             {/* Add Employee Modal */}
-            {showModal && (
-                <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                    <div className="modal" style={{ maxWidth: '600px' }} onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3 className="modal-title">إضافة موظف جديد</h3>
-                            <button className="modal-close" onClick={() => setShowModal(false)}>
-                                <X size={18} />
+            {showAddEmployeeModal && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 1000
+                    }}
+                    onClick={() => setShowAddEmployeeModal(false)}
+                >
+                    <div
+                        style={{
+                            background: 'white',
+                            borderRadius: '12px',
+                            padding: '32px',
+                            maxWidth: '500px',
+                            width: '90%',
+                            maxHeight: '90vh',
+                            overflow: 'auto'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h3 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '24px' }}>
+                            إضافة موظف جديد
+                        </h3>
+                        <div style={{ marginBottom: '16px' }}>
+                            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 500 }}>
+                                الاسم الكامل
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="أدخل اسم الموظف"
+                                style={{
+                                    width: '100%',
+                                    padding: '10px 12px',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '8px',
+                                    fontSize: '14px'
+                                }}
+                            />
+                        </div>
+                        <div style={{ marginBottom: '16px' }}>
+                            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 500 }}>
+                                البريد الإلكتروني
+                            </label>
+                            <input
+                                type="email"
+                                placeholder="example@email.com"
+                                style={{
+                                    width: '100%',
+                                    padding: '10px 12px',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '8px',
+                                    fontSize: '14px'
+                                }}
+                            />
+                        </div>
+                        <div style={{ marginBottom: '16px' }}>
+                            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 500 }}>
+                                رقم الهاتف
+                            </label>
+                            <input
+                                type="tel"
+                                placeholder="+20 XXX XXX XXXX"
+                                style={{
+                                    width: '100%',
+                                    padding: '10px 12px',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '8px',
+                                    fontSize: '14px'
+                                }}
+                            />
+                        </div>
+                        <div style={{ marginBottom: '24px' }}>
+                            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 500 }}>
+                                الدور الوظيفي
+                            </label>
+                            <select
+                                style={{
+                                    width: '100%',
+                                    padding: '10px 12px',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '8px',
+                                    fontSize: '14px'
+                                }}
+                            >
+                                <option>اختر الدور</option>
+                                <option>مدير المتجر</option>
+                                <option>مسؤول المبيعات</option>
+                                <option>مدير المخزن</option>
+                            </select>
+                        </div>
+                        <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                            <button
+                                onClick={() => setShowAddEmployeeModal(false)}
+                                style={{
+                                    padding: '10px 20px',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '8px',
+                                    background: 'white',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                إلغاء
+                            </button>
+                            <button
+                                className="btn btn-primary"
+                                style={{
+                                    padding: '10px 20px',
+                                    borderRadius: '8px'
+                                }}
+                            >
+                                إضافة
                             </button>
                         </div>
-                        <div className="modal-body">
-                            <div className="grid grid-cols-2" style={{ gap: 'var(--spacing-md)' }}>
-                                <div className="form-group">
-                                    <label className="form-label">الاسم الكامل</label>
-                                    <input type="text" className="form-input" placeholder="أدخل اسم الموظف" />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">رقم الهاتف</label>
-                                    <input type="tel" className="form-input" placeholder="+20 XXX XXX XXXX" />
-                                </div>
-                                <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                                    <label className="form-label">البريد الإلكتروني</label>
-                                    <input type="email" className="form-input" placeholder="employee@store.com" />
-                                </div>
-                                <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                                    <label className="form-label">كلمة المرور المؤقتة</label>
-                                    <input type="password" className="form-input" placeholder="سيتم إرسالها للموظف" />
-                                </div>
-                                <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                                    <label className="form-label">الدور</label>
-                                    <select className="form-select">
-                                        <option value="">اختر الدور</option>
-                                        {roles.map((role) => (
-                                            <option key={role.id} value={role.id}>{role.label}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                                    <label className="form-label">الصلاحيات</label>
-                                    <div className="flex gap-md" style={{ flexWrap: 'wrap' }}>
-                                        {roles.slice(0, 5).map((role) => (
-                                            <label key={role.id} className="flex items-center gap-sm" style={{ cursor: 'pointer' }}>
-                                                <input type="checkbox" />
-                                                <span style={{ fontSize: '14px' }}>{role.label}</span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Add Role Modal */}
+            {showAddRoleModal && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 1000
+                    }}
+                    onClick={() => setShowAddRoleModal(false)}
+                >
+                    <div
+                        style={{
+                            background: 'white',
+                            borderRadius: '12px',
+                            padding: '32px',
+                            maxWidth: '500px',
+                            width: '90%',
+                            maxHeight: '90vh',
+                            overflow: 'auto'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h3 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '24px' }}>
+                            إضافة دور جديد
+                        </h3>
+                        <div style={{ marginBottom: '16px' }}>
+                            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 500 }}>
+                                اسم الدور
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="مثال: مسؤول المبيعات"
+                                style={{
+                                    width: '100%',
+                                    padding: '10px 12px',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '8px',
+                                    fontSize: '14px'
+                                }}
+                            />
+                        </div>
+                        <div style={{ marginBottom: '24px' }}>
+                            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 500 }}>
+                                الوصف
+                            </label>
+                            <textarea
+                                placeholder="وصف مختصر للدور والصلاحيات"
+                                rows={4}
+                                style={{
+                                    width: '100%',
+                                    padding: '10px 12px',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '8px',
+                                    fontSize: '14px',
+                                    resize: 'vertical'
+                                }}
+                            />
+                        </div>
+
+                        {/* Permissions Section */}
+                        <div style={{ marginBottom: '24px' }}>
+                            <label style={{ display: 'block', marginBottom: '12px', fontSize: '14px', fontWeight: 500 }}>
+                                صلاحيات الدور
+                            </label>
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(2, 1fr)',
+                                gap: '8px',
+                                maxHeight: '250px',
+                                overflow: 'auto',
+                                padding: '4px'
+                            }}>
+                                {dashboardPages.map((page) => {
+                                    const IconComponent = page.icon;
+                                    return (
+                                        <label
+                                            key={page.id}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '10px',
+                                                padding: '10px 12px',
+                                                background: rolePermissions[page.id] ? '#eff6ff' : '#f8fafc',
+                                                border: rolePermissions[page.id] ? '1px solid #2563eb' : '1px solid #e2e8f0',
+                                                borderRadius: '8px',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.2s'
+                                            }}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={rolePermissions[page.id]}
+                                                onChange={() => togglePermission(page.id)}
+                                                style={{
+                                                    width: '16px',
+                                                    height: '16px',
+                                                    accentColor: '#2563eb'
+                                                }}
+                                            />
+                                            <IconComponent
+                                                size={18}
+                                                color={rolePermissions[page.id] ? '#2563eb' : '#64748b'}
+                                            />
+                                            <span style={{
+                                                fontSize: '13px',
+                                                fontWeight: 500,
+                                                color: rolePermissions[page.id] ? '#1e40af' : '#475569'
+                                            }}>
+                                                {page.name}
+                                            </span>
+                                        </label>
+                                    );
+                                })}
                             </div>
                         </div>
-                        <div className="modal-footer">
-                            <button className="btn btn-primary">
-                                <Plus size={18} />
-                                إضافة الموظف
-                            </button>
-                            <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
+
+                        <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                            <button
+                                onClick={() => setShowAddRoleModal(false)}
+                                style={{
+                                    padding: '10px 20px',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '8px',
+                                    background: 'white',
+                                    cursor: 'pointer'
+                                }}
+                            >
                                 إلغاء
+                            </button>
+                            <button
+                                className="btn btn-primary"
+                                style={{
+                                    padding: '10px 20px',
+                                    borderRadius: '8px'
+                                }}
+                            >
+                                إضافة
                             </button>
                         </div>
                     </div>

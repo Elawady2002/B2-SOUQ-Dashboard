@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
 
@@ -41,6 +41,15 @@ const pageTitles = {
 export default function DashboardLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
+
+    // Check authentication
+    useEffect(() => {
+        const isAuthenticated = localStorage.getItem('isAuthenticated');
+        if (!isAuthenticated) {
+            navigate('/login');
+        }
+    }, [navigate]);
 
     // Close sidebar when route changes (mobile)
     useEffect(() => {

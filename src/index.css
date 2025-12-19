@@ -292,6 +292,7 @@ a:hover {
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  gap: 0;
 }
 
 /* Remove section margins in collapsed state for even spacing */
@@ -1574,4 +1575,151 @@ a:hover {
     width: 32px;
     height: 32px;
   }
+}
+
+/* =====================================
+   Action Buttons - Standardized Styles
+   ===================================== */
+
+/* Base action button style */
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+}
+
+/* View Button - Yellow */
+.action-btn-view {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.action-btn-view:hover {
+  background: #fde68a;
+}
+
+/* Edit Button - Blue */
+.action-btn-edit {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.action-btn-edit:hover {
+  background: #bfdbfe;
+}
+
+/* Delete Button - Red */
+.action-btn-delete {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.action-btn-delete:hover {
+  background: #fecaca;
+}
+
+/* Additional action button variants */
+
+/* Download Button - Green */
+.action-btn-download {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.action-btn-download:hover {
+  background: #a7f3d0;
+}
+
+/* Settings Button - Purple */
+.action-btn-settings {
+  background: #e9d5ff;
+  color: #6b21a8;
+}
+
+.action-btn-settings:hover {
+  background: #d8b4fe;
+}
+
+/* More Options Button - Gray */
+.action-btn-more {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.action-btn-more:hover {
+  background: #e2e8f0;
+}
+
+/* =====================================
+   View All Button - Standardized Styles
+   ===================================== */
+
+/* Base view-all button style */
+.btn-view-all {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: white;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-view-all:hover {
+  background: var(--bg-secondary);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+/* View All with arrow */
+.btn-view-all-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: white;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-view-all-arrow:hover {
+  background: var(--bg-secondary);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.btn-view-all-arrow .arrow-icon {
+  transition: transform var(--transition-fast);
+}
+
+.btn-view-all-arrow:hover .arrow-icon {
+  transform: translateX(-4px);
 }

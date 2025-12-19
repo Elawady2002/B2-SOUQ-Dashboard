@@ -7,7 +7,10 @@ import {
     Eye,
     MessageSquare,
     AlertTriangle,
-    X
+    X,
+    MapPin,
+    Truck,
+    Home
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -23,9 +26,9 @@ const returns = [
         total: 45000,
         reason: 'عيب صناعة',
         status: 'pending',
-        shippingMethod: 'شحن المنصة',
-        address: 'المستودع الرئيسي - 6 أكتوبر',
-        originalStatus: 'مكتمل',
+        shippingMethod: 'platform_ship',
+        address: 'المستودع الرئيسي - 6 أكتوبر، الجيزة',
+        originalStatus: 'completed',
         date: '2024-12-18'
     },
     {
@@ -39,9 +42,9 @@ const returns = [
         total: 8500,
         reason: 'لا يعمل',
         status: 'approved',
-        shippingMethod: 'شحن ذاتي',
-        address: 'فرع الدقي',
-        originalStatus: 'مكتمل',
+        shippingMethod: 'self_ship',
+        address: 'فرع الدقي - شارع التحرير، الدقي، الجيزة',
+        originalStatus: 'completed',
         date: '2024-12-17'
     },
     {
@@ -55,9 +58,9 @@ const returns = [
         total: 900,
         reason: 'غيرت رأيي',
         status: 'rejected',
-        shippingMethod: 'شحن المنصة',
-        address: 'المستودع الرئيسي',
-        originalStatus: 'مكتمل',
+        shippingMethod: 'platform_ship',
+        address: 'المستودع الرئيسي - 6 أكتوبر، الجيزة',
+        originalStatus: 'completed',
         date: '2024-12-15'
     },
     {
@@ -71,18 +74,29 @@ const returns = [
         total: 6500,
         reason: 'منتج مختلف عن الوصف',
         status: 'completed',
-        shippingMethod: 'شحن المنصة',
-        address: 'المستودع الرئيسي',
-        originalStatus: 'مكتمل',
+        shippingMethod: 'platform_full',
+        address: 'المستودع الرئيسي - 6 أكتوبر، الجيزة',
+        originalStatus: 'completed',
         date: '2024-12-10'
     },
 ];
 
 const statusConfig = {
-    pending: { label: 'قيد المراجعة', color: 'warning', icon: Clock },
-    approved: { label: 'تمت الموافقة', color: 'info', icon: CheckCircle },
-    rejected: { label: 'مرفوض', color: 'danger', icon: XCircle },
-    completed: { label: 'مكتمل', color: 'success', icon: CheckCircle },
+    pending: { label: 'قيد المراجعة', color: '#f59e0b', bgColor: '#fffbeb', icon: Clock },
+    approved: { label: 'تمت الموافقة', color: '#3b82f6', bgColor: '#eff6ff', icon: CheckCircle },
+    rejected: { label: 'مرفوض', color: '#ef4444', bgColor: '#fef2f2', icon: XCircle },
+    completed: { label: 'مكتمل', color: '#10b981', bgColor: '#f0fdf4', icon: CheckCircle },
+};
+
+const shippingMethods = {
+    platform_full: { label: 'شحن المنصة', icon: Package, color: '#10b981' },
+    platform_ship: { label: 'شحن المنصة', icon: Truck, color: '#3b82f6' },
+    self_ship: { label: 'شحن ذاتي', icon: Home, color: '#f59e0b' },
+};
+
+const originalStatusConfig = {
+    completed: { label: 'مكتمل', color: '#10b981' },
+    cancelled: { label: 'ملغي', color: '#ef4444' },
 };
 
 export default function Returns() {
@@ -97,41 +111,105 @@ export default function Returns() {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-4 mb-xl">
-                <div className="stats-card">
-                    <div className="stats-card-icon warning">
-                        <Clock size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">قيد المراجعة</div>
-                        <div className="stats-card-value">5</div>
-                    </div>
-                </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon info">
-                        <RotateCcw size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">في الطريق</div>
-                        <div className="stats-card-value">3</div>
-                    </div>
-                </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon success">
-                        <CheckCircle size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">مكتمل</div>
-                        <div className="stats-card-value">28</div>
+            <div className="grid grid-cols-4 mb-xl" style={{ gap: 'var(--spacing-md)' }}>
+                <div style={{
+                    padding: '20px',
+                    background: '#fffbeb',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid #f1f5f9'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>قيد المراجعة</div>
+                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#f59e0b', lineHeight: 1 }}>5</div>
+                        </div>
+                        <div style={{
+                            width: '44px',
+                            height: '44px',
+                            borderRadius: 'var(--radius-lg)',
+                            background: '#f59e0b15',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#f59e0b'
+                        }}>
+                            <Clock size={22} />
+                        </div>
                     </div>
                 </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon danger">
-                        <AlertTriangle size={24} />
+                <div style={{
+                    padding: '20px',
+                    background: '#eff6ff',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid #f1f5f9'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>في الطريق</div>
+                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#3b82f6', lineHeight: 1 }}>3</div>
+                        </div>
+                        <div style={{
+                            width: '44px',
+                            height: '44px',
+                            borderRadius: 'var(--radius-lg)',
+                            background: '#3b82f615',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#3b82f6'
+                        }}>
+                            <RotateCcw size={22} />
+                        </div>
                     </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">نزاعات مفتوحة</div>
-                        <div className="stats-card-value">2</div>
+                </div>
+                <div style={{
+                    padding: '20px',
+                    background: '#f0fdf4',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid #f1f5f9'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>مكتمل</div>
+                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#10b981', lineHeight: 1 }}>28</div>
+                        </div>
+                        <div style={{
+                            width: '44px',
+                            height: '44px',
+                            borderRadius: 'var(--radius-lg)',
+                            background: '#10b98115',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#10b981'
+                        }}>
+                            <CheckCircle size={22} />
+                        </div>
+                    </div>
+                </div>
+                <div style={{
+                    padding: '20px',
+                    background: '#fef2f2',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid #f1f5f9'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>نزاعات مفتوحة</div>
+                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#ef4444', lineHeight: 1 }}>2</div>
+                        </div>
+                        <div style={{
+                            width: '44px',
+                            height: '44px',
+                            borderRadius: 'var(--radius-lg)',
+                            background: '#ef444415',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#ef4444'
+                        }}>
+                            <AlertTriangle size={22} />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -153,45 +231,94 @@ export default function Returns() {
                                 <th>السعر/وحدة</th>
                                 <th>الإجمالي</th>
                                 <th>سبب الإرجاع</th>
-                                <th>الحالة</th>
+                                <th>حالة الإرجاع</th>
+                                <th>طريقة الشحن</th>
+                                <th>العنوان</th>
+                                <th>حالة الطلب</th>
                                 <th>الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody>
                             {returns.map((item) => {
                                 const status = statusConfig[item.status];
+                                const shipping = shippingMethods[item.shippingMethod];
+                                const originalStatus = originalStatusConfig[item.originalStatus];
                                 return (
                                     <tr key={item.id}>
                                         <td>
                                             <div>
-                                                <p style={{ fontFamily: 'monospace', fontWeight: '600' }}>{item.id}</p>
-                                                <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{item.orderId}</p>
+                                                <p style={{ fontFamily: 'monospace', fontWeight: '600', fontSize: '13px', color: '#475569' }}>{item.id}</p>
+                                                <p style={{ fontSize: '11px', color: '#94a3b8', fontFamily: 'monospace' }}>{item.orderId}</p>
                                             </div>
                                         </td>
-                                        <td style={{ fontWeight: '500' }}>{item.product}</td>
-                                        <td style={{ fontFamily: 'monospace', fontSize: '12px' }}>{item.sku}</td>
-                                        <td>{item.category}</td>
-                                        <td>{item.quantity}</td>
-                                        <td>{item.unitPrice.toLocaleString('ar-EG')} ج.م</td>
-                                        <td style={{ fontWeight: '600', color: 'var(--danger)' }}>{item.total.toLocaleString('ar-EG')} ج.م</td>
+                                        <td style={{ fontWeight: '600', fontSize: '14px', color: '#1e293b' }}>{item.product}</td>
+                                        <td style={{ fontFamily: 'monospace', fontSize: '13px', color: '#64748b' }}>{item.sku}</td>
+                                        <td style={{ fontSize: '13px', color: '#475569' }}>{item.category}</td>
+                                        <td style={{ fontSize: '14px', fontWeight: 600, color: '#1e293b' }}>{item.quantity}</td>
+                                        <td style={{ fontSize: '13px', color: '#475569' }}>{item.unitPrice.toLocaleString('ar-EG')} ج.م</td>
+                                        <td style={{ fontWeight: '700', fontSize: '15px', color: '#ef4444' }}>{item.total.toLocaleString('ar-EG')} ج.م</td>
                                         <td>
-                                            <span className="badge badge-warning">{item.reason}</span>
+                                            <span style={{
+                                                padding: '6px 12px',
+                                                borderRadius: 'var(--radius-md)',
+                                                background: '#fffbeb',
+                                                color: '#f59e0b',
+                                                fontSize: '12px',
+                                                fontWeight: 600
+                                            }}>{item.reason}</span>
                                         </td>
                                         <td>
-                                            <span className={`badge badge-${status.color}`}>
-                                                <status.icon size={12} />
+                                            <span style={{
+                                                padding: '6px 12px',
+                                                borderRadius: 'var(--radius-md)',
+                                                background: status.bgColor,
+                                                color: status.color,
+                                                fontSize: '12px',
+                                                fontWeight: 600,
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '4px'
+                                            }}>
+                                                <status.icon size={14} />
                                                 {status.label}
                                             </span>
                                         </td>
                                         <td>
-                                            <div className="flex items-center gap-sm">
-                                                <button className="btn btn-secondary btn-sm" onClick={() => setSelectedReturn(item)}>
-                                                    <Eye size={14} />
-                                                </button>
-                                                <button className="btn btn-secondary btn-sm">
-                                                    <MessageSquare size={14} />
-                                                </button>
-                                            </div>
+                                            <span style={{
+                                                padding: '6px 12px',
+                                                borderRadius: 'var(--radius-md)',
+                                                background: `${shipping.color}15`,
+                                                color: shipping.color,
+                                                fontSize: '12px',
+                                                fontWeight: 600,
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '4px'
+                                            }}>
+                                                <shipping.icon size={14} />
+                                                {shipping.label}
+                                            </span>
+                                        </td>
+                                        <td style={{ fontSize: '13px', color: '#64748b', maxWidth: '200px' }}>{item.address}</td>
+                                        <td>
+                                            <span style={{
+                                                padding: '6px 12px',
+                                                borderRadius: 'var(--radius-md)',
+                                                background: `${originalStatus.color}15`,
+                                                color: originalStatus.color,
+                                                fontSize: '12px',
+                                                fontWeight: 600
+                                            }}>{originalStatus.label}</span>
+                                        </td>
+                                        <td>
+                                            <button
+                                                className="action-btn action-btn-view"
+                                                onClick={() => setSelectedReturn(item)}
+                                                style={{ padding: '8px', minWidth: '40px' }}
+                                                title="عرض التفاصيل"
+                                            >
+                                                <Eye size={18} />
+                                            </button>
                                         </td>
                                     </tr>
                                 );
@@ -204,38 +331,121 @@ export default function Returns() {
             {/* Return Details Modal */}
             {selectedReturn && (
                 <div className="modal-overlay" onClick={() => setSelectedReturn(null)}>
-                    <div className="modal" style={{ maxWidth: '600px' }} onClick={(e) => e.stopPropagation()}>
+                    <div className="modal" style={{ maxWidth: '700px' }} onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
-                            <h3 className="modal-title">تفاصيل طلب الإرجاع</h3>
+                            <h3 className="modal-title">تفاصيل طلب الإرجاع: {selectedReturn.id}</h3>
                             <button className="modal-close" onClick={() => setSelectedReturn(null)}>
                                 <X size={18} />
                             </button>
                         </div>
                         <div className="modal-body">
-                            <div className="grid grid-cols-2" style={{ gap: 'var(--spacing-md)' }}>
+                            {/* Status & Shipping */}
+                            <div className="grid grid-cols-2 mb-lg" style={{ gap: 'var(--spacing-md)' }}>
                                 <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                    <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>رقم الإرجاع</p>
-                                    <p style={{ fontWeight: '600' }}>{selectedReturn.id}</p>
+                                    <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>حالة الإرجاع</span>
+                                    <div style={{ marginTop: '8px' }}>
+                                        <span style={{
+                                            padding: '8px 16px',
+                                            borderRadius: 'var(--radius-md)',
+                                            background: statusConfig[selectedReturn.status].bgColor,
+                                            color: statusConfig[selectedReturn.status].color,
+                                            fontSize: '13px',
+                                            fontWeight: 600,
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '6px'
+                                        }}>
+                                            {React.createElement(statusConfig[selectedReturn.status].icon, { size: 16 })}
+                                            {statusConfig[selectedReturn.status].label}
+                                        </span>
+                                    </div>
                                 </div>
                                 <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                    <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>رقم الطلب الأصلي</p>
-                                    <p style={{ fontWeight: '600' }}>{selectedReturn.orderId}</p>
+                                    <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>طريقة الشحن</span>
+                                    <div style={{ marginTop: '8px' }}>
+                                        <span style={{
+                                            padding: '8px 16px',
+                                            borderRadius: 'var(--radius-md)',
+                                            background: `${shippingMethods[selectedReturn.shippingMethod].color}15`,
+                                            color: shippingMethods[selectedReturn.shippingMethod].color,
+                                            fontSize: '13px',
+                                            fontWeight: 600,
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '6px'
+                                        }}>
+                                            {React.createElement(shippingMethods[selectedReturn.shippingMethod].icon, { size: 16 })}
+                                            {shippingMethods[selectedReturn.shippingMethod].label}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', gridColumn: 'span 2' }}>
-                                    <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>المنتج</p>
-                                    <p style={{ fontWeight: '600' }}>{selectedReturn.product}</p>
+                            </div>
+
+                            {/* Order Info */}
+                            <div className="mb-lg">
+                                <h4 style={{ marginBottom: 'var(--spacing-md)', fontSize: '15px', fontWeight: 600 }}>معلومات الطلب</h4>
+                                <div className="grid grid-cols-2" style={{ gap: 'var(--spacing-md)' }}>
+                                    <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+                                        <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>رقم الإرجاع</p>
+                                        <p style={{ fontWeight: '600', fontFamily: 'monospace' }}>{selectedReturn.id}</p>
+                                    </div>
+                                    <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+                                        <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>رقم الطلب الأصلي</p>
+                                        <p style={{ fontWeight: '600', fontFamily: 'monospace' }}>{selectedReturn.orderId}</p>
+                                    </div>
                                 </div>
+                            </div>
+
+                            {/* Product Info */}
+                            <div className="mb-lg">
+                                <h4 style={{ marginBottom: 'var(--spacing-md)', fontSize: '15px', fontWeight: 600 }}>معلومات المنتج</h4>
+                                <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+                                    <div className="flex items-center gap-md mb-md">
+                                        <div style={{ width: '50px', height: '50px', background: 'var(--bg-card)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <Package size={24} style={{ color: 'var(--text-muted)' }} />
+                                        </div>
+                                        <div style={{ flex: 1 }}>
+                                            <p style={{ fontWeight: '600', fontSize: '15px' }}>{selectedReturn.product}</p>
+                                            <p style={{ fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'monospace' }}>SKU: {selectedReturn.sku}</p>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-3" style={{ gap: 'var(--spacing-sm)' }}>
+                                        <div>
+                                            <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>الفئة</p>
+                                            <p style={{ fontWeight: '500' }}>{selectedReturn.category}</p>
+                                        </div>
+                                        <div>
+                                            <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>الكمية</p>
+                                            <p style={{ fontWeight: '600' }}>{selectedReturn.quantity}</p>
+                                        </div>
+                                        <div>
+                                            <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>السعر</p>
+                                            <p style={{ fontWeight: '600', color: 'var(--danger)' }}>{selectedReturn.total.toLocaleString('ar-EG')} ج.م</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Return Reason & Address */}
+                            <div className="grid grid-cols-2 mb-lg" style={{ gap: 'var(--spacing-md)' }}>
                                 <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
                                     <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>سبب الإرجاع</p>
                                     <p style={{ fontWeight: '600', color: 'var(--warning)' }}>{selectedReturn.reason}</p>
                                 </div>
                                 <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                    <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>المبلغ</p>
-                                    <p style={{ fontWeight: '600', color: 'var(--danger)' }}>{selectedReturn.total.toLocaleString('ar-EG')} ج.م</p>
+                                    <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>التاريخ</p>
+                                    <p style={{ fontWeight: '600' }}>{selectedReturn.date}</p>
                                 </div>
-                                <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', gridColumn: 'span 2' }}>
-                                    <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>عنوان الاستلام</p>
-                                    <p style={{ fontWeight: '600' }}>{selectedReturn.address}</p>
+                            </div>
+
+                            {/* Address */}
+                            <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+                                <div className="flex items-center gap-md">
+                                    <MapPin size={18} style={{ color: 'var(--text-muted)' }} />
+                                    <div>
+                                        <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>عنوان الاستلام</p>
+                                        <p style={{ fontWeight: '600' }}>{selectedReturn.address}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

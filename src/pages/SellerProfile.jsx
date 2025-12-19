@@ -1,190 +1,228 @@
+import { useState } from 'react';
 import {
-    User,
-    Mail,
-    Phone,
-    Lock,
-    Globe,
-    Languages,
-    CreditCard,
-    Building2,
-    FileText,
-    Shield,
-    MapPin,
-    Smartphone,
-    AlertTriangle,
-    CheckCircle,
-    Clock,
-    Wallet,
     Download,
-    Edit
+    Edit2, Phone, Mail, MapPin, Calendar,
+    CheckCircle, XCircle, ExternalLink,
+    Instagram, MessageCircle
 } from 'lucide-react';
-
-const profileSections = [
-    {
-        id: 'account',
-        title: 'بيانات الحساب الأساسية',
-        icon: User,
-        fields: [
-            { label: 'البريد الإلكتروني', value: 'ahmed@example.com', icon: Mail },
-            { label: 'رقم الهاتف', value: '+20 123 456 7890', icon: Phone },
-            { label: 'كلمة المرور', value: '••••••••••', icon: Lock, masked: true },
-            { label: 'الدولة', value: 'مصر', icon: Globe },
-            { label: 'اللغة', value: 'العربية', icon: Languages },
-            { label: 'معرف الحساب', value: 'ACC-2024-78432', icon: User },
-            { label: 'حالة الحساب', value: 'نشط', status: 'success' },
-        ]
-    },
-    {
-        id: 'seller-type',
-        title: 'نوع التاجر',
-        icon: Building2,
-        fields: [
-            { label: 'نوع الحساب', value: 'شركة' },
-            { label: 'نوع التاجر', value: 'محلي' },
-            { label: 'طبيعة النشاط', value: 'إلكترونيات واكسسوارات' },
-        ]
-    },
-    {
-        id: 'kyc',
-        title: 'بيانات الهوية والتحقق (KYC)',
-        icon: Shield,
-        fields: [
-            { label: 'اسم الشركة القانوني', value: 'شركة التقنية المتقدمة للتجارة' },
-            { label: 'السجل التجاري', value: '123456789' },
-            { label: 'الرقم الضريبي', value: '987-654-321' },
-            { label: 'نوع الكيان', value: 'شركة ذات مسئولية محدودة (LLC)' },
-            { label: 'الدولة والمدينة', value: 'مصر - القاهرة' },
-            { label: 'عنوان المقر الرئيسي', value: 'شارع التحرير، الدقي، الجيزة' },
-            { label: 'ممثل الشركة', value: 'أحمد محمد علي' },
-            { label: 'حالة التحقق', value: 'تم التحقق', status: 'success' },
-        ]
-    },
-    {
-        id: 'payment',
-        title: 'بيانات الدفع',
-        icon: CreditCard,
-        fields: [
-            { label: 'وسيلة الدفع', value: 'حساب بنكي' },
-            { label: 'اسم صاحب الحساب', value: 'شركة التقنية المتقدمة' },
-            { label: 'اسم البنك', value: 'البنك الأهلي المصري' },
-            { label: 'آخر 4 أرقام', value: '•••• 4521' },
-            { label: 'IBAN', value: 'EG38 0019 0005 0001 2345 6789' },
-            { label: 'العملة الأساسية', value: 'جنيه مصري (EGP)' },
-        ]
-    },
-];
-
-const walletData = {
-    available: '45,230',
-    withdrawable: '38,500',
-    pending: '6,730',
-};
-
-const recentTransactions = [
-    { type: 'إيداع', amount: '+12,500', date: '2024-12-18', status: 'success' },
-    { type: 'سحب', amount: '-5,000', date: '2024-12-15', status: 'success' },
-    { type: 'عمولة', amount: '-450', date: '2024-12-14', status: 'warning' },
-    { type: 'إيداع', amount: '+8,200', date: '2024-12-12', status: 'success' },
-];
+import VisaCard from '../assets/image/card profile.png';
+import WalletIcon from '../assets/icons/Frame-3.svg';
+import SalesIcon from '../assets/icons/Frame-1.svg';
+import RevenueIcon from '../assets/icons/Frame-2.svg';
+import TransactionIcon from '../assets/icons/Frame.svg';
 
 export default function SellerProfile() {
+    // Mock data
+    const walletData = {
+        balance: 156000,
+        totalSales: 156000,
+        transactionCount: 156
+    };
+
+    const transactions = [
+        { id: 'TX-990381', date: '2023-10-24', amount: 24145, status: 'completed' },
+        { id: 'TX-990381', date: '2023-10-24', amount: 24145, status: 'pending' },
+        { id: 'TX-990381', date: '2023-10-24', amount: 24145, status: 'cancelled' }
+    ];
+
+    const personalInfo = {
+        name: 'عبدالله احمد العوضي محمد',
+        email: 'members@example.com',
+        phone: '+966545757',
+        nationalId: '435-10331-90428',
+        registrationDate: '2023-10-24',
+        address: 'جدة، المملكة العربية السعودية'
+    };
+
+    const businessDocs = [
+        {
+            title: 'الضرائب والاستثمار والتأمينات',
+            number: '1301240XXXXXX',
+            expiry: '2023-10-24'
+        },
+        {
+            title: 'الملكيات الفكرية والعلامات',
+            number: 'CR1234567890',
+            expiry: null
+        },
+        {
+            title: 'الملكيات الشخص والتوصيل',
+            number: 'LIC-2023-001',
+            expiry: '2023-10-24'
+        }
+    ];
+
+    const contactInfo = {
+        phones: [
+            { label: 'رقم الجوال', number: '+966545757', verified: true },
+            { label: 'رقم آخر', number: '+966545757', verified: false }
+        ],
+        emails: [
+            { label: 'البريد الإلكتروني', email: 'support@merchant-store.com', verified: true }
+        ],
+        social: [
+            { platform: 'واتساب', handle: 'متاح', active: true },
+            { platform: 'انستغرام', handle: '@merchant', active: false }
+        ]
+    };
+
+    const subscriptionInfo = {
+        plan: 'الباقة الأساسية',
+        status: 'نشط',
+        expiryDate: '2024-10-24',
+        features: ['لوحة تحكم احترافية', 'تقارير مفصلة', 'دعم فني']
+    };
+
+    const getStatusBadge = (status) => {
+        const styles = {
+            completed: { bg: '#d1fae5', color: '#059669', text: 'مكتمل' },
+            pending: { bg: '#fef3c7', color: '#d97706', text: 'قيد الانتظار' },
+            cancelled: { bg: '#fee2e2', color: '#dc2626', text: 'ملغي' }
+        };
+        const style = styles[status];
+        return (
+            <span style={{
+                background: style.bg,
+                color: style.color,
+                padding: '4px 12px',
+                borderRadius: '6px',
+                fontSize: '13px',
+                fontWeight: 600
+            }}>
+                {style.text}
+            </span>
+        );
+    };
+
     return (
-        <div>
+        <div className="page-content">
             {/* Page Header */}
             <div className="page-header">
-                <h2 className="page-title">ملف التاجر الحساس</h2>
-                <p className="page-subtitle">
-                    <AlertTriangle size={16} style={{ color: 'var(--warning)', marginLeft: '8px', display: 'inline' }} />
-                    هذه البيانات سرية ولا تظهر لأحد إلا لك أنت فقط
-                </p>
+                <h1 className="page-title">المحفظة المالية</h1>
             </div>
 
-            {/* Wallet Section */}
-            <div className="card mb-xl">
+            {/* Top Section - Wallet Card & Stats */}
+            <div style={{ display: 'flex', gap: 'var(--spacing-lg)', marginBottom: 'var(--spacing-lg)', alignItems: 'center' }}>
+                {/* Wallet Card - Far Right */}
+                <img
+                    src={VisaCard}
+                    alt="B2-SOUQ Visa Card"
+                    style={{
+                        width: '100%',
+                        maxWidth: '420px',
+                        height: 'auto',
+                        display: 'block',
+                        borderRadius: '16px'
+                    }}
+                />
+
+                {/* Stats Cards - Left Side - 2x2 Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-md)', flex: '1' }}>
+
+                    {/* Card 1: Withdrawable Balance */}
+                    <div style={{
+                        background: 'white',
+                        borderRadius: 'var(--radius-lg)',
+                        padding: 'var(--spacing-lg)',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <img src={WalletIcon} alt="Wallet" style={{ width: '52px', height: '52px' }} />
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>
+                                    الرصيد القابل لي السحب
+                                </div>
+                                <div style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a' }}>
+                                    156,000 <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: 500 }}>جنيه</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Card 2: Pending Profits */}
+                    <div style={{
+                        background: 'white',
+                        borderRadius: 'var(--radius-lg)',
+                        padding: 'var(--spacing-lg)',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <img src={SalesIcon} alt="Sales" style={{ width: '52px', height: '52px' }} />
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>
+                                    الأرباح المعلقة
+                                </div>
+                                <div style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a' }}>
+                                    156,000 <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: 500 }}>جنيه</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Card 3: Total Sales */}
+                    <div style={{
+                        background: 'white',
+                        borderRadius: 'var(--radius-lg)',
+                        padding: 'var(--spacing-lg)',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <img src={RevenueIcon} alt="Revenue" style={{ width: '52px', height: '52px' }} />
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>
+                                    إجمالي المبيعات
+                                </div>
+                                <div style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a' }}>
+                                    156,000 <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: 500 }}>جنيه</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Card 4: Transaction Count */}
+                    <div style={{
+                        background: 'white',
+                        borderRadius: 'var(--radius-lg)',
+                        padding: 'var(--spacing-lg)',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <img src={TransactionIcon} alt="Transactions" style={{ width: '52px', height: '52px' }} />
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>
+                                    عدد المعاملات
+                                </div>
+                                <div style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a' }}>
+                                    156 <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: 500 }}>معاملة</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Transactions Table */}
+            <div className="card" style={{ marginBottom: 'var(--spacing-lg)' }}>
                 <div className="card-header">
-                    <div className="flex items-center gap-md">
-                        <div style={{
-                            width: '48px',
-                            height: '48px',
-                            background: 'var(--accent-gradient)',
-                            borderRadius: 'var(--radius-md)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}>
-                            <Wallet size={24} />
-                        </div>
-                        <div>
-                            <h3 className="card-title">المحفظة</h3>
-                            <p className="card-subtitle">إدارة أرصدتك وطلبات السحب</p>
-                        </div>
-                    </div>
-                    <button className="btn btn-primary">
-                        <Download size={18} />
-                        طلب سحب
-                    </button>
+                    <h3 className="card-title">أحدث المعاملات</h3>
                 </div>
-
-                <div className="grid grid-cols-3 gap-lg mb-lg">
-                    <div style={{
-                        padding: 'var(--spacing-lg)',
-                        background: 'var(--bg-secondary)',
-                        borderRadius: 'var(--radius-md)',
-                        border: '1px solid var(--border-color)'
-                    }}>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '8px' }}>الرصيد المتاح</p>
-                        <p style={{ fontSize: '28px', fontWeight: '700', color: 'var(--text-primary)' }}>
-                            {walletData.available} <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>ج.م</span>
-                        </p>
-                    </div>
-                    <div style={{
-                        padding: 'var(--spacing-lg)',
-                        background: 'var(--success-bg)',
-                        borderRadius: 'var(--radius-md)',
-                        border: '1px solid var(--success)'
-                    }}>
-                        <p style={{ color: 'var(--success)', fontSize: '14px', marginBottom: '8px' }}>قابل للسحب</p>
-                        <p style={{ fontSize: '28px', fontWeight: '700', color: 'var(--success)' }}>
-                            {walletData.withdrawable} <span style={{ fontSize: '14px' }}>ج.م</span>
-                        </p>
-                    </div>
-                    <div style={{
-                        padding: 'var(--spacing-lg)',
-                        background: 'var(--warning-bg)',
-                        borderRadius: 'var(--radius-md)',
-                        border: '1px solid var(--warning)'
-                    }}>
-                        <p style={{ color: 'var(--warning)', fontSize: '14px', marginBottom: '8px' }}>معلق</p>
-                        <p style={{ fontSize: '28px', fontWeight: '700', color: 'var(--warning)' }}>
-                            {walletData.pending} <span style={{ fontSize: '14px' }}>ج.م</span>
-                        </p>
-                    </div>
-                </div>
-
-                <h4 style={{ marginBottom: 'var(--spacing-md)', fontSize: '16px' }}>آخر الحركات</h4>
                 <div className="table-container">
                     <table className="table">
                         <thead>
                             <tr>
-                                <th>النوع</th>
-                                <th>المبلغ</th>
+                                <th>رقم المعاملة</th>
                                 <th>التاريخ</th>
+                                <th>المبلغ</th>
                                 <th>الحالة</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {recentTransactions.map((tx, idx) => (
-                                <tr key={idx}>
-                                    <td>{tx.type}</td>
-                                    <td style={{ color: tx.amount.startsWith('+') ? 'var(--success)' : 'var(--danger)' }}>
-                                        {tx.amount} ج.م
-                                    </td>
+                            {transactions.map((tx, index) => (
+                                <tr key={index}>
+                                    <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{tx.id}</td>
                                     <td>{tx.date}</td>
-                                    <td>
-                                        <span className={`badge badge-${tx.status}`}>
-                                            {tx.status === 'success' ? 'مكتمل' : 'قيد المعالجة'}
-                                        </span>
-                                    </td>
+                                    <td style={{ fontWeight: 600 }}>{tx.amount.toLocaleString()} ريال</td>
+                                    <td>{getStatusBadge(tx.status)}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -192,193 +230,175 @@ export default function SellerProfile() {
                 </div>
             </div>
 
-            {/* Profile Sections */}
-            <div className="grid grid-cols-2">
-                {profileSections.map((section) => (
-                    <div key={section.id} className="card">
-                        <div className="card-header">
-                            <div className="flex items-center gap-md">
-                                <div style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    background: 'rgba(99, 102, 241, 0.15)',
-                                    borderRadius: 'var(--radius-md)',
+            {/* Bottom Grid - 3 Columns */}
+            <div className="grid grid-cols-3" style={{ gap: 'var(--spacing-md)' }}>
+                {/* Personal Information */}
+                <div className="card">
+                    <div className="card-header">
+                        <h3 className="card-title">بطاقة الهوية والتحقق (KYC)</h3>
+                        <button className="header-icon-btn" style={{ width: '32px', height: '32px' }}>
+                            <Edit2 size={16} />
+                        </button>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+                        <div>
+                            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>الاسم الكامل</div>
+                            <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>{personalInfo.name}</div>
+                        </div>
+                        <div>
+                            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>البريد الإلكتروني</div>
+                            <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{personalInfo.email}</div>
+                        </div>
+                        <div>
+                            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>رقم الجوال</div>
+                            <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{personalInfo.phone}</div>
+                        </div>
+                        <div>
+                            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>رقم الهوية الوطنية</div>
+                            <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{personalInfo.nationalId}</div>
+                        </div>
+                        <div>
+                            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>تاريخ التسجيل</div>
+                            <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{personalInfo.registrationDate}</div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Business Information */}
+                <div className="card">
+                    <div className="card-header">
+                        <h3 className="card-title">الأبعاد التجارية والقانونية</h3>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+                        {businessDocs.map((doc, index) => (
+                            <div key={index} style={{
+                                padding: 'var(--spacing-md)',
+                                background: 'var(--bg-input)',
+                                borderRadius: 'var(--radius-md)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between'
+                            }}>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{doc.title}</div>
+                                    <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginTop: '4px' }}>
+                                        {doc.number}
+                                    </div>
+                                    {doc.expiry && (
+                                        <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                                            تنتهي بتاريخ {doc.expiry}
+                                        </div>
+                                    )}
+                                </div>
+                                <Download size={18} style={{ color: 'var(--accent-primary)', cursor: 'pointer' }} />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Contact Information */}
+                <div className="card">
+                    <div className="card-header">
+                        <h3 className="card-title">العناوين والتواصل</h3>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
+                        {/* Phone Numbers */}
+                        <div>
+                            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: 'var(--spacing-sm)' }}>
+                                أرقام التواصل
+                            </div>
+                            {contactInfo.phones.map((phone, index) => (
+                                <div key={index} style={{
                                     display: 'flex',
                                     alignItems: 'center',
-                                    justifyContent: 'center',
-                                    color: 'var(--accent-primary)'
-                                }}>
-                                    <section.icon size={20} />
-                                </div>
-                                <h3 className="card-title">{section.title}</h3>
-                            </div>
-                            <button className="btn btn-secondary btn-sm">
-                                <Edit size={14} />
-                                تعديل
-                            </button>
-                        </div>
-                        <div className="flex flex-col gap-md">
-                            {section.fields.map((field, idx) => (
-                                <div key={idx} className="flex items-center justify-between" style={{
+                                    justifyContent: 'space-between',
                                     padding: 'var(--spacing-sm) 0',
-                                    borderBottom: idx < section.fields.length - 1 ? '1px solid var(--border-color)' : 'none'
+                                    borderBottom: index < contactInfo.phones.length - 1 ? '1px solid var(--border-light)' : 'none'
                                 }}>
-                                    <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{field.label}</span>
-                                    {field.status ? (
-                                        <span className={`badge badge-${field.status}`}>
-                                            <CheckCircle size={12} />
-                                            {field.value}
-                                        </span>
-                                    ) : (
-                                        <span style={{ fontWeight: '500', fontSize: '14px' }}>{field.value}</span>
+                                    <div>
+                                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{phone.label}</div>
+                                        <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{phone.number}</div>
+                                    </div>
+                                    {phone.verified && (
+                                        <CheckCircle size={16} style={{ color: 'var(--success)' }} />
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Email */}
+                        <div>
+                            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: 'var(--spacing-sm)' }}>
+                                البريد الإلكتروني
+                            </div>
+                            {contactInfo.emails.map((email, index) => (
+                                <div key={index} style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    padding: 'var(--spacing-sm) 0'
+                                }}>
+                                    <div>
+                                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{email.label}</div>
+                                        <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{email.email}</div>
+                                    </div>
+                                    {email.verified && (
+                                        <CheckCircle size={16} style={{ color: 'var(--success)' }} />
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Social Media */}
+                        <div>
+                            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: 'var(--spacing-sm)' }}>
+                                وسائل التواصل
+                            </div>
+                            {contactInfo.social.map((social, index) => (
+                                <div key={index} style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    padding: 'var(--spacing-sm) 0',
+                                    borderBottom: index < contactInfo.social.length - 1 ? '1px solid var(--border-light)' : 'none'
+                                }}>
+                                    <div>
+                                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{social.platform}</div>
+                                        <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{social.handle}</div>
+                                    </div>
+                                    {social.active && (
+                                        <span style={{
+                                            background: 'var(--success-bg)',
+                                            color: 'var(--success)',
+                                            padding: '2px 8px',
+                                            borderRadius: '4px',
+                                            fontSize: '11px',
+                                            fontWeight: 600
+                                        }}>نشط</span>
                                     )}
                                 </div>
                             ))}
                         </div>
                     </div>
-                ))}
+                </div>
             </div>
 
-            {/* Additional Sections */}
-            <div className="grid grid-cols-2 mt-lg">
-                {/* Tax Settings */}
-                <div className="card">
-                    <div className="card-header">
-                        <div className="flex items-center gap-md">
-                            <div style={{
-                                width: '40px',
-                                height: '40px',
-                                background: 'var(--warning-bg)',
-                                borderRadius: 'var(--radius-md)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: 'var(--warning)'
-                            }}>
-                                <FileText size={20} />
-                            </div>
-                            <h3 className="card-title">إعدادات الضرائب</h3>
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-md">
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--spacing-sm) 0', borderBottom: '1px solid var(--border-color)' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>الرقم الضريبي</span>
-                            <span style={{ fontWeight: '500', fontSize: '14px' }}>987-654-321</span>
-                        </div>
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--spacing-sm) 0', borderBottom: '1px solid var(--border-color)' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>الدولة الضريبية</span>
-                            <span style={{ fontWeight: '500', fontSize: '14px' }}>مصر</span>
-                        </div>
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--spacing-sm) 0' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>ضريبة القيمة المضافة</span>
-                            <span className="badge badge-success">مُسجل - 14%</span>
-                        </div>
-                    </div>
+            {/* Subscription Section */}
+            <div className="card" style={{ marginTop: 'var(--spacing-lg)' }}>
+                <div className="card-header">
+                    <h3 className="card-title">الترقيات المتاحة</h3>
                 </div>
-
-                {/* Addresses */}
-                <div className="card">
-                    <div className="card-header">
-                        <div className="flex items-center gap-md">
-                            <div style={{
-                                width: '40px',
-                                height: '40px',
-                                background: 'var(--info-bg)',
-                                borderRadius: 'var(--radius-md)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: 'var(--info)'
-                            }}>
-                                <MapPin size={20} />
-                            </div>
-                            <h3 className="card-title">عناوين الاستلام والمرتجعات</h3>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                        <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '4px' }}>الباقة الحالية</div>
+                        <div style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)' }}>{subscriptionInfo.plan}</div>
+                        <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
+                            تنتهي في {subscriptionInfo.expiryDate}
                         </div>
                     </div>
-                    <div className="flex flex-col gap-md">
-                        <div style={{ padding: 'var(--spacing-sm) 0', borderBottom: '1px solid var(--border-color)' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '12px', display: 'block', marginBottom: '4px' }}>عنوان الاستلام الرئيسي</span>
-                            <span style={{ fontWeight: '500', fontSize: '14px' }}>شارع التحرير، الدقي، الجيزة</span>
-                        </div>
-                        <div style={{ padding: 'var(--spacing-sm) 0', borderBottom: '1px solid var(--border-color)' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '12px', display: 'block', marginBottom: '4px' }}>عنوان الإرجاع</span>
-                            <span style={{ fontWeight: '500', fontSize: '14px' }}>المستودع الرئيسي، 6 أكتوبر</span>
-                        </div>
-                        <div style={{ padding: 'var(--spacing-sm) 0' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '12px', display: 'block', marginBottom: '4px' }}>عنوان المستودع</span>
-                            <span style={{ fontWeight: '500', fontSize: '14px' }}>المنطقة الصناعية، 6 أكتوبر</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Security */}
-                <div className="card">
-                    <div className="card-header">
-                        <div className="flex items-center gap-md">
-                            <div style={{
-                                width: '40px',
-                                height: '40px',
-                                background: 'var(--success-bg)',
-                                borderRadius: 'var(--radius-md)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: 'var(--success)'
-                            }}>
-                                <Shield size={20} />
-                            </div>
-                            <h3 className="card-title">سجل الدخول والحماية</h3>
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-md">
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--spacing-sm) 0', borderBottom: '1px solid var(--border-color)' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>آخر تسجيل دخول</span>
-                            <span style={{ fontWeight: '500', fontSize: '14px' }}>اليوم 10:30 ص</span>
-                        </div>
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--spacing-sm) 0', borderBottom: '1px solid var(--border-color)' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>الأجهزة المستخدمة</span>
-                            <span style={{ fontWeight: '500', fontSize: '14px' }}>3 أجهزة</span>
-                        </div>
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--spacing-sm) 0' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>المصادقة الثنائية 2FA</span>
-                            <span className="badge badge-success">مُفعّل</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Risk & Compliance */}
-                <div className="card">
-                    <div className="card-header">
-                        <div className="flex items-center gap-md">
-                            <div style={{
-                                width: '40px',
-                                height: '40px',
-                                background: 'var(--danger-bg)',
-                                borderRadius: 'var(--radius-md)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: 'var(--danger)'
-                            }}>
-                                <AlertTriangle size={20} />
-                            </div>
-                            <h3 className="card-title">مستوى المخاطر والامتثال</h3>
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-md">
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--spacing-sm) 0', borderBottom: '1px solid var(--border-color)' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>درجة المخاطر</span>
-                            <span className="badge badge-success">منخفض (15/100)</span>
-                        </div>
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--spacing-sm) 0', borderBottom: '1px solid var(--border-color)' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>حالات التعليق السابقة</span>
-                            <span style={{ fontWeight: '500', fontSize: '14px' }}>لا يوجد</span>
-                        </div>
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--spacing-sm) 0' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>إنذارات الامتثال</span>
-                            <span style={{ fontWeight: '500', fontSize: '14px' }}>0</span>
-                        </div>
-                    </div>
+                    <button className="btn btn-primary">
+                        ترقية الباقة
+                    </button>
                 </div>
             </div>
         </div>

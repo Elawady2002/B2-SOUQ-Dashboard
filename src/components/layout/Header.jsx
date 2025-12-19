@@ -1,4 +1,5 @@
 import { Menu } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import SearchIcon from '../../assets/icons/material-symbols-light_search.svg';
 import NightIcon from '../../assets/icons/fluent-mdl2_clear-night.svg';
 import LanguageIcon from '../../assets/icons/famicons_language-outline.svg';
@@ -8,6 +9,13 @@ import SettingsIcon from '../../assets/icons/uil_setting.svg';
 import Avatar from '../../assets/image/avater.png';
 
 export default function Header({ onMenuClick }) {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('sellerData');
+        navigate('/login');
+    };
     return (
         <header className="header">
             {/* Right Side - Search + Menu */}
@@ -68,10 +76,6 @@ export default function Header({ onMenuClick }) {
                     <img src={MaximizeIcon} alt="" style={{ width: 20, height: 20 }} />
                 </button>
 
-                {/* Question/Help */}
-                <button className="header-icon-btn" title="المساعدة">
-                    <img src={QuestionIcon} alt="" style={{ width: 20, height: 20 }} />
-                </button>
 
                 {/* Avatar */}
                 <div className="header-profile">
