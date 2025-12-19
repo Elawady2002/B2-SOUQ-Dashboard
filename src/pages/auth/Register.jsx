@@ -671,7 +671,7 @@ export default function Register() {
                         <div style={{
                             position: 'absolute',
                             top: '16px',
-                            left: 'calc(100% / 12)',
+                            right: 'calc(100% / 12)',
                             width: `calc((100% - 100% / 6) * ${(currentStep - 1) / (STEPS.length - 1)})`,
                             height: '2px',
                             background: '#2563eb',
