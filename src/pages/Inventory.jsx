@@ -207,7 +207,7 @@ export default function Inventory() {
                                     </td>
                                     <td style={{ fontFamily: 'monospace', fontSize: '13px', color: '#64748b', fontWeight: 500 }}>{item.sku}</td>
                                     <td style={{ fontSize: '14px', color: '#475569' }}>{item.category}</td>
-                                    <td style={{ fontSize: '14px', fontWeight: 600, color: '#0f172a' }}>{item.price.toLocaleString('ar-EG')} ج.م</td>
+                                    <td style={{ fontSize: '14px', fontWeight: 600, color: '#0f172a' }}>{item.price.toLocaleString('en-US')} ج.م</td>
                                     <td style={{ fontSize: '13px', color: '#64748b' }}>{item.dimensions}</td>
                                     <td>
                                         <span style={{

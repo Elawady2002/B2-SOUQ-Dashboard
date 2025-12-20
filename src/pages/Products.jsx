@@ -255,7 +255,7 @@ export default function Products() {
                                         </td>
                                         <td style={{ fontFamily: 'monospace', fontSize: '13px' }}>{product.sku}</td>
                                         <td>{product.category}</td>
-                                        <td style={{ fontWeight: '600' }}>{product.price.toLocaleString('ar-EG')} ج.م</td>
+                                        <td style={{ fontWeight: '600' }}>{product.price.toLocaleString('en-US')} ج.م</td>
                                         <td>
                                             <span style={{
                                                 color: product.quantity <= 5 ? 'var(--danger)' :

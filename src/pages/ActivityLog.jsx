@@ -87,9 +87,9 @@ const activities = [
 ];
 
 const userTypeConfig = {
-    owner: { label: 'المالك', color: 'primary' },
-    employee: { label: 'موظف', color: 'info' },
-    system: { label: 'النظام', color: 'warning' },
+    owner: { label: 'المالك', color: '#3b82f6', bg: '#eff6ff' },
+    employee: { label: 'موظف', color: '#10b981', bg: '#d1fae5' },
+    system: { label: 'النظام', color: '#f59e0b', bg: '#fef3c7' },
 };
 
 const actionFilters = [
@@ -128,13 +128,11 @@ export default function ActivityLog() {
                             ))}
                         </div>
                     </div>
-                    <div className="flex items-center gap-md">
-                        <div className="flex items-center gap-sm" style={{ color: 'var(--text-muted)' }}>
-                            <Calendar size={16} />
-                            <input type="date" className="form-input" style={{ width: 'auto', padding: '6px 12px' }} />
-                            <span>إلى</span>
-                            <input type="date" className="form-input" style={{ width: 'auto', padding: '6px 12px' }} />
-                        </div>
+                    <div className="flex items-center gap-sm" style={{ color: 'var(--text-muted)', fontSize: 14 }}>
+                        <Calendar size={16} />
+                        <input type="date" className="form-input" style={{ width: 'auto', padding: '6px 12px', fontSize: 13 }} />
+                        <span>إلى</span>
+                        <input type="date" className="form-input" style={{ width: 'auto', padding: '6px 12px', fontSize: 13 }} />
                     </div>
                 </div>
             </div>
@@ -155,22 +153,23 @@ export default function ActivityLog() {
                                 key={activity.id}
                                 style={{
                                     display: 'flex',
-                                    gap: 'var(--spacing-lg)',
+                                    gap: 'var(--spacing-md)',
                                     padding: 'var(--spacing-lg) 0',
                                     borderBottom: idx < activities.length - 1 ? '1px solid var(--border-color)' : 'none'
                                 }}
                             >
-                                {/* Timeline Line */}
+                                {/* Timeline Icon */}
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                     <div style={{
                                         width: '40px',
                                         height: '40px',
-                                        borderRadius: '50%',
+                                        borderRadius: 'var(--radius-md)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        background: activity.userType === 'system' ? 'var(--warning-bg)' : 'rgba(99, 102, 241, 0.15)',
-                                        color: activity.userType === 'system' ? 'var(--warning)' : 'var(--accent-primary)'
+                                        background: userType.bg,
+                                        color: userType.color,
+                                        flexShrink: 0
                                     }}>
                                         {activity.userType === 'system' ? <Bot size={20} /> : <activity.icon size={20} />}
                                     </div>
@@ -186,12 +185,21 @@ export default function ActivityLog() {
 
                                 {/* Content */}
                                 <div style={{ flex: 1 }}>
-                                    <div className="flex items-center gap-md mb-sm">
-                                        <h4 style={{ fontWeight: '600' }}>{activity.action}</h4>
-                                        <span className={`badge badge-${userType.color}`}>{userType.label}</span>
+                                    <div className="flex items-center gap-sm mb-sm">
+                                        <h4 style={{ fontWeight: '600', fontSize: 15 }}>{activity.action}</h4>
+                                        <span style={{
+                                            padding: '2px 8px',
+                                            borderRadius: 'var(--radius-sm)',
+                                            fontSize: 11,
+                                            fontWeight: 600,
+                                            background: userType.bg,
+                                            color: userType.color
+                                        }}>
+                                            {userType.label}
+                                        </span>
                                     </div>
-                                    <p style={{ marginBottom: 'var(--spacing-sm)' }}>
-                                        <span style={{ color: 'var(--accent-primary)', fontWeight: '500' }}>{activity.target}</span>
+                                    <p style={{ marginBottom: 'var(--spacing-sm)', fontSize: 14 }}>
+                                        <span style={{ color: '#3b82f6', fontWeight: '500' }}>{activity.target}</span>
                                     </p>
                                     <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: 'var(--spacing-sm)' }}>
                                         {activity.details}

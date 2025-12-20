@@ -4,20 +4,29 @@ import AuthLayout from './layouts/AuthLayout';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 
+// Protected Route Component
+function ProtectedRoute({ children }) {
+  const isAuthenticated = localStorage.getItem('isAuthenticated');
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+}
+
+// Auth Route Component (redirect to home if already logged in)
+function AuthRoute({ children }) {
+  const isAuthenticated = localStorage.getItem('isAuthenticated');
+  return isAuthenticated ? <Navigate to="/" replace /> : children;
+}
+
 function App() {
   return (
     <Routes>
       {/* Auth Routes */}
       <Route element={<AuthLayout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<AuthRoute><Login /></AuthRoute>} />
+        <Route path="/register" element={<AuthRoute><Register /></AuthRoute>} />
       </Route>
 
-      {/* Default redirect to login */}
-      <Route path="/" element={<Navigate to="/login" replace />} />
-
       {/* Dashboard Routes (Protected) */}
-      <Route path="/*" element={<DashboardLayout />} />
+      <Route path="/*" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>} />
     </Routes>
   );
 }

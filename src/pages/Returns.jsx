@@ -255,8 +255,8 @@ export default function Returns() {
                                         <td style={{ fontFamily: 'monospace', fontSize: '13px', color: '#64748b' }}>{item.sku}</td>
                                         <td style={{ fontSize: '13px', color: '#475569' }}>{item.category}</td>
                                         <td style={{ fontSize: '14px', fontWeight: 600, color: '#1e293b' }}>{item.quantity}</td>
-                                        <td style={{ fontSize: '13px', color: '#475569' }}>{item.unitPrice.toLocaleString('ar-EG')} ج.م</td>
-                                        <td style={{ fontWeight: '700', fontSize: '15px', color: '#ef4444' }}>{item.total.toLocaleString('ar-EG')} ج.م</td>
+                                        <td style={{ fontSize: '13px', color: '#475569' }}>{item.unitPrice.toLocaleString('en-US')} ج.م</td>
+                                        <td style={{ fontWeight: '700', fontSize: '15px', color: '#ef4444' }}>{item.total.toLocaleString('en-US')} ج.م</td>
                                         <td>
                                             <span style={{
                                                 padding: '6px 12px',
@@ -420,7 +420,7 @@ export default function Returns() {
                                         </div>
                                         <div>
                                             <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>السعر</p>
-                                            <p style={{ fontWeight: '600', color: 'var(--danger)' }}>{selectedReturn.total.toLocaleString('ar-EG')} ج.م</p>
+                                            <p style={{ fontWeight: '600', color: 'var(--danger)' }}>{selectedReturn.total.toLocaleString('en-US')} ج.م</p>
                                         </div>
                                     </div>
                                 </div>

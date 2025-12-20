@@ -207,7 +207,7 @@ export default function Campaigns() {
                         <div style={{ flex: 1 }}>
                             <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>إجمالي العائد</div>
                             <div style={{ fontSize: '28px', fontWeight: 700, color: '#8b5cf6', lineHeight: 1 }}>
-                                {totalRevenue.toLocaleString('ar-EG')}
+                                {totalRevenue.toLocaleString('en-US')}
                                 <span style={{ fontSize: '14px', color: '#64748b', marginRight: '4px' }}>ج.م</span>
                             </div>
                         </div>
@@ -234,7 +234,7 @@ export default function Campaigns() {
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                         <div style={{ flex: 1 }}>
                             <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>الزيارات من العروض</div>
-                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#f59e0b', lineHeight: 1 }}>{totalVisits.toLocaleString('ar-EG')}</div>
+                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#f59e0b', lineHeight: 1 }}>{totalVisits.toLocaleString('en-US')}</div>
                         </div>
                         <div style={{
                             width: '44px',
@@ -369,9 +369,9 @@ export default function Campaigns() {
                                     <td style={{ color: '#10b981', fontWeight: '700', fontSize: '14px' }}>{campaign.discount}</td>
                                     <td style={{ fontSize: '13px', color: '#475569' }}>{campaign.products} منتج</td>
                                     <td style={{ fontSize: '14px', fontWeight: 600, color: '#1e293b' }}>{campaign.sales}</td>
-                                    <td style={{ fontSize: '13px', color: '#475569' }}>{campaign.visits.toLocaleString('ar-EG')}</td>
-                                    <td style={{ fontWeight: '700', fontSize: '14px', color: '#8b5cf6' }}>{campaign.revenue.toLocaleString('ar-EG')} ج.م</td>
-                                    <td style={{ fontWeight: '700', fontSize: '14px', color: '#10b981' }}>+{campaign.profit.toLocaleString('ar-EG')} ج.م</td>
+                                    <td style={{ fontSize: '13px', color: '#475569' }}>{campaign.visits.toLocaleString('en-US')}</td>
+                                    <td style={{ fontWeight: '700', fontSize: '14px', color: '#8b5cf6' }}>{campaign.revenue.toLocaleString('en-US')} ج.م</td>
+                                    <td style={{ fontWeight: '700', fontSize: '14px', color: '#10b981' }}>+{campaign.profit.toLocaleString('en-US')} ج.م</td>
                                     <td>
                                         <span style={{
                                             padding: '6px 12px',
@@ -519,7 +519,7 @@ export default function Campaigns() {
                                         </div>
                                         <div>
                                             <p style={{ fontSize: '12px', color: '#64748b' }}>الزيارات</p>
-                                            <p style={{ fontSize: '20px', fontWeight: 700, color: '#f59e0b' }}>{selectedCampaign.visits.toLocaleString('ar-EG')}</p>
+                                            <p style={{ fontSize: '20px', fontWeight: 700, color: '#f59e0b' }}>{selectedCampaign.visits.toLocaleString('en-US')}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -539,7 +539,7 @@ export default function Campaigns() {
                                         </div>
                                         <div>
                                             <p style={{ fontSize: '12px', color: '#64748b' }}>العائد</p>
-                                            <p style={{ fontSize: '20px', fontWeight: 700, color: '#8b5cf6' }}>{selectedCampaign.revenue.toLocaleString('ar-EG')} ج.م</p>
+                                            <p style={{ fontSize: '20px', fontWeight: 700, color: '#8b5cf6' }}>{selectedCampaign.revenue.toLocaleString('en-US')} ج.م</p>
                                         </div>
                                     </div>
                                 </div>
@@ -559,7 +559,7 @@ export default function Campaigns() {
                                         </div>
                                         <div>
                                             <p style={{ fontSize: '12px', color: '#64748b' }}>تأثير على الربح</p>
-                                            <p style={{ fontSize: '20px', fontWeight: 700, color: '#3b82f6' }}>+{selectedCampaign.profit.toLocaleString('ar-EG')} ج.م</p>
+                                            <p style={{ fontSize: '20px', fontWeight: 700, color: '#3b82f6' }}>+{selectedCampaign.profit.toLocaleString('en-US')} ج.م</p>
                                         </div>
                                     </div>
                                 </div>

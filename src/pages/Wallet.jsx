@@ -142,7 +142,7 @@ export default function WalletPage() {
                                             color: tx.type === 'deposit' || tx.type === 'refund' ? 'var(--success)' : 'var(--danger)'
                                         }}>
                                             {tx.type === 'deposit' || tx.type === 'refund' ? '+' : '-'}
-                                            {tx.amount.toLocaleString('ar-EG')} ج.م
+                                            {tx.amount.toLocaleString('en-US')} ج.م
                                         </p>
                                         <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{tx.date}</p>
                                     </div>
@@ -171,7 +171,7 @@ export default function WalletPage() {
                             <tbody>
                                 {withdrawalRequests.map((req) => (
                                     <tr key={req.id}>
-                                        <td style={{ fontWeight: '600' }}>{req.amount.toLocaleString('ar-EG')} ج.م</td>
+                                        <td style={{ fontWeight: '600' }}>{req.amount.toLocaleString('en-US')} ج.م</td>
                                         <td>{req.date}</td>
                                         <td>{req.bank}</td>
                                         <td style={{ fontFamily: 'monospace' }}>{req.account}</td>

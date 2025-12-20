@@ -4,10 +4,9 @@ import {
     ThumbsUp,
     ThumbsDown,
     Reply,
-    Eye,
-    Filter,
     HelpCircle,
-    X
+    X,
+    Send
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -94,7 +93,7 @@ export default function Reviews() {
                 key={i}
                 size={16}
                 fill={i < rating ? '#f59e0b' : 'transparent'}
-                color={i < rating ? '#f59e0b' : '#64748b'}
+                color={i < rating ? '#f59e0b' : '#cbd5e1'}
             />
         ));
     };
@@ -108,9 +107,9 @@ export default function Reviews() {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-4 mb-xl">
+            <div className="grid grid-cols-4 mb-lg" style={{ gap: 'var(--spacing-md)' }}>
                 <div className="stats-card">
-                    <div className="stats-card-icon warning">
+                    <div className="stats-card-icon" style={{ background: '#fef3c7', color: '#f59e0b' }}>
                         <Star size={24} />
                     </div>
                     <div className="stats-card-content">
@@ -119,7 +118,7 @@ export default function Reviews() {
                     </div>
                 </div>
                 <div className="stats-card">
-                    <div className="stats-card-icon success">
+                    <div className="stats-card-icon" style={{ background: '#d1fae5', color: '#10b981' }}>
                         <ThumbsUp size={24} />
                     </div>
                     <div className="stats-card-content">
@@ -128,7 +127,7 @@ export default function Reviews() {
                     </div>
                 </div>
                 <div className="stats-card">
-                    <div className="stats-card-icon danger">
+                    <div className="stats-card-icon" style={{ background: '#fee2e2', color: '#ef4444' }}>
                         <ThumbsDown size={24} />
                     </div>
                     <div className="stats-card-content">
@@ -137,7 +136,7 @@ export default function Reviews() {
                     </div>
                 </div>
                 <div className="stats-card">
-                    <div className="stats-card-icon info">
+                    <div className="stats-card-icon" style={{ background: '#eff6ff', color: '#3b82f6' }}>
                         <HelpCircle size={24} />
                     </div>
                     <div className="stats-card-content">
@@ -149,7 +148,7 @@ export default function Reviews() {
 
             {/* Tabs */}
             <div className="card mb-lg">
-                <div className="flex gap-md">
+                <div className="flex gap-sm">
                     <button
                         className={`chart-filter-btn ${activeTab === 'reviews' ? 'active' : ''}`}
                         onClick={() => setActiveTab('reviews')}
@@ -169,16 +168,16 @@ export default function Reviews() {
 
             {/* Reviews Tab */}
             {activeTab === 'reviews' && (
-                <div className="flex flex-col gap-lg">
+                <div className="flex flex-col gap-md">
                     {reviews.map((review) => (
                         <div key={review.id} className="card">
-                            <div className="flex items-start gap-lg">
+                            <div className="flex items-start gap-md">
                                 <img
                                     src={review.avatar}
                                     alt={review.customer}
                                     style={{
-                                        width: '50px',
-                                        height: '50px',
+                                        width: '48px',
+                                        height: '48px',
                                         borderRadius: 'var(--radius-md)',
                                         objectFit: 'cover',
                                         flexShrink: 0
@@ -187,31 +186,31 @@ export default function Reviews() {
                                 <div style={{ flex: 1 }}>
                                     <div className="flex items-center justify-between mb-sm">
                                         <div>
-                                            <h4 style={{ fontWeight: '600' }}>{review.customer}</h4>
+                                            <h4 style={{ fontWeight: '600', fontSize: 15 }}>{review.customer}</h4>
                                             <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{review.product}</p>
                                         </div>
                                         <div className="flex items-center gap-sm">
                                             <div className="flex">{renderStars(review.rating)}</div>
-                                            <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{review.date}</span>
+                                            <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{review.date}</span>
                                         </div>
                                     </div>
-                                    <p style={{ lineHeight: '1.7', marginBottom: 'var(--spacing-md)' }}>{review.comment}</p>
+                                    <p style={{ lineHeight: '1.7', marginBottom: 'var(--spacing-md)', fontSize: 14 }}>{review.comment}</p>
 
                                     {review.replied && (
                                         <div style={{
                                             padding: 'var(--spacing-md)',
-                                            background: 'var(--bg-secondary)',
+                                            background: '#eff6ff',
                                             borderRadius: 'var(--radius-md)',
-                                            borderRight: '3px solid var(--accent-primary)',
-                                            marginBottom: 'var(--spacing-md)'
+                                            borderRight: '3px solid #3b82f6',
+                                            marginBottom: 'var(--spacing-sm)'
                                         }}>
-                                            <p style={{ fontSize: '12px', color: 'var(--accent-primary)', marginBottom: '4px' }}>ردك:</p>
-                                            <p style={{ fontSize: '14px' }}>{review.reply}</p>
+                                            <p style={{ fontSize: '12px', color: '#3b82f6', marginBottom: '4px', fontWeight: 600 }}>ردك:</p>
+                                            <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{review.reply}</p>
                                         </div>
                                     )}
 
                                     {!review.replied && (
-                                        <button className="action-btn action-btn-edit" onClick={() => setReplyModal(review)}>
+                                        <button className="btn btn-primary btn-sm" onClick={() => setReplyModal(review)}>
                                             <Reply size={14} />
                                             الرد على التقييم
                                         </button>
@@ -225,19 +224,19 @@ export default function Reviews() {
 
             {/* Questions Tab */}
             {activeTab === 'questions' && (
-                <div className="flex flex-col gap-lg">
+                <div className="flex flex-col gap-md">
                     {questions.map((question) => (
                         <div key={question.id} className="card">
-                            <div className="flex items-start gap-lg">
+                            <div className="flex items-start gap-md">
                                 <div style={{
-                                    width: '50px',
-                                    height: '50px',
-                                    background: 'var(--info-bg)',
+                                    width: '48px',
+                                    height: '48px',
+                                    background: '#eff6ff',
                                     borderRadius: 'var(--radius-md)',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    color: 'var(--info)',
+                                    color: '#3b82f6',
                                     flexShrink: 0
                                 }}>
                                     <HelpCircle size={24} />
@@ -245,25 +244,25 @@ export default function Reviews() {
                                 <div style={{ flex: 1 }}>
                                     <div className="flex items-center justify-between mb-sm">
                                         <div>
-                                            <h4 style={{ fontWeight: '600' }}>{question.customer}</h4>
+                                            <h4 style={{ fontWeight: '600', fontSize: 15 }}>{question.customer}</h4>
                                             <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{question.product}</p>
                                         </div>
-                                        <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{question.date}</span>
+                                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{question.date}</span>
                                     </div>
-                                    <p style={{ lineHeight: '1.7', marginBottom: 'var(--spacing-md)', fontWeight: '500' }}>
-                                        ❓ {question.question}
+                                    <p style={{ lineHeight: '1.7', marginBottom: 'var(--spacing-md)', fontWeight: '500', fontSize: 14 }}>
+                                        {question.question}
                                     </p>
 
                                     {question.answered && (
                                         <div style={{
                                             padding: 'var(--spacing-md)',
-                                            background: 'var(--success-bg)',
+                                            background: '#d1fae5',
                                             borderRadius: 'var(--radius-md)',
-                                            borderRight: '3px solid var(--success)',
-                                            marginBottom: 'var(--spacing-md)'
+                                            borderRight: '3px solid #10b981',
+                                            marginBottom: 'var(--spacing-sm)'
                                         }}>
-                                            <p style={{ fontSize: '12px', color: 'var(--success)', marginBottom: '4px' }}>إجابتك:</p>
-                                            <p style={{ fontSize: '14px' }}>{question.answer}</p>
+                                            <p style={{ fontSize: '12px', color: '#10b981', marginBottom: '4px', fontWeight: 600 }}>إجابتك:</p>
+                                            <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{question.answer}</p>
                                         </div>
                                     )}
 
@@ -293,12 +292,12 @@ export default function Reviews() {
                         <div className="modal-body">
                             <div style={{
                                 padding: 'var(--spacing-md)',
-                                background: 'var(--bg-secondary)',
+                                background: 'var(--bg-input)',
                                 borderRadius: 'var(--radius-md)',
                                 marginBottom: 'var(--spacing-lg)'
                             }}>
                                 <div className="flex mb-sm">{renderStars(replyModal.rating)}</div>
-                                <p style={{ fontSize: '14px' }}>"{replyModal.comment}"</p>
+                                <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>"{replyModal.comment}"</p>
                             </div>
                             <div className="form-group">
                                 <label className="form-label">ردك</label>
@@ -307,7 +306,7 @@ export default function Reviews() {
                         </div>
                         <div className="modal-footer">
                             <button className="btn btn-primary">
-                                <Reply size={18} />
+                                <Send size={18} />
                                 إرسال الرد
                             </button>
                             <button className="btn btn-secondary" onClick={() => setReplyModal(null)}>

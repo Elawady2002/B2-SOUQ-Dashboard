@@ -57,9 +57,9 @@ const tips = [
 ];
 
 const typeConfig = {
-    dispute: { label: 'نزاع', color: 'danger', icon: AlertTriangle },
-    support: { label: 'دعم فني', color: 'info', icon: MessageSquare },
-    report: { label: 'بلاغ', color: 'warning', icon: AlertCircle },
+    dispute: { label: 'نزاع', color: '#ef4444', bg: '#fee2e2', icon: AlertTriangle },
+    support: { label: 'دعم فني', color: '#3b82f6', bg: '#eff6ff', icon: MessageSquare },
+    report: { label: 'بلاغ', color: '#f59e0b', bg: '#fef3c7', icon: AlertCircle },
 };
 
 export default function Messages() {
@@ -74,9 +74,9 @@ export default function Messages() {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-4 mb-xl">
+            <div className="grid grid-cols-4 mb-lg" style={{ gap: 'var(--spacing-md)' }}>
                 <div className="stats-card">
-                    <div className="stats-card-icon primary">
+                    <div className="stats-card-icon" style={{ background: '#eff6ff', color: '#3b82f6' }}>
                         <MessageSquare size={24} />
                     </div>
                     <div className="stats-card-content">
@@ -85,7 +85,7 @@ export default function Messages() {
                     </div>
                 </div>
                 <div className="stats-card">
-                    <div className="stats-card-icon danger">
+                    <div className="stats-card-icon" style={{ background: '#fee2e2', color: '#ef4444' }}>
                         <AlertTriangle size={24} />
                     </div>
                     <div className="stats-card-content">
@@ -94,7 +94,7 @@ export default function Messages() {
                     </div>
                 </div>
                 <div className="stats-card">
-                    <div className="stats-card-icon warning">
+                    <div className="stats-card-icon" style={{ background: '#fef3c7', color: '#f59e0b' }}>
                         <AlertCircle size={24} />
                     </div>
                     <div className="stats-card-content">
@@ -103,7 +103,7 @@ export default function Messages() {
                     </div>
                 </div>
                 <div className="stats-card">
-                    <div className="stats-card-icon success">
+                    <div className="stats-card-icon" style={{ background: '#d1fae5', color: '#10b981' }}>
                         <CheckCircle size={24} />
                     </div>
                     <div className="stats-card-content">
@@ -113,7 +113,7 @@ export default function Messages() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-3">
+            <div className="grid grid-cols-3" style={{ gap: 'var(--spacing-md)' }}>
                 {/* Conversations List */}
                 <div className="card" style={{ gridColumn: 'span 2' }}>
                     <div className="card-header">
@@ -123,7 +123,7 @@ export default function Messages() {
                             رسالة جديدة
                         </button>
                     </div>
-                    <div className="flex flex-col gap-md">
+                    <div className="flex flex-col gap-sm">
                         {conversations.map((conv) => {
                             const type = typeConfig[conv.type];
                             return (
@@ -134,40 +134,50 @@ export default function Messages() {
                                         alignItems: 'center',
                                         gap: 'var(--spacing-md)',
                                         padding: 'var(--spacing-md)',
-                                        background: conv.unread > 0 ? 'rgba(99, 102, 241, 0.1)' : 'var(--bg-secondary)',
+                                        background: conv.unread > 0 ? '#eff6ff' : 'var(--bg-input)',
                                         borderRadius: 'var(--radius-md)',
                                         cursor: 'pointer',
-                                        border: conv.unread > 0 ? '1px solid var(--accent-primary)' : '1px solid transparent'
+                                        border: conv.unread > 0 ? '1px solid #3b82f6' : '1px solid transparent'
                                     }}
                                     onClick={() => setSelectedConversation(conv)}
                                 >
                                     <div style={{
-                                        width: '45px',
-                                        height: '45px',
+                                        width: '44px',
+                                        height: '44px',
                                         borderRadius: 'var(--radius-md)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        background: `var(--${type.color}-bg)`,
-                                        color: `var(--${type.color})`
+                                        background: type.bg,
+                                        color: type.color,
+                                        flexShrink: 0
                                     }}>
                                         <type.icon size={22} />
                                     </div>
                                     <div style={{ flex: 1 }}>
-                                        <div className="flex items-center gap-sm">
+                                        <div className="flex items-center gap-sm mb-xs">
                                             <h4 style={{ fontWeight: '600', fontSize: '14px' }}>{conv.subject}</h4>
-                                            <span className={`badge badge-${type.color}`} style={{ fontSize: '10px' }}>{type.label}</span>
+                                            <span style={{
+                                                padding: '2px 8px',
+                                                borderRadius: 'var(--radius-sm)',
+                                                fontSize: 10,
+                                                fontWeight: 600,
+                                                background: type.bg,
+                                                color: type.color
+                                            }}>
+                                                {type.label}
+                                            </span>
                                         </div>
                                         <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{conv.lastMessage}</p>
                                     </div>
                                     <div style={{ textAlign: 'left' }}>
-                                        <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{conv.date}</p>
+                                        <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: 4 }}>{conv.date}</p>
                                         {conv.unread > 0 && (
                                             <span style={{
-                                                background: 'var(--danger)',
+                                                background: '#ef4444',
                                                 color: 'white',
                                                 padding: '2px 8px',
-                                                borderRadius: '10px',
+                                                borderRadius: 'var(--radius-full)',
                                                 fontSize: '11px',
                                                 fontWeight: '600'
                                             }}>
@@ -175,7 +185,16 @@ export default function Messages() {
                                             </span>
                                         )}
                                         {conv.status === 'resolved' && (
-                                            <span className="badge badge-success" style={{ fontSize: '10px' }}>تم الحل</span>
+                                            <span style={{
+                                                padding: '2px 8px',
+                                                borderRadius: 'var(--radius-sm)',
+                                                fontSize: 10,
+                                                fontWeight: 600,
+                                                background: '#d1fae5',
+                                                color: '#10b981'
+                                            }}>
+                                                تم الحل
+                                            </span>
                                         )}
                                     </div>
                                 </div>
@@ -185,22 +204,22 @@ export default function Messages() {
                 </div>
 
                 {/* Notifications & Tips */}
-                <div className="flex flex-col gap-lg">
+                <div className="flex flex-col gap-md">
                     {/* Notifications */}
                     <div className="card">
                         <div className="card-header">
                             <div className="flex items-center gap-sm">
-                                <Bell size={18} style={{ color: 'var(--warning)' }} />
+                                <Bell size={18} style={{ color: '#f59e0b' }} />
                                 <h3 className="card-title">الإشعارات</h3>
                             </div>
                         </div>
-                        <div className="flex flex-col gap-sm">
+                        <div className="flex flex-col gap-xs">
                             {notifications.map((notif) => (
                                 <div key={notif.id} style={{
                                     padding: 'var(--spacing-sm) var(--spacing-md)',
-                                    background: notif.read ? 'transparent' : 'rgba(99, 102, 241, 0.1)',
+                                    background: notif.read ? 'transparent' : '#eff6ff',
                                     borderRadius: 'var(--radius-sm)',
-                                    borderRight: notif.read ? 'none' : '3px solid var(--accent-primary)'
+                                    borderRight: notif.read ? 'none' : '3px solid #3b82f6'
                                 }}>
                                     <p style={{ fontWeight: notif.read ? '400' : '600', fontSize: '13px' }}>{notif.title}</p>
                                     <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{notif.message}</p>
@@ -214,18 +233,18 @@ export default function Messages() {
                     <div className="card">
                         <div className="card-header">
                             <div className="flex items-center gap-sm">
-                                <Lightbulb size={18} style={{ color: 'var(--success)' }} />
+                                <Lightbulb size={18} style={{ color: '#10b981' }} />
                                 <h3 className="card-title">نصائح التحسين</h3>
                             </div>
                         </div>
-                        <div className="flex flex-col gap-md">
+                        <div className="flex flex-col gap-sm">
                             {tips.map((tip) => (
                                 <div key={tip.id} style={{
                                     padding: 'var(--spacing-md)',
-                                    background: 'var(--success-bg)',
+                                    background: '#d1fae5',
                                     borderRadius: 'var(--radius-md)'
                                 }}>
-                                    <p style={{ fontWeight: '600', fontSize: '13px', color: 'var(--success)', marginBottom: '4px' }}>
+                                    <p style={{ fontWeight: '600', fontSize: '13px', color: '#10b981', marginBottom: '4px' }}>
                                         💡 {tip.title}
                                     </p>
                                     <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{tip.description}</p>

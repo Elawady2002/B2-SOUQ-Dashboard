@@ -221,7 +221,7 @@ export default function SellerProfile() {
                                 <tr key={index}>
                                     <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{tx.id}</td>
                                     <td>{tx.date}</td>
-                                    <td style={{ fontWeight: 600 }}>{tx.amount.toLocaleString()} ريال</td>
+                                    <td style={{ fontWeight: 600 }}>{tx.amount.toLocaleString('en-US')} ج.م</td>
                                     <td>{getStatusBadge(tx.status)}</td>
                                 </tr>
                             ))}

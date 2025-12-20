@@ -392,7 +392,7 @@ export default function Orders() {
                                             ))}
                                         </td>
                                         <td style={{ fontWeight: '700', fontSize: '15px', color: '#10b981' }}>
-                                            {order.total.toLocaleString('ar-EG')} ج.م
+                                            {order.total.toLocaleString('en-US')} ج.م
                                         </td>
                                         <td>
                                             <span style={{
@@ -511,7 +511,7 @@ export default function Orders() {
                                                 <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>الكمية: {product.qty}</p>
                                             </div>
                                         </div>
-                                        <p style={{ fontWeight: '600' }}>{product.price.toLocaleString('ar-EG')} ج.م</p>
+                                        <p style={{ fontWeight: '600' }}>{product.price.toLocaleString('en-US')} ج.م</p>
                                     </div>
                                 ))}
                             </div>
@@ -520,7 +520,7 @@ export default function Orders() {
                             <div style={{ padding: 'var(--spacing-lg)', background: 'var(--accent-gradient)', borderRadius: 'var(--radius-md)' }}>
                                 <div className="flex items-center justify-between">
                                     <span>الإجمالي</span>
-                                    <span style={{ fontSize: '24px', fontWeight: '700' }}>{selectedOrder.total.toLocaleString('ar-EG')} ج.م</span>
+                                    <span style={{ fontSize: '24px', fontWeight: '700' }}>{selectedOrder.total.toLocaleString('en-US')} ج.م</span>
                                 </div>
                                 <p style={{ fontSize: '12px', marginTop: '8px', opacity: 0.8 }}>
                                     طريقة الدفع: {selectedOrder.paymentMethod}
