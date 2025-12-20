@@ -1,15 +1,37 @@
 import { useState } from 'react';
 import {
     Download,
-    Edit2, Phone, Mail, MapPin, Calendar,
+    Edit2, Phone, Mail, MapPin, Calendar as CalendarIcon,
     CheckCircle, XCircle, ExternalLink,
-    Instagram, MessageCircle
+    Instagram, MessageCircle,
+    ShoppingBag,
+    Wallet,
+    CreditCard
 } from 'lucide-react';
 import VisaCard from '../assets/image/card profile.png';
 import WalletIcon from '../assets/icons/Frame-3.svg';
 import SalesIcon from '../assets/icons/Frame-1.svg';
 import RevenueIcon from '../assets/icons/Frame-2.svg';
 import TransactionIcon from '../assets/icons/Frame.svg';
+
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    CardDescription
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 
 export default function SellerProfile() {
     // Mock data
@@ -75,332 +97,276 @@ export default function SellerProfile() {
 
     const getStatusBadge = (status) => {
         const styles = {
-            completed: { bg: '#d1fae5', color: '#059669', text: 'مكتمل' },
-            pending: { bg: '#fef3c7', color: '#d97706', text: 'قيد الانتظار' },
-            cancelled: { bg: '#fee2e2', color: '#dc2626', text: 'ملغي' }
+            completed: { class: "bg-emerald-100 text-emerald-700 hover:bg-emerald-200", text: 'مكتمل' },
+            pending: { class: "bg-amber-100 text-amber-700 hover:bg-amber-200", text: 'قيد الانتظار' },
+            cancelled: { class: "bg-rose-100 text-rose-700 hover:bg-rose-200", text: 'ملغي' }
         };
-        const style = styles[status];
+        const style = styles[status] || styles.pending;
         return (
-            <span style={{
-                background: style.bg,
-                color: style.color,
-                padding: '4px 12px',
-                borderRadius: '6px',
-                fontSize: '13px',
-                fontWeight: 600
-            }}>
+            <Badge variant="secondary" className={`${style.class} font-normal`}>
                 {style.text}
-            </span>
+            </Badge>
         );
     };
 
     return (
-        <div className="page-content">
+        <div className="flex flex-col gap-6">
             {/* Page Header */}
-            <div className="page-header">
-                <h1 className="page-title">المحفظة المالية</h1>
+            <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold text-slate-900">المحفظة المالية</h1>
             </div>
 
             {/* Top Section - Wallet Card & Stats */}
-            <div style={{ display: 'flex', gap: 'var(--spacing-lg)', marginBottom: 'var(--spacing-lg)', alignItems: 'center' }}>
+            <div className="grid grid-cols-[380px_1fr] gap-6">
                 {/* Wallet Card - Far Right */}
-                <img
-                    src={VisaCard}
-                    alt="B2-SOUQ Visa Card"
-                    style={{
-                        width: '100%',
-                        maxWidth: '420px',
-                        height: 'auto',
-                        display: 'block',
-                        borderRadius: '16px'
-                    }}
-                />
+                <div className="relative">
+                    <img
+                        src={VisaCard}
+                        alt="B2-SOUQ Visa Card"
+                        className="w-full h-auto rounded-2xl object-cover bg-transparent"
+                    />
+                </div>
 
                 {/* Stats Cards - Left Side - 2x2 Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-md)', flex: '1' }}>
+                <div className="grid grid-cols-2 gap-4">
 
                     {/* Card 1: Withdrawable Balance */}
-                    <div style={{
-                        background: 'white',
-                        borderRadius: 'var(--radius-lg)',
-                        padding: 'var(--spacing-lg)',
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
-                    }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                            <img src={WalletIcon} alt="Wallet" style={{ width: '52px', height: '52px' }} />
-                            <div style={{ flex: 1 }}>
-                                <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>
-                                    الرصيد القابل لي السحب
-                                </div>
-                                <div style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a' }}>
-                                    156,000 <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: 500 }}>جنيه</span>
+                    <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
+                        <CardContent className="p-6 flex items-center gap-4">
+                            <img src={WalletIcon} alt="Wallet" className="w-12 h-12" />
+                            <div className="flex-1">
+                                <p className="text-sm font-medium text-slate-500 mb-1">الرصيد القابل للسحب</p>
+                                <div className="text-2xl font-bold text-slate-900">
+                                    156,000 <span className="text-xs font-medium text-slate-400">جنيه</span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </CardContent>
+                    </Card>
 
                     {/* Card 2: Pending Profits */}
-                    <div style={{
-                        background: 'white',
-                        borderRadius: 'var(--radius-lg)',
-                        padding: 'var(--spacing-lg)',
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
-                    }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                            <img src={SalesIcon} alt="Sales" style={{ width: '52px', height: '52px' }} />
-                            <div style={{ flex: 1 }}>
-                                <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>
-                                    الأرباح المعلقة
-                                </div>
-                                <div style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a' }}>
-                                    156,000 <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: 500 }}>جنيه</span>
+                    <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
+                        <CardContent className="p-6 flex items-center gap-4">
+                            <img src={SalesIcon} alt="Sales" className="w-12 h-12" />
+                            <div className="flex-1">
+                                <p className="text-sm font-medium text-slate-500 mb-1">الأرباح المعلقة</p>
+                                <div className="text-2xl font-bold text-slate-900">
+                                    156,000 <span className="text-xs font-medium text-slate-400">جنيه</span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </CardContent>
+                    </Card>
 
                     {/* Card 3: Total Sales */}
-                    <div style={{
-                        background: 'white',
-                        borderRadius: 'var(--radius-lg)',
-                        padding: 'var(--spacing-lg)',
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
-                    }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                            <img src={RevenueIcon} alt="Revenue" style={{ width: '52px', height: '52px' }} />
-                            <div style={{ flex: 1 }}>
-                                <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>
-                                    إجمالي المبيعات
-                                </div>
-                                <div style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a' }}>
-                                    156,000 <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: 500 }}>جنيه</span>
+                    <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
+                        <CardContent className="p-6 flex items-center gap-4">
+                            <img src={RevenueIcon} alt="Revenue" className="w-12 h-12" />
+                            <div className="flex-1">
+                                <p className="text-sm font-medium text-slate-500 mb-1">إجمالي المبيعات</p>
+                                <div className="text-2xl font-bold text-slate-900">
+                                    156,000 <span className="text-xs font-medium text-slate-400">جنيه</span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </CardContent>
+                    </Card>
 
                     {/* Card 4: Transaction Count */}
-                    <div style={{
-                        background: 'white',
-                        borderRadius: 'var(--radius-lg)',
-                        padding: 'var(--spacing-lg)',
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
-                    }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                            <img src={TransactionIcon} alt="Transactions" style={{ width: '52px', height: '52px' }} />
-                            <div style={{ flex: 1 }}>
-                                <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>
-                                    عدد المعاملات
-                                </div>
-                                <div style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a' }}>
-                                    156 <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: 500 }}>معاملة</span>
+                    <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
+                        <CardContent className="p-6 flex items-center gap-4">
+                            <img src={TransactionIcon} alt="Transactions" className="w-12 h-12" />
+                            <div className="flex-1">
+                                <p className="text-sm font-medium text-slate-500 mb-1">عدد المعاملات</p>
+                                <div className="text-2xl font-bold text-slate-900">
+                                    156 <span className="text-xs font-medium text-slate-400">معاملة</span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
 
             {/* Transactions Table */}
-            <div className="card" style={{ marginBottom: 'var(--spacing-lg)' }}>
-                <div className="card-header">
-                    <h3 className="card-title">أحدث المعاملات</h3>
-                </div>
-                <div className="table-container">
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>رقم المعاملة</th>
-                                <th>التاريخ</th>
-                                <th>المبلغ</th>
-                                <th>الحالة</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+            <Card className="border-slate-100 shadow-sm bg-white">
+                <CardHeader className="pb-4 border-b border-slate-50">
+                    <CardTitle className="text-lg font-bold text-slate-800">أحدث المعاملات</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                    <Table>
+                        <TableHeader className="bg-slate-50/50">
+                            <TableRow className="hover:bg-transparent border-slate-100">
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">رقم المعاملة</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">التاريخ</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المبلغ</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الحالة</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
                             {transactions.map((tx, index) => (
-                                <tr key={index}>
-                                    <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{tx.id}</td>
-                                    <td>{tx.date}</td>
-                                    <td style={{ fontWeight: 600 }}>{tx.amount.toLocaleString('en-US')} ج.م</td>
-                                    <td>{getStatusBadge(tx.status)}</td>
-                                </tr>
+                                <TableRow key={index} className="hover:bg-slate-50">
+                                    <TableCell className="font-mono text-sm font-semibold text-slate-700">{tx.id}</TableCell>
+                                    <TableCell className="text-slate-600">{tx.date}</TableCell>
+                                    <TableCell className="font-bold text-slate-800">{tx.amount.toLocaleString('en-US')} ج.م</TableCell>
+                                    <TableCell>{getStatusBadge(tx.status)}</TableCell>
+                                </TableRow>
                             ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
 
             {/* Bottom Grid - 3 Columns */}
-            <div className="grid grid-cols-3" style={{ gap: 'var(--spacing-md)' }}>
+            <div className="grid grid-cols-3 gap-6">
                 {/* Personal Information */}
-                <div className="card">
-                    <div className="card-header">
-                        <h3 className="card-title">بطاقة الهوية والتحقق (KYC)</h3>
-                        <button className="header-icon-btn" style={{ width: '32px', height: '32px' }}>
+                <Card className="border-slate-100 shadow-sm bg-white h-full">
+                    <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-slate-50">
+                        <CardTitle className="text-lg font-bold text-slate-800">بطاقة الهوية والتحقق (KYC)</CardTitle>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-blue-600">
                             <Edit2 size={16} />
-                        </button>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
-                        <div>
-                            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>الاسم الكامل</div>
-                            <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>{personalInfo.name}</div>
+                        </Button>
+                    </CardHeader>
+                    <CardContent className="p-6 flex flex-col gap-5">
+                        <div className="flex flex-col gap-1">
+                            <span className="text-xs text-slate-400">الاسم الكامل</span>
+                            <span className="text-sm font-semibold text-slate-800">{personalInfo.name}</span>
                         </div>
-                        <div>
-                            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>البريد الإلكتروني</div>
-                            <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{personalInfo.email}</div>
+                        <div className="flex flex-col gap-1">
+                            <span className="text-xs text-slate-400">البريد الإلكتروني</span>
+                            <span className="text-sm font-medium text-slate-800">{personalInfo.email}</span>
                         </div>
-                        <div>
-                            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>رقم الجوال</div>
-                            <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{personalInfo.phone}</div>
+                        <div className="flex flex-col gap-1">
+                            <span className="text-xs text-slate-400">رقم الجوال</span>
+                            <span className="text-sm font-medium text-slate-800 dir-ltr text-right">{personalInfo.phone}</span>
                         </div>
-                        <div>
-                            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>رقم الهوية الوطنية</div>
-                            <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{personalInfo.nationalId}</div>
+                        <div className="flex flex-col gap-1">
+                            <span className="text-xs text-slate-400">رقم الهوية الوطنية</span>
+                            <span className="text-sm font-medium text-slate-800">{personalInfo.nationalId}</span>
                         </div>
-                        <div>
-                            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>تاريخ التسجيل</div>
-                            <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{personalInfo.registrationDate}</div>
+                        <div className="flex flex-col gap-1">
+                            <span className="text-xs text-slate-400">تاريخ التسجيل</span>
+                            <span className="text-sm font-medium text-slate-800">{personalInfo.registrationDate}</span>
                         </div>
-                    </div>
-                </div>
+                    </CardContent>
+                </Card>
 
                 {/* Business Information */}
-                <div className="card">
-                    <div className="card-header">
-                        <h3 className="card-title">الأبعاد التجارية والقانونية</h3>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+                <Card className="border-slate-100 shadow-sm bg-white h-full">
+                    <CardHeader className="pb-4 border-b border-slate-50">
+                        <CardTitle className="text-lg font-bold text-slate-800">الأبعاد التجارية والقانونية</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 flex flex-col gap-4">
                         {businessDocs.map((doc, index) => (
-                            <div key={index} style={{
-                                padding: 'var(--spacing-md)',
-                                background: 'var(--bg-input)',
-                                borderRadius: 'var(--radius-md)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between'
-                            }}>
-                                <div style={{ flex: 1 }}>
-                                    <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{doc.title}</div>
-                                    <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginTop: '4px' }}>
-                                        {doc.number}
-                                    </div>
+                            <div key={index} className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between group hover:border-slate-200 transition-colors">
+                                <div className="flex-1">
+                                    <div className="text-xs text-slate-500 mb-1">{doc.title}</div>
+                                    <div className="text-sm font-semibold text-slate-800 mb-0.5">{doc.number}</div>
                                     {doc.expiry && (
-                                        <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                                        <div className="text-[10px] text-slate-400">
                                             تنتهي بتاريخ {doc.expiry}
                                         </div>
                                     )}
                                 </div>
-                                <Download size={18} style={{ color: 'var(--accent-primary)', cursor: 'pointer' }} />
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-full opacity-70 group-hover:opacity-100 transition-opacity">
+                                    <Download size={16} />
+                                </Button>
                             </div>
                         ))}
-                    </div>
-                </div>
+                    </CardContent>
+                </Card>
 
                 {/* Contact Information */}
-                <div className="card">
-                    <div className="card-header">
-                        <h3 className="card-title">العناوين والتواصل</h3>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
+                <Card className="border-slate-100 shadow-sm bg-white h-full">
+                    <CardHeader className="pb-4 border-b border-slate-50">
+                        <CardTitle className="text-lg font-bold text-slate-800">العناوين والتواصل</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 flex flex-col gap-6">
                         {/* Phone Numbers */}
                         <div>
-                            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: 'var(--spacing-sm)' }}>
+                            <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                                <Phone size={14} className="text-slate-400" />
                                 أرقام التواصل
-                            </div>
-                            {contactInfo.phones.map((phone, index) => (
-                                <div key={index} style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between',
-                                    padding: 'var(--spacing-sm) 0',
-                                    borderBottom: index < contactInfo.phones.length - 1 ? '1px solid var(--border-light)' : 'none'
-                                }}>
-                                    <div>
-                                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{phone.label}</div>
-                                        <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{phone.number}</div>
+                            </h4>
+                            <div className="flex flex-col gap-3">
+                                {contactInfo.phones.map((phone, index) => (
+                                    <div key={index} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
+                                        <div>
+                                            <div className="text-xs text-slate-500">{phone.label}</div>
+                                            <div className="text-sm font-medium text-slate-800 dir-ltr text-right">{phone.number}</div>
+                                        </div>
+                                        {phone.verified && (
+                                            <CheckCircle size={16} className="text-emerald-500" />
+                                        )}
                                     </div>
-                                    {phone.verified && (
-                                        <CheckCircle size={16} style={{ color: 'var(--success)' }} />
-                                    )}
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
+
+                        <Separator className="bg-slate-100" />
 
                         {/* Email */}
                         <div>
-                            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: 'var(--spacing-sm)' }}>
+                            <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                                <Mail size={14} className="text-slate-400" />
                                 البريد الإلكتروني
-                            </div>
+                            </h4>
                             {contactInfo.emails.map((email, index) => (
-                                <div key={index} style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between',
-                                    padding: 'var(--spacing-sm) 0'
-                                }}>
+                                <div key={index} className="flex items-center justify-between py-2">
                                     <div>
-                                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{email.label}</div>
-                                        <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{email.email}</div>
+                                        <div className="text-xs text-slate-500">{email.label}</div>
+                                        <div className="text-sm font-medium text-slate-800">{email.email}</div>
                                     </div>
                                     {email.verified && (
-                                        <CheckCircle size={16} style={{ color: 'var(--success)' }} />
+                                        <CheckCircle size={16} className="text-emerald-500" />
                                     )}
                                 </div>
                             ))}
                         </div>
+
+                        <Separator className="bg-slate-100" />
 
                         {/* Social Media */}
                         <div>
-                            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: 'var(--spacing-sm)' }}>
+                            <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                                <MessageCircle size={14} className="text-slate-400" />
                                 وسائل التواصل
-                            </div>
+                            </h4>
                             {contactInfo.social.map((social, index) => (
-                                <div key={index} style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between',
-                                    padding: 'var(--spacing-sm) 0',
-                                    borderBottom: index < contactInfo.social.length - 1 ? '1px solid var(--border-light)' : 'none'
-                                }}>
+                                <div key={index} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
                                     <div>
-                                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{social.platform}</div>
-                                        <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{social.handle}</div>
+                                        <div className="text-xs text-slate-500">{social.platform}</div>
+                                        <div className="text-sm font-medium text-slate-800">{social.handle}</div>
                                     </div>
                                     {social.active && (
-                                        <span style={{
-                                            background: 'var(--success-bg)',
-                                            color: 'var(--success)',
-                                            padding: '2px 8px',
-                                            borderRadius: '4px',
-                                            fontSize: '11px',
-                                            fontWeight: 600
-                                        }}>نشط</span>
+                                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-600 hover:bg-emerald-100 font-normal text-[10px]">
+                                            نشط
+                                        </Badge>
                                     )}
                                 </div>
                             ))}
                         </div>
-                    </div>
-                </div>
+                    </CardContent>
+                </Card>
             </div>
 
             {/* Subscription Section */}
-            <div className="card" style={{ marginTop: 'var(--spacing-lg)' }}>
-                <div className="card-header">
-                    <h3 className="card-title">الترقيات المتاحة</h3>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div>
-                        <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '4px' }}>الباقة الحالية</div>
-                        <div style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)' }}>{subscriptionInfo.plan}</div>
-                        <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
-                            تنتهي في {subscriptionInfo.expiryDate}
+            <Card className="border-slate-100 shadow-sm bg-white">
+                <CardHeader className="pb-2 border-b border-slate-50">
+                    <CardTitle className="text-lg font-bold text-slate-800">الترقيات المتاحة</CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <div className="text-sm text-slate-500 mb-1">الباقة الحالية</div>
+                            <div className="text-xl font-bold text-slate-900">{subscriptionInfo.plan}</div>
+                            <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
+                                <CalendarIcon size={12} />
+                                تنتهي في {subscriptionInfo.expiryDate}
+                            </div>
                         </div>
+                        <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-100">
+                            ترقية الباقة
+                        </Button>
                     </div>
-                    <button className="btn btn-primary">
-                        ترقية الباقة
-                    </button>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
         </div>
     );
 }

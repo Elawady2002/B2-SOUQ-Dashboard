@@ -26,6 +26,23 @@ import {
 } from 'chart.js';
 import { Bar, Doughnut } from 'react-chartjs-2';
 
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -141,21 +158,21 @@ export default function Reports() {
     };
 
     return (
-        <div>
+        <div className="flex flex-col gap-6">
             {/* Page Header */}
-            <div className="page-header flex items-center justify-between">
+            <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="page-title">التقارير والتحليلات</h2>
-                    <p className="page-subtitle">نظرة شاملة على أداء متجرك</p>
+                    <h2 className="text-2xl font-bold text-slate-900">التقارير والتحليلات</h2>
+                    <p className="text-sm text-slate-500 mt-1">نظرة شاملة على أداء متجرك</p>
                 </div>
-                <button className="btn btn-primary">
+                <Button className="bg-blue-600 hover:bg-blue-700 gap-2">
                     <Download size={18} />
                     تصدير التقرير
-                </button>
+                </Button>
             </div>
 
             {/* Simple Stats Cards with Sparklines */}
-            <div className="grid grid-cols-6 mb-lg" style={{ gap: 'var(--spacing-md)' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
                 {reportCards.map((card, idx) => {
                     const maxVal = Math.max(...card.sparkline);
                     const points = card.sparkline.map((val, i) =>
@@ -164,60 +181,61 @@ export default function Reports() {
                     const areaPoints = `0,50 ${points} 100,50`;
 
                     return (
-                        <div key={idx} className="stats-card">
-                            {/* Row 1: Icon + Label */}
-                            <div className="stats-card-row">
-                                <div className="stats-card-icon" style={{ background: '#eff6ff', color: '#3b82f6' }}>
-                                    <card.icon size={20} strokeWidth={1.5} />
+                        <Card key={idx} className="bg-white border-slate-200 shadow-sm overflow-hidden">
+                            <CardContent className="p-4">
+                                {/* Row 1: Icon + Label */}
+                                <div className="flex items-center justify-between mb-3">
+                                    <div className="text-xs text-slate-500 font-medium">{card.label}</div>
+                                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                                        <card.icon size={16} strokeWidth={1.5} />
+                                    </div>
                                 </div>
-                                <div className="stats-card-label">{card.label}</div>
-                            </div>
 
-                            {/* Row 2: Value + Change */}
-                            <div className="stats-card-row stats-card-main">
-                                <div className="stats-card-value-group">
-                                    <span className="stats-card-value">{card.value}</span>
-                                    {card.unit && <span className="stats-card-unit">{card.unit}</span>}
+                                {/* Row 2: Value + Change */}
+                                <div className="flex items-baseline gap-1 mb-2">
+                                    <span className="text-lg font-bold text-slate-900">{card.value}</span>
+                                    {card.unit && <span className="text-xs text-slate-500">{card.unit}</span>}
                                 </div>
-                                <div className={`stats-card-change ${card.positive ? 'positive' : 'negative'}`}>
-                                    <span>{card.change}</span>
-                                    {card.positive ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
-                                </div>
-                            </div>
 
-                            {/* Row 3: Simple Chart */}
-                            <div className="stats-card-chart">
-                                <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none">
-                                    <defs>
-                                        <linearGradient id={`gradient-${idx}`} x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.2" />
-                                            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.02" />
-                                        </linearGradient>
-                                    </defs>
-                                    <polygon points={areaPoints} fill={`url(#gradient-${idx})`} />
-                                    <polyline
-                                        points={points}
-                                        fill="none"
-                                        stroke="#3b82f6"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                            </div>
-                        </div>
+                                <div className={`flex items-center text-xs font-semibold mb-3 ${card.positive ? 'text-emerald-600' : 'text-red-600'}`}>
+                                    <span dir="ltr">{card.change}</span>
+                                    {card.positive ? <TrendingUp size={14} className="ml-1" /> : <TrendingDown size={14} className="ml-1" />}
+                                </div>
+
+                                {/* Row 3: Simple Chart */}
+                                <div className="h-8 w-full opacity-60">
+                                    <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none">
+                                        <defs>
+                                            <linearGradient id={`gradient-${idx}`} x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.2" />
+                                                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.02" />
+                                            </linearGradient>
+                                        </defs>
+                                        <polygon points={areaPoints} fill={`url(#gradient-${idx})`} />
+                                        <polyline
+                                            points={points}
+                                            fill="none"
+                                            stroke="#3b82f6"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </div>
+                            </CardContent>
+                        </Card>
                     );
                 })}
             </div>
 
             {/* Charts Row */}
-            <div className="grid grid-cols-3 mb-lg" style={{ gap: 'var(--spacing-md)' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Sales by Shipping Type */}
-                <div className="card">
-                    <div className="card-header">
-                        <h3 className="card-title">المبيعات حسب نوع الشحن</h3>
-                    </div>
-                    <div className="chart-container" style={{ height: '280px', padding: 'var(--spacing-md)' }}>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-lg font-bold text-slate-800">المبيعات حسب نوع الشحن</CardTitle>
+                    </CardHeader>
+                    <CardContent className="h-[280px] p-4">
                         <Doughnut
                             data={salesByShippingData}
                             options={{
@@ -230,22 +248,22 @@ export default function Reports() {
                                         labels: {
                                             color: '#64748b',
                                             padding: 15,
-                                            font: { family: 'Cairo', size: 12 }
+                                            font: { family: 'Cairo', size: 11 }
                                         }
                                     }
                                 },
                                 cutout: '65%'
                             }}
                         />
-                    </div>
-                </div>
+                    </CardContent>
+                </Card>
 
                 {/* Monthly Sales & Profits */}
-                <div className="card" style={{ gridColumn: 'span 2' }}>
-                    <div className="card-header">
-                        <h3 className="card-title">المبيعات والأرباح الشهرية</h3>
-                    </div>
-                    <div className="chart-container" style={{ height: '280px', padding: 'var(--spacing-md)' }}>
+                <Card className="bg-white border-slate-200 shadow-sm lg:col-span-2">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-lg font-bold text-slate-800">المبيعات والأرباح الشهرية</CardTitle>
+                    </CardHeader>
+                    <CardContent className="h-[280px] p-4">
                         <Bar
                             data={monthlySalesData}
                             options={{
@@ -255,9 +273,12 @@ export default function Reports() {
                                     legend: {
                                         position: 'top',
                                         rtl: true,
+                                        align: 'end',
                                         labels: {
                                             color: '#64748b',
-                                            font: { family: 'Cairo', size: 12 }
+                                            font: { family: 'Cairo', size: 12 },
+                                            usePointStyle: true,
+                                            boxWidth: 8
                                         }
                                     }
                                 },
@@ -268,152 +289,128 @@ export default function Reports() {
                                     },
                                     y: {
                                         grid: { color: '#f1f5f9' },
-                                        ticks: { color: '#64748b', font: { family: 'Cairo' } }
+                                        ticks: { color: '#64748b', font: { family: 'Cairo' } },
+                                        border: { display: false }
                                     }
                                 }
                             }}
                         />
-                    </div>
-                </div>
+                    </CardContent>
+                </Card>
             </div>
 
             {/* Tables Row */}
-            <div className="grid grid-cols-2 mb-lg" style={{ gap: 'var(--spacing-md)' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Top Cities */}
-                <div className="card">
-                    <div className="card-header">
-                        <div className="flex items-center gap-sm">
-                            <MapPin size={20} style={{ color: '#3b82f6' }} />
-                            <h3 className="card-title">المدن الأكثر طلباً</h3>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardHeader className="pb-4 border-b border-slate-50">
+                        <div className="flex items-center gap-2">
+                            <MapPin size={20} className="text-blue-600" />
+                            <CardTitle className="text-lg font-bold text-slate-800">المدن الأكثر طلباً</CardTitle>
                         </div>
-                    </div>
-                    <div className="table-container">
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>المدينة</th>
-                                    <th>الطلبات</th>
-                                    <th>الإيرادات</th>
-                                    <th>النسبة</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                        <Table>
+                            <TableHeader className="bg-slate-50/50">
+                                <TableRow className="hover:bg-transparent border-slate-100">
+                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المدينة</TableHead>
+                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الطلبات</TableHead>
+                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الإيرادات</TableHead>
+                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">النسبة</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
                                 {topCities.map((city, idx) => (
-                                    <tr key={idx}>
-                                        <td style={{ fontWeight: '600' }}>{city.city}</td>
-                                        <td>{city.orders}</td>
-                                        <td style={{ fontWeight: '600', color: '#3b82f6' }}>{city.revenue}</td>
-                                        <td>
-                                            <div className="flex items-center gap-sm">
-                                                <div style={{
-                                                    flex: 1,
-                                                    maxWidth: '80px',
-                                                    height: '6px',
-                                                    background: '#f1f5f9',
-                                                    borderRadius: 'var(--radius-full)',
-                                                    overflow: 'hidden'
-                                                }}>
-                                                    <div style={{
-                                                        width: `${city.percentage}%`,
-                                                        height: '100%',
-                                                        background: '#3b82f6',
-                                                        borderRadius: 'var(--radius-full)'
-                                                    }}></div>
+                                    <TableRow key={idx} className="hover:bg-slate-50/50">
+                                        <TableCell className="font-semibold text-slate-700 py-3">{city.city}</TableCell>
+                                        <TableCell className="text-slate-600 py-3">{city.orders}</TableCell>
+                                        <TableCell className="font-bold text-blue-600 py-3">{city.revenue}</TableCell>
+                                        <TableCell className="py-3">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden max-w-[80px]">
+                                                    <div className="h-full bg-blue-600 rounded-full" style={{ width: `${city.percentage}%` }}></div>
                                                 </div>
-                                                <span style={{ fontSize: 13, fontWeight: 600, color: '#64748b', minWidth: 35 }}>{city.percentage}%</span>
+                                                <span className="text-xs font-semibold text-slate-500 min-w-[30px]">{city.percentage}%</span>
                                             </div>
-                                        </td>
-                                    </tr>
+                                        </TableCell>
+                                    </TableRow>
                                 ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
 
                 {/* Top Products */}
-                <div className="card">
-                    <div className="card-header">
-                        <div className="flex items-center gap-sm">
-                            <Package size={20} style={{ color: '#3b82f6' }} />
-                            <h3 className="card-title">أفضل المنتجات أداءً</h3>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardHeader className="pb-4 border-b border-slate-50">
+                        <div className="flex items-center gap-2">
+                            <Package size={20} className="text-blue-600" />
+                            <CardTitle className="text-lg font-bold text-slate-800">أفضل المنتجات أداءً</CardTitle>
                         </div>
-                    </div>
-                    <div className="table-container">
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>المنتج</th>
-                                    <th>المبيعات</th>
-                                    <th>الإيرادات</th>
-                                    <th>الأداء</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                        <Table>
+                            <TableHeader className="bg-slate-50/50">
+                                <TableRow className="hover:bg-transparent border-slate-100">
+                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتج</TableHead>
+                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المبيعات</TableHead>
+                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الإيرادات</TableHead>
+                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الأداء</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
                                 {topProducts.map((product, idx) => (
-                                    <tr key={idx}>
-                                        <td style={{ fontWeight: '500', fontSize: '13px' }}>{product.name}</td>
-                                        <td>{product.sales}</td>
-                                        <td style={{ fontWeight: '600', color: '#3b82f6' }}>{product.revenue}</td>
-                                        <td>
-                                            <span className={`badge badge-${product.performance === 'excellent' ? 'success' : product.performance === 'good' ? 'info' : 'secondary'}`}>
+                                    <TableRow key={idx} className="hover:bg-slate-50/50">
+                                        <TableCell className="font-medium text-slate-700 text-sm py-3 max-w-[150px] truncate" title={product.name}>{product.name}</TableCell>
+                                        <TableCell className="text-slate-600 py-3">{product.sales}</TableCell>
+                                        <TableCell className="font-bold text-blue-600 py-3">{product.revenue}</TableCell>
+                                        <TableCell className="py-3">
+                                            <Badge variant="secondary" className={`font-normal ${product.performance === 'excellent' ? 'bg-emerald-50 text-emerald-700' :
+                                                product.performance === 'good' ? 'bg-blue-50 text-blue-700' :
+                                                    'bg-slate-100 text-slate-600'
+                                                }`}>
                                                 {product.performance === 'excellent' ? 'ممتاز' : product.performance === 'good' ? 'جيد' : 'متوسط'}
-                                            </span>
-                                        </td>
-                                    </tr>
+                                            </Badge>
+                                        </TableCell>
+                                    </TableRow>
                                 ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
             </div>
 
             {/* Simple Operational Stats */}
-            <div className="card">
-                <div className="card-header">
-                    <h3 className="card-title">الإحصائيات التشغيلية</h3>
-                </div>
-                <div className="grid grid-cols-4" style={{ gap: 'var(--spacing-md)' }}>
-                    <div style={{
-                        padding: 'var(--spacing-lg)',
-                        background: 'var(--bg-input)',
-                        borderRadius: 'var(--radius-md)'
-                    }}>
-                        <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 8 }}>سرعة التجهيز</p>
-                        <p style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>2.5 ساعة</p>
-                        <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>متوسط وقت التجهيز</p>
+            <Card className="bg-white border-slate-200 shadow-sm">
+                <CardHeader className="pb-4">
+                    <CardTitle className="text-lg font-bold text-slate-800">الإحصائيات التشغيلية</CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
+                        <p className="text-sm font-medium text-slate-500 mb-2">سرعة التجهيز</p>
+                        <p className="text-3xl font-bold text-slate-900 mb-1">2.5 ساعة</p>
+                        <p className="text-xs text-slate-400">متوسط وقت التجهيز</p>
                     </div>
 
-                    <div style={{
-                        padding: 'var(--spacing-lg)',
-                        background: 'var(--bg-input)',
-                        borderRadius: 'var(--radius-md)'
-                    }}>
-                        <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 8 }}>نسبة التسليم الناجح</p>
-                        <p style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>94.5%</p>
-                        <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>من إجمالي الشحنات</p>
+                    <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
+                        <p className="text-sm font-medium text-slate-500 mb-2">نسبة التسليم الناجح</p>
+                        <p className="text-3xl font-bold text-slate-900 mb-1">94.5%</p>
+                        <p className="text-xs text-slate-400">من إجمالي الشحنات</p>
                     </div>
 
-                    <div style={{
-                        padding: 'var(--spacing-lg)',
-                        background: 'var(--bg-input)',
-                        borderRadius: 'var(--radius-md)'
-                    }}>
-                        <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 8 }}>التكلفة التشغيلية</p>
-                        <p style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>18,200 ج.م</p>
-                        <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>هذا الشهر</p>
+                    <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
+                        <p className="text-sm font-medium text-slate-500 mb-2">التكلفة التشغيلية</p>
+                        <p className="text-3xl font-bold text-slate-900 mb-1">18,200 ج.م</p>
+                        <p className="text-xs text-slate-400">هذا الشهر</p>
                     </div>
 
-                    <div style={{
-                        padding: 'var(--spacing-lg)',
-                        background: 'var(--bg-input)',
-                        borderRadius: 'var(--radius-md)'
-                    }}>
-                        <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 8 }}>معدل رضا العملاء</p>
-                        <p style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>4.8/5</p>
-                        <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>من 2,450 تقييم</p>
+                    <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
+                        <p className="text-sm font-medium text-slate-500 mb-2">معدل رضا العملاء</p>
+                        <p className="text-3xl font-bold text-slate-900 mb-1">4.8/5</p>
+                        <p className="text-xs text-slate-400">من 2,450 تقييم</p>
                     </div>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
         </div>
     );
 }

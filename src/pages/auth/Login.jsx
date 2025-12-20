@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import LogoFull from '../../assets/image/logo2.svg';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Field, FieldLabel } from '@/components/ui/field';
+import LogoFull from '../../assets/image/logo3.svg';
 
 const TESTIMONIALS = [
     {
@@ -32,158 +36,91 @@ const TESTIMONIALS = [
 
 export default function Login() {
     const navigate = useNavigate();
-    const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentTestimonial((prev) => (prev + 1) % TESTIMONIALS.length);
-        }, 5000); // Change every 5 seconds
+        }, 5000);
 
         return () => clearInterval(interval);
     }, []);
 
     const handleLogin = (e) => {
         e.preventDefault();
-        // Simple authentication - just set a flag in localStorage
         localStorage.setItem('isAuthenticated', 'true');
         navigate('/');
     };
 
     return (
-        <div style={{
-            minHeight: '100vh',
-            display: 'flex',
-            direction: 'rtl'
-        }}>
+        <div className="min-h-screen flex" dir="rtl">
             {/* Right Side - Blue Panel */}
-            <div style={{
-                flex: '0 0 40%',
-                background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                padding: '60px 50px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden'
-            }}>
+            <div className="flex-[0_0_35%] bg-gradient-to-br from-primary to-primary-700 px-10 py-16 flex flex-col justify-center text-white relative overflow-hidden">
                 {/* Decorative circles */}
-                <div style={{
-                    position: 'absolute',
-                    width: '400px',
-                    height: '400px',
-                    borderRadius: '50%',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    top: '-100px',
-                    right: '-100px'
-                }} />
-                <div style={{
-                    position: 'absolute',
-                    width: '300px',
-                    height: '300px',
-                    borderRadius: '50%',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    bottom: '-80px',
-                    left: '-80px'
-                }} />
+                <div className="absolute w-[400px] h-[400px] rounded-full bg-white/5 -top-24 -right-24" />
+                <div className="absolute w-[300px] h-[300px] rounded-full bg-white/5 -bottom-20 -left-20" />
 
-                <div style={{ position: 'relative', zIndex: 1 }}>
+                <div className="relative z-10">
                     {/* Logo */}
-                    <img src={LogoFull} alt="B2 SOUQ" style={{ height: '50px', marginBottom: '40px', filter: 'brightness(0) invert(1)' }} />
+                    <img
+                        src={LogoFull}
+                        alt="B2 SOUQ"
+                        className="h-12 mb-10"
+                    />
 
                     {/* Title */}
-                    <h1 style={{
-                        fontSize: '42px',
-                        fontWeight: 700,
-                        marginBottom: '20px',
-                        lineHeight: 1.2,
-                        color: '#ffffff'
-                    }}>
+                    <h1 className="text-4xl font-bold mb-5 leading-tight text-white">
                         مرحباً بك في<br />
                         لوحة التحكم
                     </h1>
 
-                    <p style={{
-                        fontSize: '18px',
-                        opacity: 0.95,
-                        lineHeight: 1.6,
-                        marginBottom: '50px',
-                        color: '#f0f9ff'
-                    }}>
+                    {/* Description */}
+                    <p className="text-lg leading-relaxed mb-12 text-white/95">
                         منصة B2-SOUQ للتجارة الإلكترونية.<br />
                         إدارة متجرك بكل سهولة واحترافية.
                     </p>
 
                     {/* Testimonials Carousel */}
-                    <div style={{
-                        background: 'rgba(255, 255, 255, 0.95)',
-                        borderRadius: '16px',
-                        padding: '24px',
-                        border: 'none',
-                        position: 'relative',
-                        minHeight: '180px',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
-                    }}>
-                        {/* Testimonial Content */}
-                        <div style={{
-                            transition: 'opacity 0.5s',
-                            opacity: 1
-                        }}>
-                            <p style={{
-                                fontSize: '15px',
-                                lineHeight: 1.7,
-                                marginBottom: '16px',
-                                color: '#475569',
-                                minHeight: '60px'
-                            }}>
+                    <Card className="bg-white/95 rounded-xl p-6 border-none min-h-[180px] shadow-lg">
+                        <div className="transition-opacity duration-500">
+                            <p className="text-base leading-relaxed mb-4 text-slate-600 min-h-[60px]">
                                 "{TESTIMONIALS[currentTestimonial].text}"
                             </p>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+
+                            <div className="flex items-center gap-3">
                                 <img
                                     src={TESTIMONIALS[currentTestimonial].avatar}
                                     alt={TESTIMONIALS[currentTestimonial].author}
-                                    style={{
-                                        width: '40px',
-                                        height: '40px',
-                                        borderRadius: '50%',
-                                        objectFit: 'cover'
-                                    }}
+                                    className="w-10 h-10 rounded-full object-cover"
                                 />
                                 <div>
-                                    <div style={{ fontWeight: 600, fontSize: '14px', color: '#1e293b' }}>{TESTIMONIALS[currentTestimonial].author}</div>
-                                    <div style={{ fontSize: '13px', color: '#64748b' }}>{TESTIMONIALS[currentTestimonial].role}</div>
+                                    <div className="font-semibold text-sm text-slate-700">
+                                        {TESTIMONIALS[currentTestimonial].author}
+                                    </div>
+                                    <div className="text-xs text-slate-500">
+                                        {TESTIMONIALS[currentTestimonial].role}
+                                    </div>
                                 </div>
                             </div>
-                            <div style={{ marginTop: '12px', display: 'flex', gap: '4px' }}>
+
+                            <div className="mt-3 flex gap-1">
                                 {[1, 2, 3, 4, 5].map(i => (
-                                    <span key={i} style={{ color: '#fbbf24', fontSize: '16px' }}>★</span>
+                                    <span key={i} className="text-amber-400 text-base">★</span>
                                 ))}
                             </div>
                         </div>
-                    </div>
+                    </Card>
 
-                    {/* Progress Indicators - Outside Card */}
-                    <div style={{
-                        display: 'flex',
-                        gap: '8px',
-                        marginTop: '20px',
-                        justifyContent: 'center'
-                    }}>
+                    {/* Progress Indicators */}
+                    <div className="flex gap-2 mt-5 justify-center">
                         {TESTIMONIALS.map((_, index) => (
                             <div
                                 key={index}
-                                style={{
-                                    height: '4px',
-                                    flex: 1,
-                                    maxWidth: '60px',
-                                    background: currentTestimonial === index ? 'white' : 'rgba(255, 255, 255, 0.3)',
-                                    borderRadius: '2px',
-                                    transition: 'all 0.3s',
-                                    cursor: 'pointer'
-                                }}
+                                className={`h-1 flex-1 max-w-[60px] rounded-sm transition-all duration-300 cursor-pointer ${currentTestimonial === index ? 'bg-white' : 'bg-white/30'
+                                    }`}
                                 onClick={() => setCurrentTestimonial(index)}
                             />
                         ))}
@@ -192,157 +129,78 @@ export default function Login() {
             </div>
 
             {/* Left Side - Login Form */}
-            <div style={{
-                flex: 1,
-                background: '#f8fafc',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '40px'
-            }}>
-                <div style={{
-                    width: '100%',
-                    maxWidth: '480px'
-                }}>
-                    {/* Form Card */}
-                    <div style={{
-                        background: 'white',
-                        borderRadius: '12px',
-                        padding: '32px',
-                        border: '1px solid #e2e8f0',
-                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)',
-                        marginBottom: '24px'
-                    }}>
-                        <form onSubmit={handleLogin}>
-                            <div style={{ marginBottom: '16px' }}>
-                                <label className="form-label">البريد الإلكتروني *</label>
-                                <div style={{ position: 'relative' }}>
-                                    <Mail size={18} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                                    <input
+            <div className="flex-1 bg-slate-50 flex items-center justify-center p-10">
+                <div className="w-full max-w-[480px]">
+                    <Card className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                        <form onSubmit={handleLogin} className="space-y-6">
+                            {/* Email Field */}
+                            <Field>
+                                <FieldLabel htmlFor="email">البريد الإلكتروني</FieldLabel>
+                                <div className="relative">
+                                    <Mail className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                    <Input
+                                        id="email"
                                         type="email"
-                                        className="form-input"
-                                        style={{ paddingRight: '40px' }}
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="example@email.com"
+                                        className="pr-10 h-12"
                                         required
                                     />
                                 </div>
-                            </div>
+                            </Field>
 
-                            <div style={{ marginBottom: '16px' }}>
-                                <label className="form-label">كلمة المرور *</label>
-                                <div style={{ position: 'relative' }}>
-                                    <Lock size={18} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                                    <input
+                            {/* Password Field */}
+                            <Field>
+                                <FieldLabel htmlFor="password">كلمة المرور</FieldLabel>
+                                <div className="relative">
+                                    <Lock className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                    <Input
+                                        id="password"
                                         type={showPassword ? 'text' : 'password'}
-                                        className="form-input"
-                                        style={{ paddingRight: '40px', paddingLeft: '40px' }}
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         placeholder="••••••••"
+                                        className="pr-10 pl-10 h-12"
                                         required
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        style={{
-                                            position: 'absolute',
-                                            left: '12px',
-                                            top: '50%',
-                                            transform: 'translateY(-50%)',
-                                            background: 'none',
-                                            border: 'none',
-                                            cursor: 'pointer',
-                                            color: '#94a3b8',
-                                            padding: 0
-                                        }}
+                                        className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none"
+                                        tabIndex={-1}
                                     >
                                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                     </button>
                                 </div>
-                            </div>
+                            </Field>
 
-                            <button
+                            {/* Submit Button */}
+                            <Button
                                 type="submit"
-                                style={{
-                                    width: '100%',
-                                    padding: '16px',
-                                    background: '#2563eb',
-                                    color: '#fff',
-                                    border: 'none',
-                                    borderRadius: '10px',
-                                    fontSize: '16px',
-                                    fontWeight: 600,
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s',
-                                    marginBottom: '24px'
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.target.style.background = '#1d4ed8';
-                                    e.target.style.transform = 'translateY(-2px)';
-                                    e.target.style.boxShadow = '0 8px 16px rgba(37, 99, 235, 0.3)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.target.style.background = '#2563eb';
-                                    e.target.style.transform = 'translateY(0)';
-                                    e.target.style.boxShadow = 'none';
-                                }}
+                                size="lg"
+                                className="w-full"
                             >
                                 تسجيل الدخول
-                            </button>
-                        </form>
+                            </Button>
 
-                        {/* Back to Register */}
-                        <div style={{ textAlign: 'center', marginTop: '24px' }}>
-                            <p style={{ fontSize: '14px', color: '#64748b' }}>
-                                ليس لديك حساب؟{' '}
-                                <button
-                                    onClick={() => navigate('/register')}
-                                    style={{
-                                        background: 'none',
-                                        border: 'none',
-                                        color: '#2563eb',
-                                        fontSize: '14px',
-                                        fontWeight: 600,
-                                        cursor: 'pointer'
-                                    }}
-                                    onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
-                                    onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
-                                >
-                                    إنشاء حساب جديد
-                                </button>
-                            </p>
-                        </div>
-                    </div>
+                            {/* Register Link */}
+                            <div className="text-center pt-4">
+                                <p className="text-sm text-slate-600">
+                                    ليس لديك حساب؟{' '}
+                                    <button
+                                        type="button"
+                                        onClick={() => navigate('/register')}
+                                        className="text-primary font-semibold hover:underline transition-all"
+                                    >
+                                        إنشاء حساب جديد
+                                    </button>
+                                </p>
+                            </div>
+                        </form>
+                    </Card>
                 </div>
             </div>
-
-            <style>{`
-            .form-label {
-                display: block;
-                margin-bottom: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                color: #475569;
-            }
-            
-            .form-input {
-                width: 100%;
-                padding: 12px 14px;
-                border: 1px solid #e2e8f0;
-                border-radius: 8px;
-                fontSize: 14px;
-                outline: none;
-                transition: all 0.2s;
-                background: #fff;
-            }
-            
-            .form-input:focus {
-                border-color: #2563eb;
-                box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-            }
-        `}</style>
         </div>
     );
 }

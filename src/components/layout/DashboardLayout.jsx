@@ -19,6 +19,7 @@ import Wallet from '../../pages/Wallet';
 import Reviews from '../../pages/Reviews';
 import Messages from '../../pages/Messages';
 import ActivityLog from '../../pages/ActivityLog';
+import ComponentsDemo from '../../pages/ComponentsDemo';
 
 const pageTitles = {
     '/': 'الصفحة الرئيسية',
@@ -36,6 +37,7 @@ const pageTitles = {
     '/reviews': 'التقييمات والأسئلة',
     '/messages': 'الرسائل والدعم',
     '/activity-log': 'سجل النشاط',
+    '/components-demo': 'عرض المكونات',
 };
 
 export default function DashboardLayout() {
@@ -87,6 +89,7 @@ export default function DashboardLayout() {
                         <Route path="/reviews" element={<Reviews />} />
                         <Route path="/messages" element={<Messages />} />
                         <Route path="/activity-log" element={<ActivityLog />} />
+                        <Route path="/components-demo" element={<ComponentsDemo />} />
                     </Routes>
                 </div>
             </main>

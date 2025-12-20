@@ -3,9 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import {
     Mail, Lock, Phone, User, Building, FileText,
     CreditCard, CheckCircle, ArrowRight, ArrowLeft,
-    Upload
+    Upload, Eye, EyeOff, CalendarIcon
 } from 'lucide-react';
-import LogoFull from '../../assets/image/logo2.svg';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Field, FieldLabel } from '@/components/ui/field';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format } from 'date-fns';
+import { ar } from 'date-fns/locale';
+import LogoFull from '../../assets/image/logo3.svg';
 
 const TESTIMONIALS = [
     {
@@ -46,6 +56,9 @@ const STEPS = [
 export default function Register() {
     const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(1);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [phoneCountryCode, setPhoneCountryCode] = useState('+962');
     const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
     useEffect(() => {
@@ -54,6 +67,7 @@ export default function Register() {
         }, 5000);
         return () => clearInterval(interval);
     }, []);
+
     const [formData, setFormData] = useState({
         // Step 1
         email: '',
@@ -98,7 +112,6 @@ export default function Register() {
     };
 
     const handleSubmit = () => {
-        // Save to localStorage and redirect
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('sellerData', JSON.stringify(formData));
         navigate('/');
@@ -108,231 +121,322 @@ export default function Register() {
         switch (currentStep) {
             case 1:
                 return (
-                    <div>
-                        <div style={{ marginBottom: '16px' }}>
-                            <label className="form-label">البريد الإلكتروني *</label>
-                            <div style={{ position: 'relative' }}>
-                                <Mail size={18} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                                <input
+                    <div className="space-y-6">
+                        {/* Email */}
+                        <Field>
+                            <FieldLabel htmlFor="email">البريد الإلكتروني</FieldLabel>
+                            <div className="relative">
+                                <Mail className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                <Input
+                                    id="email"
                                     type="email"
-                                    className="form-input"
-                                    style={{ paddingRight: '40px' }}
                                     value={formData.email}
                                     onChange={(e) => updateFormData('email', e.target.value)}
                                     placeholder="example@email.com"
+                                    className="pr-10 h-12"
                                     required
                                 />
                             </div>
-                        </div>
-                        <div style={{ marginBottom: '16px' }}>
-                            <label className="form-label">رقم الهاتف *</label>
-                            <div style={{ position: 'relative' }}>
-                                <Phone size={18} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                                <input
-                                    type="tel"
-                                    className="form-input"
-                                    style={{ paddingRight: '40px' }}
-                                    value={formData.phone}
-                                    onChange={(e) => updateFormData('phone', e.target.value)}
-                                    placeholder="+962 79 123 4567"
+                        </Field>
+
+                        {/* Phone */}
+                        <Field>
+                            <FieldLabel htmlFor="phone">رقم الهاتف</FieldLabel>
+                            <div className="flex gap-2">
+                                <Select value={phoneCountryCode} onValueChange={setPhoneCountryCode}>
+                                    <SelectTrigger className="h-12 w-[100px] font-medium">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent className="font-medium">
+                                        <SelectItem value="+962"><span className="flex items-center gap-2"><span className="text-lg">🇯🇴</span> +962</span></SelectItem>
+                                        <SelectItem value="+966"><span className="flex items-center gap-2"><span className="text-lg">🇸🇦</span> +966</span></SelectItem>
+                                        <SelectItem value="+971"><span className="flex items-center gap-2"><span className="text-lg">🇦🇪</span> +971</span></SelectItem>
+                                        <SelectItem value="+20"><span className="flex items-center gap-2"><span className="text-lg">🇪🇬</span> +20</span></SelectItem>
+                                        <SelectItem value="+965"><span className="flex items-center gap-2"><span className="text-lg">🇰🇼</span> +965</span></SelectItem>
+                                        <SelectItem value="+968"><span className="flex items-center gap-2"><span className="text-lg">🇴🇲</span> +968</span></SelectItem>
+                                        <SelectItem value="+974"><span className="flex items-center gap-2"><span className="text-lg">🇶🇦</span> +974</span></SelectItem>
+                                        <SelectItem value="+973"><span className="flex items-center gap-2"><span className="text-lg">🇧🇭</span> +973</span></SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <div className="relative flex-1">
+                                    <Phone className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                    <Input
+                                        id="phone"
+                                        type="tel"
+                                        value={formData.phone}
+                                        onChange={(e) => updateFormData('phone', e.target.value)}
+                                        placeholder="79 123 4567"
+                                        className="pr-12 h-12 font-medium text-right"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        </Field>
+
+                        {/* Password */}
+                        <Field>
+                            <FieldLabel htmlFor="password">كلمة المرور</FieldLabel>
+                            <div className="relative">
+                                <Lock className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                <Input
+                                    id="password"
+                                    type={showPassword ? 'text' : 'password'}
+                                    value={formData.password}
+                                    onChange={(e) => updateFormData('password', e.target.value)}
+                                    placeholder="••••••••"
+                                    className="pr-10 pl-10 h-12"
                                     required
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none"
+                                    tabIndex={-1}
+                                >
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
                             </div>
-                        </div>
-                        <div style={{ marginBottom: '16px' }}>
-                            <label className="form-label">كلمة المرور *</label>
-                            <input
-                                type="password"
-                                className="form-input"
-                                value={formData.password}
-                                onChange={(e) => updateFormData('password', e.target.value)}
-                                placeholder="••••••••"
-                                required
-                            />
-                        </div>
-                        <div style={{ marginBottom: '16px' }}>
-                            <label className="form-label">تأكيد كلمة المرور *</label>
-                            <input
-                                type="password"
-                                className="form-input"
-                                value={formData.confirmPassword}
-                                onChange={(e) => updateFormData('confirmPassword', e.target.value)}
-                                placeholder="••••••••"
-                                required
-                            />
-                        </div>
-                        <div className="grid grid-cols-2" style={{ gap: '16px' }}>
-                            <div>
-                                <label className="form-label">اللغة</label>
-                                <select className="form-select" value={formData.language} onChange={(e) => updateFormData('language', e.target.value)}>
-                                    <option value="ar">العربية</option>
-                                    <option value="en">English</option>
-                                </select>
+                        </Field>
+
+                        {/* Confirm Password */}
+                        <Field>
+                            <FieldLabel htmlFor="confirmPassword">تأكيد كلمة المرور</FieldLabel>
+                            <div className="relative">
+                                <Lock className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                <Input
+                                    id="confirmPassword"
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    value={formData.confirmPassword}
+                                    onChange={(e) => updateFormData('confirmPassword', e.target.value)}
+                                    placeholder="••••••••"
+                                    className="pr-10 pl-10 h-12"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none"
+                                    tabIndex={-1}
+                                >
+                                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
                             </div>
-                            <div>
-                                <label className="form-label">الدولة</label>
-                                <select className="form-select" value={formData.country} onChange={(e) => updateFormData('country', e.target.value)}>
-                                    <option value="JO">الأردن</option>
-                                    <option value="SA">السعودية</option>
-                                    <option value="AE">الإمارات</option>
-                                </select>
-                            </div>
+                        </Field>
+
+                        {/* Language & Country */}
+                        <div className="grid grid-cols-2 gap-4">
+                            <Field>
+                                <FieldLabel htmlFor="language">اللغة</FieldLabel>
+                                <Select value={formData.language} onValueChange={(value) => updateFormData('language', value)}>
+                                    <SelectTrigger id="language" className="h-12">
+                                        <SelectValue placeholder="اختر اللغة" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="ar">العربية</SelectItem>
+                                        <SelectItem value="en">English</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </Field>
+                            <Field>
+                                <FieldLabel htmlFor="country">الدولة</FieldLabel>
+                                <Select value={formData.country} onValueChange={(value) => updateFormData('country', value)}>
+                                    <SelectTrigger id="country" className="h-12">
+                                        <SelectValue placeholder="اختر الدولة" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="JO">الأردن</SelectItem>
+                                        <SelectItem value="SA">السعودية</SelectItem>
+                                        <SelectItem value="AE">الإمارات</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </Field>
                         </div>
                     </div>
                 );
 
             case 2:
                 return (
-                    <div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                            <div
-                                onClick={() => updateFormData('sellerType', 'individual')}
-                                style={{
-                                    padding: '24px',
-                                    border: `2px solid ${formData.sellerType === 'individual' ? '#2563eb' : '#e2e8f0'}`,
-                                    borderRadius: '12px',
-                                    cursor: 'pointer',
-                                    textAlign: 'center',
-                                    background: formData.sellerType === 'individual' ? '#eff6ff' : '#fff',
-                                    transition: 'all 0.2s'
-                                }}
-                            >
-                                <User size={40} style={{ margin: '0 auto 12px', color: formData.sellerType === 'individual' ? '#2563eb' : '#64748b' }} />
-                                <h4 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>تاجر فردي</h4>
-                                <p style={{ fontSize: '13px', color: '#64748b' }}>للأفراد والتجار المستقلين</p>
-                            </div>
-                            <div
-                                onClick={() => updateFormData('sellerType', 'company')}
-                                style={{
-                                    padding: '24px',
-                                    border: `2px solid ${formData.sellerType === 'company' ? '#2563eb' : '#e2e8f0'}`,
-                                    borderRadius: '12px',
-                                    cursor: 'pointer',
-                                    textAlign: 'center',
-                                    background: formData.sellerType === 'company' ? '#eff6ff' : '#fff',
-                                    transition: 'all 0.2s'
-                                }}
-                            >
-                                <Building size={40} style={{ margin: '0 auto 12px', color: formData.sellerType === 'company' ? '#2563eb' : '#64748b' }} />
-                                <h4 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>شركة / مؤسسة</h4>
-                                <p style={{ fontSize: '13px', color: '#64748b' }}>للشركات والمؤسسات المسجلة</p>
-                            </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* Individual */}
+                        <div
+                            onClick={() => updateFormData('sellerType', 'individual')}
+                            className={`p-6 rounded-xl cursor-pointer text-center transition-all ${formData.sellerType === 'individual'
+                                ? 'border-2 border-primary bg-primary-50'
+                                : 'border-2 border-slate-200 bg-white hover:border-slate-300'
+                                }`}
+                        >
+                            <User
+                                size={40}
+                                className={`mx-auto mb-3 ${formData.sellerType === 'individual' ? 'text-primary' : 'text-slate-500'
+                                    }`}
+                            />
+                            <h4 className="text-base font-semibold mb-2 text-slate-700">تاجر فردي</h4>
+                            <p className="text-xs text-slate-500">للأفراد والتجار المستقلين</p>
+                        </div>
+
+                        {/* Company */}
+                        <div
+                            onClick={() => updateFormData('sellerType', 'company')}
+                            className={`p-6 rounded-xl cursor-pointer text-center transition-all ${formData.sellerType === 'company'
+                                ? 'border-2 border-primary bg-primary-50'
+                                : 'border-2 border-slate-200 bg-white hover:border-slate-300'
+                                }`}
+                        >
+                            <Building
+                                size={40}
+                                className={`mx-auto mb-3 ${formData.sellerType === 'company' ? 'text-primary' : 'text-slate-500'
+                                    }`}
+                            />
+                            <h4 className="text-base font-semibold mb-2 text-slate-700">شركة / مؤسسة</h4>
+                            <p className="text-xs text-slate-500">للشركات والمؤسسات المسجلة</p>
                         </div>
                     </div>
                 );
 
             case 3:
                 return (
-                    <div>
+                    <div className="space-y-6">
                         {formData.sellerType === 'individual' ? (
                             <>
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label className="form-label">الاسم الكامل *</label>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        value={formData.fullName}
-                                        onChange={(e) => updateFormData('fullName', e.target.value)}
-                                        placeholder="الاسم الكامل"
-                                    />
-                                </div>
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label className="form-label">الرقم القومي / جواز السفر *</label>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        value={formData.nationalId}
-                                        onChange={(e) => updateFormData('nationalId', e.target.value)}
-                                        placeholder="123456789"
-                                    />
-                                </div>
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label className="form-label">تاريخ الميلاد *</label>
-                                    <input
-                                        type="date"
-                                        className="form-input"
-                                        value={formData.birthDate}
-                                        onChange={(e) => updateFormData('birthDate', e.target.value)}
-                                    />
-                                </div>
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label className="form-label">عنوان السكن *</label>
-                                    <textarea
-                                        className="form-input"
-                                        rows="3"
+                                <Field>
+                                    <FieldLabel htmlFor="fullName">الاسم الكامل</FieldLabel>
+                                    <div className="relative">
+                                        <User className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                        <Input
+                                            id="fullName"
+                                            type="text"
+                                            value={formData.fullName}
+                                            onChange={(e) => updateFormData('fullName', e.target.value)}
+                                            placeholder="الاسم الكامل"
+                                            className="pr-10 h-12"
+                                            required
+                                        />
+                                    </div>
+                                </Field>
+                                <Field>
+                                    <FieldLabel htmlFor="nationalId">الرقم القومي / جواز السفر</FieldLabel>
+                                    <div className="relative">
+                                        <FileText className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                        <Input
+                                            id="nationalId"
+                                            type="text"
+                                            value={formData.nationalId}
+                                            onChange={(e) => updateFormData('nationalId', e.target.value)}
+                                            placeholder="123456789"
+                                            className="pr-10 h-12"
+                                            required
+                                        />
+                                    </div>
+                                </Field>
+                                <Field>
+                                    <FieldLabel htmlFor="birthDate">تاريخ الميلاد</FieldLabel>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                className="w-full h-12 justify-between text-right font-normal"
+                                            >
+                                                {formData.birthDate ? (
+                                                    format(new Date(formData.birthDate), 'PPP', { locale: ar })
+                                                ) : (
+                                                    <span className="text-muted-foreground">اختر تاريخ الميلاد</span>
+                                                )}
+                                                <CalendarIcon className="h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar
+                                                mode="single"
+                                                selected={formData.birthDate ? new Date(formData.birthDate) : undefined}
+                                                onSelect={(date) => updateFormData('birthDate', date ? date.toISOString().split('T')[0] : '')}
+                                                initialFocus
+                                                locale={ar}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                </Field>
+                                <Field>
+                                    <FieldLabel htmlFor="address">عنوان السكن</FieldLabel>
+                                    <Textarea
+                                        id="address"
+                                        rows={3}
                                         value={formData.address}
                                         onChange={(e) => updateFormData('address', e.target.value)}
                                         placeholder="العنوان الكامل"
+                                        required
                                     />
-                                </div>
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label className="form-label">إثبات الهوية *</label>
-                                    <div style={{
-                                        border: '2px dashed #e2e8f0',
-                                        borderRadius: '8px',
-                                        padding: '24px',
-                                        textAlign: 'center',
-                                        cursor: 'pointer'
-                                    }}>
-                                        <Upload size={32} style={{ margin: '0 auto 8px', color: '#94a3b8' }} />
-                                        <p style={{ fontSize: '14px', color: '#64748b' }}>اضغط لرفع صورة الهوية</p>
+                                </Field>
+                                <Field>
+                                    <FieldLabel htmlFor="idUpload">إثبات الهوية</FieldLabel>
+                                    <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center cursor-pointer hover:border-slate-300 transition-colors">
+                                        <Upload size={32} className="mx-auto mb-2 text-slate-400" />
+                                        <p className="text-sm text-slate-500">اضغط لرفع صورة الهوية</p>
                                     </div>
-                                </div>
+                                </Field>
                             </>
                         ) : (
                             <>
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label className="form-label">اسم الشركة *</label>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        value={formData.companyName}
-                                        onChange={(e) => updateFormData('companyName', e.target.value)}
-                                        placeholder="اسم الشركة"
-                                    />
-                                </div>
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label className="form-label">الرقم الضريبي / السجل التجاري *</label>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        value={formData.taxNumber}
-                                        onChange={(e) => updateFormData('taxNumber', e.target.value)}
-                                        placeholder="123456789"
-                                    />
-                                </div>
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label className="form-label">نوع الكيان *</label>
-                                    <select className="form-select" value={formData.entityType} onChange={(e) => updateFormData('entityType', e.target.value)}>
-                                        <option value="">اختر نوع الكيان</option>
-                                        <option value="llc">شركة ذات مسؤولية محدودة</option>
-                                        <option value="corporation">شركة مساهمة</option>
-                                        <option value="partnership">شراكة</option>
-                                    </select>
-                                </div>
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label className="form-label">عنوان المقر *</label>
-                                    <textarea
-                                        className="form-input"
-                                        rows="3"
+                                <Field>
+                                    <FieldLabel htmlFor="companyName">اسم الشركة</FieldLabel>
+                                    <div className="relative">
+                                        <Building className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                        <Input
+                                            id="companyName"
+                                            type="text"
+                                            value={formData.companyName}
+                                            onChange={(e) => updateFormData('companyName', e.target.value)}
+                                            placeholder="اسم الشركة"
+                                            className="pr-10 h-12"
+                                            required
+                                        />
+                                    </div>
+                                </Field>
+                                <Field>
+                                    <FieldLabel htmlFor="taxNumber">الرقم الضريبي / السجل التجاري</FieldLabel>
+                                    <div className="relative">
+                                        <FileText className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                        <Input
+                                            id="taxNumber"
+                                            type="text"
+                                            value={formData.taxNumber}
+                                            onChange={(e) => updateFormData('taxNumber', e.target.value)}
+                                            placeholder="123456789"
+                                            className="pr-10 h-12"
+                                            required
+                                        />
+                                    </div>
+                                </Field>
+                                <Field>
+                                    <FieldLabel htmlFor="entityType">نوع الكيان</FieldLabel>
+                                    <Select value={formData.entityType} onValueChange={(value) => updateFormData('entityType', value)}>
+                                        <SelectTrigger id="entityType" className="h-12">
+                                            <SelectValue placeholder="اختر نوع الكيان" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="llc">شركة ذات مسؤولية محدودة</SelectItem>
+                                            <SelectItem value="corporation">شركة مساهمة</SelectItem>
+                                            <SelectItem value="partnership">شراكة</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </Field>
+                                <Field>
+                                    <FieldLabel htmlFor="companyAddress">عنوان المقر</FieldLabel>
+                                    <Textarea
+                                        id="companyAddress"
+                                        rows={3}
                                         value={formData.companyAddress}
                                         onChange={(e) => updateFormData('companyAddress', e.target.value)}
                                         placeholder="العنوان الكامل للمقر"
+                                        required
                                     />
-                                </div>
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label className="form-label">المستندات الرسمية *</label>
-                                    <div style={{
-                                        border: '2px dashed #e2e8f0',
-                                        borderRadius: '8px',
-                                        padding: '24px',
-                                        textAlign: 'center',
-                                        cursor: 'pointer'
-                                    }}>
-                                        <Upload size={32} style={{ margin: '0 auto 8px', color: '#94a3b8' }} />
-                                        <p style={{ fontSize: '14px', color: '#64748b' }}>اضغط لرفع المستندات</p>
+                                </Field>
+                                <Field>
+                                    <FieldLabel htmlFor="docsUpload">المستندات الرسمية</FieldLabel>
+                                    <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center cursor-pointer hover:border-slate-300 transition-colors">
+                                        <Upload size={32} className="mx-auto mb-2 text-slate-400" />
+                                        <p className="text-sm text-slate-500">اضغط لرفع المستندات</p>
                                     </div>
-                                </div>
+                                </Field>
                             </>
                         )}
                     </div>
@@ -340,108 +444,126 @@ export default function Register() {
 
             case 4:
                 return (
-                    <div>
-                        <div style={{ marginBottom: '16px' }}>
-                            <label className="form-label">اسم المتجر *</label>
-                            <input
-                                type="text"
-                                className="form-input"
-                                value={formData.storeName}
-                                onChange={(e) => updateFormData('storeName', e.target.value)}
-                                placeholder="اسم متجرك"
-                            />
-                        </div>
-                        <div style={{ marginBottom: '16px' }}>
-                            <label className="form-label">وصف قصير *</label>
-                            <textarea
-                                className="form-input"
-                                rows="3"
+                    <div className="space-y-6">
+                        <Field>
+                            <FieldLabel htmlFor="storeName">اسم المتجر</FieldLabel>
+                            <div className="relative">
+                                <Building className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                <Input
+                                    id="storeName"
+                                    type="text"
+                                    value={formData.storeName}
+                                    onChange={(e) => updateFormData('storeName', e.target.value)}
+                                    placeholder="اسم متجرك"
+                                    className="pr-10 h-12"
+                                    required
+                                />
+                            </div>
+                        </Field>
+                        <Field>
+                            <FieldLabel htmlFor="storeDescription">وصف قصير</FieldLabel>
+                            <Textarea
+                                id="storeDescription"
+                                rows={3}
                                 value={formData.storeDescription}
                                 onChange={(e) => updateFormData('storeDescription', e.target.value)}
                                 placeholder="وصف مختصر عن متجرك"
+                                required
                             />
-                        </div>
-                        <div style={{ marginBottom: '16px' }}>
-                            <label className="form-label">الفئة الرئيسية *</label>
-                            <select className="form-select" value={formData.category} onChange={(e) => updateFormData('category', e.target.value)}>
-                                <option value="">اختر الفئة</option>
-                                <option value="electronics">إلكترونيات</option>
-                                <option value="fashion">أزياء</option>
-                                <option value="home">منزل ومطبخ</option>
-                                <option value="sports">رياضة</option>
-                            </select>
-                        </div>
-                        <div style={{ marginBottom: '16px' }}>
-                            <label className="form-label">شعار المتجر</label>
-                            <div style={{
-                                border: '2px dashed #e2e8f0',
-                                borderRadius: '8px',
-                                padding: '24px',
-                                textAlign: 'center',
-                                cursor: 'pointer'
-                            }}>
-                                <Upload size={32} style={{ margin: '0 auto 8px', color: '#94a3b8' }} />
-                                <p style={{ fontSize: '14px', color: '#64748b' }}>اضغط لرفع الشعار</p>
+                        </Field>
+                        <Field>
+                            <FieldLabel htmlFor="category">الفئة الرئيسية</FieldLabel>
+                            <Select value={formData.category} onValueChange={(value) => updateFormData('category', value)}>
+                                <SelectTrigger id="category" className="h-12">
+                                    <SelectValue placeholder="اختر الفئة" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="electronics">إلكترونيات</SelectItem>
+                                    <SelectItem value="fashion">أزياء</SelectItem>
+                                    <SelectItem value="home">منزل ومطبخ</SelectItem>
+                                    <SelectItem value="sports">رياضة</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </Field>
+                        <Field>
+                            <FieldLabel htmlFor="logoUpload">شعار المتجر</FieldLabel>
+                            <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center cursor-pointer hover:border-slate-300 transition-colors">
+                                <Upload size={32} className="mx-auto mb-2 text-slate-400" />
+                                <p className="text-sm text-slate-500">اضغط لرفع الشعار</p>
                             </div>
-                        </div>
+                        </Field>
                     </div>
                 );
 
             case 5:
                 return (
-                    <div>
-                        <div style={{ marginBottom: '16px' }}>
-                            <label className="form-label">وسيلة الدفع *</label>
-                            <select className="form-select" value={formData.paymentMethod} onChange={(e) => updateFormData('paymentMethod', e.target.value)}>
-                                <option value="bank">حساب بنكي</option>
-                                <option value="wallet">محفظة رقمية</option>
-                            </select>
-                        </div>
+                    <div className="space-y-6">
+                        <Field>
+                            <FieldLabel htmlFor="paymentMethod">وسيلة الدفع</FieldLabel>
+                            <Select value={formData.paymentMethod} onValueChange={(value) => updateFormData('paymentMethod', value)}>
+                                <SelectTrigger id="paymentMethod" className="h-12">
+                                    <SelectValue placeholder="اختر وسيلة الدفع" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="bank">حساب بنكي</SelectItem>
+                                    <SelectItem value="wallet">محفظة رقمية</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </Field>
                         {formData.paymentMethod === 'bank' && (
                             <>
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label className="form-label">اسم البنك *</label>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        value={formData.bankName}
-                                        onChange={(e) => updateFormData('bankName', e.target.value)}
-                                        placeholder="اسم البنك"
-                                    />
-                                </div>
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label className="form-label">اسم صاحب الحساب *</label>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        value={formData.accountHolder}
-                                        onChange={(e) => updateFormData('accountHolder', e.target.value)}
-                                        placeholder="الاسم كما يظهر في البنك"
-                                    />
-                                </div>
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label className="form-label">رقم الـ IBAN *</label>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        value={formData.iban}
-                                        onChange={(e) => updateFormData('iban', e.target.value)}
-                                        placeholder="JO00XXXX0000000000000000000000"
-                                    />
-                                </div>
-                                <div style={{ marginBottom: '16px' }}>
-                                    <label className="form-label">إثبات الحساب</label>
-                                    <div style={{
-                                        border: '2px dashed #e2e8f0',
-                                        borderRadius: '8px',
-                                        padding: '24px',
-                                        textAlign: 'center',
-                                        cursor: 'pointer'
-                                    }}>
-                                        <Upload size={32} style={{ margin: '0 auto 8px', color: '#94a3b8' }} />
-                                        <p style={{ fontSize: '14px', color: '#64748b' }}>اضغط لرفع كشف حساب</p>
+                                <Field>
+                                    <FieldLabel htmlFor="bankName">اسم البنك</FieldLabel>
+                                    <div className="relative">
+                                        <Building className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                        <Input
+                                            id="bankName"
+                                            type="text"
+                                            value={formData.bankName}
+                                            onChange={(e) => updateFormData('bankName', e.target.value)}
+                                            placeholder="اسم البنك"
+                                            className="pr-10 h-12"
+                                            required
+                                        />
                                     </div>
-                                </div>
+                                </Field>
+                                <Field>
+                                    <FieldLabel htmlFor="accountHolder">اسم صاحب الحساب</FieldLabel>
+                                    <div className="relative">
+                                        <User className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                        <Input
+                                            id="accountHolder"
+                                            type="text"
+                                            value={formData.accountHolder}
+                                            onChange={(e) => updateFormData('accountHolder', e.target.value)}
+                                            placeholder="الاسم كما يظهر في البنك"
+                                            className="pr-10 h-12"
+                                            required
+                                        />
+                                    </div>
+                                </Field>
+                                <Field>
+                                    <FieldLabel htmlFor="iban">رقم الـ IBAN</FieldLabel>
+                                    <div className="relative">
+                                        <CreditCard className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                        <Input
+                                            id="iban"
+                                            type="text"
+                                            value={formData.iban}
+                                            onChange={(e) => updateFormData('iban', e.target.value)}
+                                            placeholder="JO00XXXX0000000000000000000000"
+                                            className="pr-10 h-12"
+                                            required
+                                        />
+                                    </div>
+                                </Field>
+                                <Field>
+                                    <FieldLabel htmlFor="bankUpload">إثبات الحساب</FieldLabel>
+                                    <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center cursor-pointer hover:border-slate-300 transition-colors">
+                                        <Upload size={32} className="mx-auto mb-2 text-slate-400" />
+                                        <p className="text-sm text-slate-500">اضغط لرفع كشف حساب</p>
+                                    </div>
+                                </Field>
                             </>
                         )}
                     </div>
@@ -449,41 +571,32 @@ export default function Register() {
 
             case 6:
                 return (
-                    <div>
-                        <div style={{
-                            background: '#f8fafc',
-                            borderRadius: '12px',
-                            padding: '24px',
-                            marginBottom: '24px'
-                        }}>
-                            <div style={{ marginBottom: '16px' }}>
-                                <h4 style={{ fontSize: '14px', color: '#64748b', marginBottom: '8px' }}>معلومات الحساب</h4>
-                                <p style={{ fontSize: '15px', fontWeight: 600 }}>{formData.email}</p>
-                                <p style={{ fontSize: '15px', fontWeight: 600 }}>{formData.phone}</p>
+                    <div className="space-y-6">
+                        <Card className="bg-slate-50 rounded-xl p-6 border-slate-200">
+                            <div className="space-y-4">
+                                <div>
+                                    <h4 className="text-sm text-slate-500 mb-2">معلومات الحساب</h4>
+                                    <p className="text-base font-semibold text-slate-700">{formData.email}</p>
+                                    <p className="text-base font-semibold text-slate-700">{formData.phone}</p>
+                                </div>
+                                <div>
+                                    <h4 className="text-sm text-slate-500 mb-2">نوع التاجر</h4>
+                                    <p className="text-base font-semibold text-slate-700">
+                                        {formData.sellerType === 'individual' ? 'تاجر فردي' : 'شركة / مؤسسة'}
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 className="text-sm text-slate-500 mb-2">اسم المتجر</h4>
+                                    <p className="text-base font-semibold text-slate-700">{formData.storeName || 'غير محدد'}</p>
+                                </div>
                             </div>
-                            <div style={{ marginBottom: '16px' }}>
-                                <h4 style={{ fontSize: '14px', color: '#64748b', marginBottom: '8px' }}>نوع التاجر</h4>
-                                <p style={{ fontSize: '15px', fontWeight: 600 }}>
-                                    {formData.sellerType === 'individual' ? 'تاجر فردي' : 'شركة / مؤسسة'}
-                                </p>
-                            </div>
-                            <div style={{ marginBottom: '16px' }}>
-                                <h4 style={{ fontSize: '14px', color: '#64748b', marginBottom: '8px' }}>اسم المتجر</h4>
-                                <p style={{ fontSize: '15px', fontWeight: 600 }}>{formData.storeName || 'غير محدد'}</p>
-                            </div>
-                        </div>
-                        <div style={{
-                            background: '#eff6ff',
-                            border: '1px solid #2563eb',
-                            borderRadius: '8px',
-                            padding: '16px',
-                            textAlign: 'center'
-                        }}>
-                            <CheckCircle size={48} style={{ margin: '0 auto 12px', color: '#2563eb' }} />
-                            <h4 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', color: '#1e293b' }}>
+                        </Card>
+                        <div className="bg-primary-50 border border-primary rounded-lg p-6 text-center">
+                            <CheckCircle size={48} className="mx-auto mb-3 text-primary" />
+                            <h4 className="text-base font-semibold mb-2 text-slate-800">
                                 جاهز للمراجعة
                             </h4>
-                            <p style={{ fontSize: '14px', color: '#64748b' }}>
+                            <p className="text-sm text-slate-600">
                                 سيتم مراجعة طلبك خلال 24-48 ساعة وسنرسل لك إشعاراً عند الموافقة
                             </p>
                         </div>
@@ -496,137 +609,68 @@ export default function Register() {
     };
 
     return (
-        <div style={{
-            minHeight: '100vh',
-            display: 'flex',
-            direction: 'rtl'
-        }}>
+        <div className="min-h-screen flex" dir="rtl">
             {/* Right Side - Blue Panel */}
-            <div style={{
-                flex: '0 0 35%',
-                background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                padding: '60px 40px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden'
-            }}>
+            <div className="flex-[0_0_35%] bg-gradient-to-br from-primary to-primary-700 px-10 py-16 flex flex-col justify-center text-white relative overflow-hidden">
                 {/* Decorative circles */}
-                <div style={{
-                    position: 'absolute',
-                    width: '350px',
-                    height: '350px',
-                    borderRadius: '50%',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    top: '-80px',
-                    right: '-80px'
-                }} />
-                <div style={{
-                    position: 'absolute',
-                    width: '250px',
-                    height: '250px',
-                    borderRadius: '50%',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    bottom: '-60px',
-                    left: '-60px'
-                }} />
+                <div className="absolute w-[350px] h-[350px] rounded-full bg-white/5 -top-20 -right-20" />
+                <div className="absolute w-[250px] h-[250px] rounded-full bg-white/5 -bottom-16 -left-16" />
 
-                <div style={{ position: 'relative', zIndex: 1 }}>
+                <div className="relative z-10">
                     {/* Logo */}
-                    <img src={LogoFull} alt="B2 SOUQ" style={{ height: '45px', marginBottom: '40px', filter: 'brightness(0) invert(1)' }} />
+                    <img
+                        src={LogoFull}
+                        alt="B2 SOUQ"
+                        className="h-12 mb-10"
+                    />
 
                     {/* Title */}
-                    <h1 style={{
-                        fontSize: '36px',
-                        fontWeight: 700,
-                        marginBottom: '16px',
-                        lineHeight: 1.2,
-                        color: '#ffffff'
-                    }}>
+                    <h1 className="text-4xl font-bold mb-4 leading-tight text-white">
                         انضم إلى منصة<br />
                         B2-SOUQ
                     </h1>
 
-                    <p style={{
-                        fontSize: '16px',
-                        opacity: 0.95,
-                        lineHeight: 1.6,
-                        marginBottom: '50px',
-                        color: '#f0f9ff'
-                    }}>
+                    <p className="text-base leading-relaxed mb-12 text-white/95">
                         ابدأ رحلتك في التجارة الإلكترونية اليوم.<br />
                         سجل الآن واحصل على لوحة تحكم احترافية.
                     </p>
 
                     {/* Testimonials Carousel */}
-                    <div style={{
-                        background: 'rgba(255, 255, 255, 0.95)',
-                        borderRadius: '16px',
-                        padding: '24px',
-                        border: 'none',
-                        position: 'relative',
-                        minHeight: '180px',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
-                    }}>
-                        {/* Testimonial Content */}
-                        <div style={{
-                            transition: 'opacity 0.5s',
-                            opacity: 1
-                        }}>
-                            <p style={{
-                                fontSize: '15px',
-                                lineHeight: 1.7,
-                                marginBottom: '16px',
-                                color: '#475569',
-                                minHeight: '60px'
-                            }}>
+                    <Card className="bg-white/95 rounded-xl p-6 border-none min-h-[180px] shadow-lg">
+                        <div className="transition-opacity duration-500">
+                            <p className="text-base leading-relaxed mb-4 text-slate-600 min-h-[60px]">
                                 "{TESTIMONIALS[currentTestimonial].text}"
                             </p>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <div className="flex items-center gap-3">
                                 <img
                                     src={TESTIMONIALS[currentTestimonial].avatar}
                                     alt={TESTIMONIALS[currentTestimonial].author}
-                                    style={{
-                                        width: '40px',
-                                        height: '40px',
-                                        borderRadius: '50%',
-                                        objectFit: 'cover'
-                                    }}
+                                    className="w-10 h-10 rounded-full object-cover"
                                 />
                                 <div>
-                                    <div style={{ fontWeight: 600, fontSize: '14px', color: '#1e293b' }}>{TESTIMONIALS[currentTestimonial].author}</div>
-                                    <div style={{ fontSize: '13px', color: '#64748b' }}>{TESTIMONIALS[currentTestimonial].role}</div>
+                                    <div className="font-semibold text-sm text-slate-700">
+                                        {TESTIMONIALS[currentTestimonial].author}
+                                    </div>
+                                    <div className="text-xs text-slate-500">
+                                        {TESTIMONIALS[currentTestimonial].role}
+                                    </div>
                                 </div>
                             </div>
-                            <div style={{ marginTop: '12px', display: 'flex', gap: '4px' }}>
+                            <div className="mt-3 flex gap-1">
                                 {[1, 2, 3, 4, 5].map(i => (
-                                    <span key={i} style={{ color: '#fbbf24', fontSize: '16px' }}>★</span>
+                                    <span key={i} className="text-amber-400 text-base">★</span>
                                 ))}
                             </div>
                         </div>
-                    </div>
+                    </Card>
 
-                    {/* Progress Indicators - Outside Card */}
-                    <div style={{
-                        display: 'flex',
-                        gap: '8px',
-                        marginTop: '20px',
-                        justifyContent: 'center'
-                    }}>
+                    {/* Progress Indicators */}
+                    <div className="flex gap-2 mt-5 justify-center">
                         {TESTIMONIALS.map((_, index) => (
                             <div
                                 key={index}
-                                style={{
-                                    height: '4px',
-                                    flex: 1,
-                                    maxWidth: '60px',
-                                    background: currentTestimonial === index ? 'white' : 'rgba(255, 255, 255, 0.3)',
-                                    borderRadius: '2px',
-                                    transition: 'all 0.3s',
-                                    cursor: 'pointer'
-                                }}
+                                className={`h-1 flex-1 max-w-[60px] rounded-sm transition-all duration-300 cursor-pointer ${currentTestimonial === index ? 'bg-white' : 'bg-white/30'
+                                    }`}
                                 onClick={() => setCurrentTestimonial(index)}
                             />
                         ))}
@@ -635,86 +679,34 @@ export default function Register() {
             </div>
 
             {/* Left Side - Form */}
-            <div style={{
-                flex: 1,
-                background: '#f8fafc',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '40px',
-                overflowY: 'auto'
-            }}>
-                <div style={{
-                    width: '100%',
-                    maxWidth: '600px'
-                }}>
+            <div className="flex-1 bg-slate-50 flex items-center justify-center p-10 overflow-y-auto">
+                <div className="w-full max-w-[600px]">
                     {/* Horizontal Steps Progress */}
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        marginBottom: '40px',
-                        gap: '8px',
-                        position: 'relative'
-                    }}>
-                        {/* Single continuous background line */}
-                        <div style={{
-                            position: 'absolute',
-                            top: '16px',
-                            left: 'calc(100% / 12)',
-                            right: 'calc(100% / 12)',
-                            height: '2px',
-                            background: '#e2e8f0',
-                            zIndex: 0
-                        }} />
+                    <div className="flex justify-between mb-10 gap-2 relative">
+                        {/* Background line */}
+                        <div className="absolute top-4 left-[8.33%] right-[8.33%] h-0.5 bg-slate-200 z-0" />
 
                         {/* Active progress line */}
-                        <div style={{
-                            position: 'absolute',
-                            top: '16px',
-                            right: 'calc(100% / 12)',
-                            width: `calc((100% - 100% / 6) * ${(currentStep - 1) / (STEPS.length - 1)})`,
-                            height: '2px',
-                            background: '#2563eb',
-                            zIndex: 0,
-                            transition: 'width 0.3s ease'
-                        }} />
+                        <div
+                            className="absolute top-4 right-[8.33%] h-0.5 bg-primary z-0 transition-all duration-300"
+                            style={{ width: `calc((100% - 16.66%) * ${(currentStep - 1) / (STEPS.length - 1)})` }}
+                        />
 
-                        {STEPS.map((step, index) => (
-                            <div key={step.id} style={{
-                                flex: 1,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                position: 'relative'
-                            }}>
+                        {STEPS.map((step) => (
+                            <div key={step.id} className="flex-1 flex flex-col items-center relative">
                                 {/* Step Circle */}
-                                <div style={{
-                                    width: '32px',
-                                    height: '32px',
-                                    borderRadius: '50%',
-                                    background: currentStep >= step.id ? '#2563eb' : '#e2e8f0',
-                                    color: currentStep >= step.id ? 'white' : '#94a3b8',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    fontSize: '14px',
-                                    fontWeight: 600,
-                                    marginBottom: '8px',
-                                    position: 'relative',
-                                    zIndex: 1,
-                                    transition: 'all 0.3s'
-                                }}>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold mb-2 relative z-10 transition-all ${currentStep >= step.id
+                                    ? 'bg-primary text-white'
+                                    : 'bg-slate-200 text-slate-400'
+                                    }`}>
                                     {currentStep > step.id ? '✓' : step.id}
                                 </div>
 
                                 {/* Step Title */}
-                                <span style={{
-                                    fontSize: '12px',
-                                    color: currentStep >= step.id ? '#1e293b' : '#64748b',
-                                    textAlign: 'center',
-                                    fontWeight: currentStep === step.id ? 600 : 500,
-                                    transition: 'all 0.3s'
-                                }}>
+                                <span className={`text-xs text-center transition-all ${currentStep >= step.id
+                                    ? 'text-slate-800 font-semibold'
+                                    : 'text-slate-500 font-medium'
+                                    }`}>
                                     {step.title}
                                 </span>
                             </div>
@@ -722,129 +714,52 @@ export default function Register() {
                     </div>
 
                     {/* Form Card */}
-                    <div style={{
-                        background: 'white',
-                        borderRadius: '12px',
-                        padding: '32px',
-                        border: '1px solid #e2e8f0',
-                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)',
-                        marginBottom: '24px'
-                    }}>
+                    <Card className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm mb-6">
                         {renderStepContent()}
-                    </div>
+                    </Card>
 
                     {/* Navigation Buttons */}
-                    <div style={{ display: 'flex', gap: '16px', justifyContent: 'space-between' }}>
+                    <div className="flex gap-4 justify-between">
                         {currentStep > 1 && (
-                            <button
+                            <Button
                                 onClick={prevStep}
-                                style={{
-                                    padding: '14px 24px',
-                                    background: '#fff',
-                                    color: '#2563eb',
-                                    border: '2px solid #2563eb',
-                                    borderRadius: '10px',
-                                    fontSize: '16px',
-                                    fontWeight: 600,
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '8px',
-                                    transition: 'all 0.2s'
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.target.style.background = '#eff6ff';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.target.style.background = '#fff';
-                                }}
+                                variant="outline"
+                                size="lg"
+                                className="gap-2"
                             >
                                 <ArrowRight size={20} />
                                 السابق
-                            </button>
+                            </Button>
                         )}
-                        <div style={{ flex: 1 }} />
+                        <div className="flex-1" />
                         {currentStep < 6 ? (
-                            <button
+                            <Button
                                 onClick={nextStep}
-                                style={{
-                                    padding: '14px 24px',
-                                    background: '#2563eb',
-                                    color: '#fff',
-                                    border: 'none',
-                                    borderRadius: '10px',
-                                    fontSize: '16px',
-                                    fontWeight: 600,
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '8px',
-                                    transition: 'all 0.2s'
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.target.style.background = '#1d4ed8';
-                                    e.target.style.transform = 'translateY(-2px)';
-                                    e.target.style.boxShadow = '0 8px 16px rgba(37, 99, 235, 0.3)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.target.style.background = '#2563eb';
-                                    e.target.style.transform = 'translateY(0)';
-                                    e.target.style.boxShadow = 'none';
-                                }}
+                                size="lg"
+                                className="gap-2"
                             >
                                 التالي
                                 <ArrowLeft size={20} />
-                            </button>
+                            </Button>
                         ) : (
-                            <button
+                            <Button
                                 onClick={handleSubmit}
-                                style={{
-                                    padding: '14px 24px',
-                                    background: '#10b981',
-                                    color: '#fff',
-                                    border: 'none',
-                                    borderRadius: '10px',
-                                    fontSize: '16px',
-                                    fontWeight: 600,
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '8px',
-                                    transition: 'all 0.2s'
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.target.style.background = '#059669';
-                                    e.target.style.transform = 'translateY(-2px)';
-                                    e.target.style.boxShadow = '0 8px 16px rgba(16, 185, 129, 0.3)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.target.style.background = '#10b981';
-                                    e.target.style.transform = 'translateY(0)';
-                                    e.target.style.boxShadow = 'none';
-                                }}
+                                size="lg"
+                                className="gap-2"
                             >
+                                إتمام التسجيل
                                 <CheckCircle size={20} />
-                                إرسال الطلب
-                            </button>
+                            </Button>
                         )}
                     </div>
 
                     {/* Back to Login */}
-                    <div style={{ textAlign: 'center', marginTop: '24px' }}>
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>
+                    <div className="text-center mt-6">
+                        <p className="text-sm text-slate-600">
                             لديك حساب بالفعل؟{' '}
                             <button
                                 onClick={() => navigate('/login')}
-                                style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    color: '#2563eb',
-                                    fontSize: '14px',
-                                    fontWeight: 600,
-                                    cursor: 'pointer'
-                                }}
-                                onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
-                                onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
+                                className="text-primary font-semibold hover:underline transition-all"
                             >
                                 تسجيل الدخول
                             </button>
@@ -852,37 +767,6 @@ export default function Register() {
                     </div>
                 </div>
             </div>
-
-            <style>{`
-                .form-label {
-                    display: block;
-                    margin-bottom: 8px;
-                    font-size: 14px;
-                    font-weight: 600;
-                    color: #475569;
-                }
-                
-                .form-input, .form-select {
-                    width: 100%;
-                    padding: 12px 14px;
-                    border: 1px solid #e2e8f0;
-                    border-radius: 8px;
-                    fontSize: 14px;
-                    outline: none;
-                    transition: all 0.2s;
-                    background: #fff;
-                }
-                
-                .form-input:focus, .form-select:focus {
-                    border-color: #2563eb;
-                    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-                }
-                
-                .grid-cols-2 {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                }
-            `}</style>
         </div>
     );
 }

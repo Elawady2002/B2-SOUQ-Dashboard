@@ -9,20 +9,63 @@ import {
     XCircle,
     AlertTriangle,
     Pause,
-    TrendingUp,
+    MoreHorizontal,
+    Eye,
+    Edit,
+    Trash2,
+    Upload,
     ShoppingCart,
     RotateCcw,
-    Star,
-    X,
-    Upload,
-    Image
+    Star
 } from 'lucide-react';
 
-// Custom action icons
-import DeleteIcon from '../assets/icons/delete.svg';
-import EditIcon from '../assets/icons/edit.svg';
-import EyesIcon from '../assets/icons/eyes.svg';
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    CardDescription
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 
+// Mock Data
 const products = [
     {
         id: 1,
@@ -86,14 +129,13 @@ const products = [
     },
 ];
 
-
 const statusConfig = {
-    active: { label: 'نشط', color: 'success', icon: CheckCircle },
-    pending_review: { label: 'تحت المراجعة', color: 'warning', icon: Clock },
-    rejected: { label: 'مرفوض', color: 'danger', icon: XCircle },
-    low_stock: { label: 'منخفض المخزون', color: 'warning', icon: AlertTriangle },
-    out_of_stock: { label: 'نفذ المخزون', color: 'danger', icon: AlertTriangle },
-    suspended: { label: 'موقوف', color: 'danger', icon: Pause },
+    active: { label: 'نشط', color: 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100', icon: CheckCircle },
+    pending_review: { label: 'تحت المراجعة', color: 'bg-amber-50 text-amber-700 hover:bg-amber-100', icon: Clock },
+    rejected: { label: 'مرفوض', color: 'bg-rose-50 text-rose-700 hover:bg-rose-100', icon: XCircle },
+    low_stock: { label: 'منخفض المخزون', color: 'bg-orange-50 text-orange-700 hover:bg-orange-100', icon: AlertTriangle },
+    out_of_stock: { label: 'نفذ المخزون', color: 'bg-slate-100 text-slate-700 hover:bg-slate-200', icon: AlertTriangle },
+    suspended: { label: 'موقوف', color: 'bg-red-50 text-red-700 hover:bg-red-100', icon: Pause },
 };
 
 const filters = [
@@ -107,384 +149,377 @@ const filters = [
 
 export default function Products() {
     const [activeFilter, setActiveFilter] = useState('all');
-    const [showModal, setShowModal] = useState(false);
-    const [showAnalytics, setShowAnalytics] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
 
     const filteredProducts = activeFilter === 'all'
         ? products
         : products.filter(p => p.status === activeFilter);
 
+    const handleAnalytics = (product) => {
+        setSelectedProduct(product);
+        setShowAnalyticsModal(true);
+    };
+
     return (
-        <div>
+        <div className="flex flex-col gap-6">
             {/* Page Header */}
-            <div className="page-header flex items-center justify-between">
+            <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="page-title">المنتجات</h2>
-                    <p className="page-subtitle">إدارة منتجات متجرك</p>
+                    <h2 className="text-2xl font-bold text-slate-900">المنتجات</h2>
+                    <p className="text-sm text-slate-500 mt-1">إدارة منتجات متجرك ومتابعة المخزون</p>
                 </div>
-                <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+                <Button onClick={() => setShowAddModal(true)} className="bg-blue-600 hover:bg-blue-700 gap-2">
                     <Plus size={18} />
                     إضافة منتج
-                </button>
+                </Button>
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-5 mb-xl">
-                <div className="stats-card">
-                    <div className="stats-card-icon primary">
-                        <Package size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">إجمالي المنتجات</div>
-                        <div className="stats-card-value">156</div>
-                    </div>
-                </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon success">
-                        <CheckCircle size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">منتجات نشطة</div>
-                        <div className="stats-card-value">142</div>
-                    </div>
-                </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon warning">
-                        <Clock size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">تحت المراجعة</div>
-                        <div className="stats-card-value">8</div>
-                    </div>
-                </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon danger">
-                        <AlertTriangle size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">منخفض المخزون</div>
-                        <div className="stats-card-value">12</div>
-                    </div>
-                </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon danger">
-                        <XCircle size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">مرفوض</div>
-                        <div className="stats-card-value">3</div>
-                    </div>
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                            <Package size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">إجمالي المنتجات</p>
+                            <p className="text-lg font-bold text-slate-900">156</p>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                            <CheckCircle size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">منتجات نشطة</p>
+                            <p className="text-lg font-bold text-slate-900">142</p>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+                            <Clock size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">تحت المراجعة</p>
+                            <p className="text-lg font-bold text-slate-900">8</p>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-600">
+                            <AlertTriangle size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">منخفض المخزون</p>
+                            <p className="text-lg font-bold text-slate-900">12</p>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-600">
+                            <XCircle size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">مرفوض</p>
+                            <p className="text-lg font-bold text-slate-900">3</p>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
 
-            {/* Filters & Search */}
-            <div className="card mb-lg">
-                <div className="flex items-center justify-between gap-lg" style={{ flexWrap: 'wrap' }}>
-                    {/* Status Filters */}
-                    <div className="flex gap-sm" style={{ flexWrap: 'wrap' }}>
-                        {filters.map((filter) => (
-                            <button
-                                key={filter.id}
-                                className={`chart-filter-btn ${activeFilter === filter.id ? 'active' : ''}`}
-                                onClick={() => setActiveFilter(filter.id)}
-                            >
-                                {filter.label} ({filter.count})
-                            </button>
-                        ))}
-                    </div>
+            {/* Filters & Content */}
+            <Card className="bg-white border-slate-200 shadow-sm">
+                <CardHeader className="pb-4 border-b border-slate-50">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        {/* Status Filters */}
+                        <div className="flex flex-wrap gap-2">
+                            {filters.map((filter) => (
+                                <button
+                                    key={filter.id}
+                                    onClick={() => setActiveFilter(filter.id)}
+                                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${activeFilter === filter.id
+                                        ? 'bg-blue-600 text-white shadow-sm'
+                                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                        }`}
+                                >
+                                    {filter.label}
+                                    <span className={`mr-1.5 text-xs ${activeFilter === filter.id ? 'text-slate-300' : 'text-slate-500'}`}>
+                                        ({filter.count})
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
 
-                    {/* Search */}
-                    <div className="header-search">
-                        <Search className="header-search-icon" size={18} />
-                        <input type="text" placeholder="بحث عن منتج..." />
+                        {/* Search */}
+                        <div className="relative w-full md:w-64">
+                            <Search className="absolute right-3 top-2.5 h-4 w-4 text-slate-400" />
+                            <Input
+                                placeholder="بحث عن منتج..."
+                                className="pr-9 bg-slate-50 border-slate-200"
+                            />
+                        </div>
                     </div>
-                </div>
-            </div>
+                </CardHeader>
 
-            {/* Products Table */}
-            <div className="card">
-                <div className="table-container">
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>المنتج</th>
-                                <th>SKU</th>
-                                <th>الفئة</th>
-                                <th>السعر</th>
-                                <th>الكمية</th>
-                                <th>طريقة الشحن</th>
-                                <th>المبيعات</th>
-                                <th>الحالة</th>
-                                <th>الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <CardContent className="p-0">
+                    <Table>
+                        <TableHeader className="bg-slate-50/50">
+                            <TableRow className="hover:bg-transparent border-slate-100">
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتج</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">SKU</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الفئة</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">السعر</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الكمية</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الشحن</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">المبيعات</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الحالة</TableHead>
+                                <TableHead className="text-center h-10 w-[50px]"></TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
                             {filteredProducts.map((product) => {
                                 const status = statusConfig[product.status];
+                                const StatusIcon = status.icon;
                                 return (
-                                    <tr key={product.id}>
-                                        <td>
-                                            <div className="flex items-center gap-md">
-                                                {product.image ? (
-                                                    <img
-                                                        src={product.image}
-                                                        alt={product.name}
-                                                        style={{
-                                                            width: '50px',
-                                                            height: '50px',
-                                                            borderRadius: 'var(--radius-md)',
-                                                            objectFit: 'cover'
-                                                        }}
-                                                    />
-                                                ) : (
-                                                    <div style={{
-                                                        width: '50px',
-                                                        height: '50px',
-                                                        background: 'var(--bg-secondary)',
-                                                        borderRadius: 'var(--radius-md)',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center'
-                                                    }}>
-                                                        <Package size={20} style={{ color: 'var(--text-muted)' }} />
-                                                    </div>
-                                                )}
-                                                <span style={{ fontWeight: '500' }}>{product.name}</span>
+                                    <TableRow key={product.id} className="border-slate-50 hover:bg-slate-50/50">
+                                        <TableCell className="font-medium">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-12 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0 border border-slate-100">
+                                                    {product.image ? (
+                                                        <img
+                                                            src={product.image}
+                                                            alt={product.name}
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center text-slate-400">
+                                                            <Package size={20} />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <span className="text-slate-700 line-clamp-2 max-w-[200px]">{product.name}</span>
                                             </div>
-                                        </td>
-                                        <td style={{ fontFamily: 'monospace', fontSize: '13px' }}>{product.sku}</td>
-                                        <td>{product.category}</td>
-                                        <td style={{ fontWeight: '600' }}>{product.price.toLocaleString('en-US')} ج.م</td>
-                                        <td>
-                                            <span style={{
-                                                color: product.quantity <= 5 ? 'var(--danger)' :
-                                                    product.quantity <= 20 ? 'var(--warning)' : 'var(--success)',
-                                                fontWeight: '600'
-                                            }}>
+                                        </TableCell>
+                                        <TableCell className="text-slate-500 font-mono text-xs">{product.sku}</TableCell>
+                                        <TableCell className="text-slate-600">{product.category}</TableCell>
+                                        <TableCell className="font-bold text-slate-900">{product.price.toLocaleString('en-US')} ج.م</TableCell>
+                                        <TableCell className="text-center">
+                                            <span className={`font-semibold ${product.quantity <= 5 ? 'text-red-600' :
+                                                product.quantity <= 20 ? 'text-orange-600' : 'text-emerald-600'
+                                                }`}>
                                                 {product.quantity}
                                             </span>
-                                        </td>
-                                        <td>
-                                            <span className="badge badge-info">{product.shipping}</span>
-                                        </td>
-                                        <td>{product.sales}</td>
-                                        <td>
-                                            <span className={`badge badge-${status.color}`}>
-                                                <status.icon size={12} />
+                                        </TableCell>
+                                        <TableCell className="text-center">
+                                            <Badge variant="outline" className="bg-slate-50 text-slate-600 font-normal">
+                                                {product.shipping}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-center text-slate-600">{product.sales}</TableCell>
+                                        <TableCell className="text-center">
+                                            <Badge variant="secondary" className={`${status.color} gap-1 font-normal`}>
+                                                <StatusIcon size={12} />
                                                 {status.label}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div className="flex items-center gap-md">
-                                                <button
-                                                    style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4 }}
-                                                    title="عرض"
-                                                    onClick={() => {
-                                                        setSelectedProduct(product);
-                                                        setShowAnalytics(true);
-                                                    }}
-                                                >
-                                                    <img src={EyesIcon} alt="عرض" style={{ width: 20, height: 20 }} />
-                                                </button>
-                                                <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4 }} title="تعديل">
-                                                    <img src={EditIcon} alt="تعديل" style={{ width: 20, height: 20 }} />
-                                                </button>
-                                                <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4 }} title="حذف">
-                                                    <img src={DeleteIcon} alt="حذف" style={{ width: 20, height: 20 }} />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                                        <span className="sr-only">Open menu</span>
+                                                        <MoreHorizontal className="h-4 w-4 text-slate-400" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end" className="w-[160px] bg-white">
+                                                    <DropdownMenuLabel className="text-right">الإجراءات</DropdownMenuLabel>
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuItem
+                                                        className="gap-2 flex-row-reverse cursor-pointer"
+                                                        onClick={() => handleAnalytics(product)}
+                                                    >
+                                                        <Eye size={14} />
+                                                        عرض التفاصيل
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem className="gap-2 flex-row-reverse cursor-pointer">
+                                                        <Edit size={14} />
+                                                        تعديل المنتج
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuItem className="gap-2 flex-row-reverse text-red-600 focus:text-red-600 cursor-pointer">
+                                                        <Trash2 size={14} />
+                                                        حذف المنتج
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    </TableRow>
                                 );
                             })}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
 
             {/* Add Product Modal */}
-            {showModal && (
-                <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                    <div className="modal" style={{ maxWidth: '800px' }} onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3 className="modal-title">إضافة منتج جديد</h3>
-                            <button className="modal-close" onClick={() => setShowModal(false)}>
-                                <X size={18} />
-                            </button>
-                        </div>
-                        <div className="modal-body" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                            <style>{`
-                                .modal-body::-webkit-scrollbar {
-                                    display: none;
-                                }
-                            `}</style>
-                            <h4 style={{ marginBottom: 'var(--spacing-md)', color: 'var(--accent-primary)' }}>أ. بيانات أساسية</h4>
-                            <div className="grid grid-cols-2" style={{ gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-xl)' }}>
-                                <div className="form-group">
-                                    <label className="form-label">اسم المنتج</label>
-                                    <input type="text" className="form-input" placeholder="أدخل اسم المنتج" />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">كود SKU</label>
-                                    <input type="text" className="form-input" placeholder="XXX-XXX-XXX" />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">الفئة الرئيسية</label>
-                                    <select className="form-select">
-                                        <option value="">اختر الفئة</option>
-                                        <option>هواتف</option>
-                                        <option>سماعات</option>
-                                        <option>ساعات ذكية</option>
-                                        <option>اكسسوارات</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">الفئة الفرعية</label>
-                                    <select className="form-select">
-                                        <option value="">اختر الفئة الفرعية</option>
-                                    </select>
-                                </div>
-                                <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                                    <label className="form-label">الكلمات المفتاحية</label>
-                                    <input type="text" className="form-input" placeholder="هاتف, سامسونج, جالاكسي" />
-                                </div>
-                                <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                                    <label className="form-label">وصف المنتج</label>
-                                    <textarea className="form-textarea" placeholder="اكتب وصف تفصيلي للمنتج..."></textarea>
-                                </div>
-                                <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                                    <label className="form-label">صور المنتج</label>
-                                    <div style={{
-                                        border: '2px dashed var(--border-color)',
-                                        borderRadius: 'var(--radius-md)',
-                                        padding: 'var(--spacing-xl)',
-                                        textAlign: 'center',
-                                        cursor: 'pointer'
-                                    }}>
-                                        <Upload size={32} style={{ color: 'var(--text-muted)', marginBottom: '8px' }} />
-                                        <p style={{ color: 'var(--text-muted)' }}>اسحب الصور هنا أو انقر للرفع</p>
-                                    </div>
-                                </div>
-                            </div>
+            <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
+                <DialogContent className="sm:max-w-[800px] gap-6">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4">إضافة منتج جديد</DialogTitle>
+                    </DialogHeader>
 
-                            <h4 style={{ marginBottom: 'var(--spacing-md)', color: 'var(--accent-primary)' }}>ب. بيانات السعر والشحن</h4>
-                            <div className="grid grid-cols-3" style={{ gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-xl)' }}>
-                                <div className="form-group">
-                                    <label className="form-label">السعر (ج.م)</label>
-                                    <input type="number" className="form-input" placeholder="0.00" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-2">
+                        {/* Basic Info */}
+                        <div className="space-y-4 md:col-span-2">
+                            <h4 className="text-sm font-semibold text-blue-600">أ. البيانات الأساسية</h4>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label>اسم المنتج</Label>
+                                    <Input placeholder="أدخل اسم المنتج" />
                                 </div>
-                                <div className="form-group">
-                                    <label className="form-label">الوزن (كجم)</label>
-                                    <input type="number" className="form-input" placeholder="0.0" />
+                                <div className="space-y-2">
+                                    <Label>كود SKU</Label>
+                                    <Input placeholder="XXX-XXX-XXX" className="font-mono text-sm" />
                                 </div>
-                                <div className="form-group">
-                                    <label className="form-label">الأبعاد (سم)</label>
-                                    <input type="text" className="form-input" placeholder="طول × عرض × ارتفاع" />
+                                <div className="space-y-2">
+                                    <Label>الفئة الرئيسية</Label>
+                                    <Select>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="اختر الفئة" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="phones">هواتف</SelectItem>
+                                            <SelectItem value="audio">سماعات</SelectItem>
+                                            <SelectItem value="wearables">ساعات ذكية</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
-                                <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                                    <label className="form-label">طريقة الشحن</label>
-                                    <select className="form-select">
-                                        <option>بيع وشحن عبر المنصة</option>
-                                        <option>بيع مباشر + شحن المنصة</option>
-                                        <option>بيع وشحن ذاتي</option>
-                                    </select>
+                                <div className="space-y-2">
+                                    <Label>الفئة الفرعية</Label>
+                                    <Select>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="اختر الفئة الفرعية" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="samsung">سامسونج</SelectItem>
+                                            <SelectItem value="apple">آبل</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
-                                <div className="form-group">
-                                    <label className="form-label">عنوان الاستلام</label>
-                                    <select className="form-select">
-                                        <option>المستودع الرئيسي</option>
-                                        <option>فرع 6 أكتوبر</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <h4 style={{ marginBottom: 'var(--spacing-md)', color: 'var(--accent-primary)' }}>ج. بيانات المخزون</h4>
-                            <div className="grid grid-cols-2" style={{ gap: 'var(--spacing-md)' }}>
-                                <div className="form-group">
-                                    <label className="form-label">الكمية الأولية</label>
-                                    <input type="number" className="form-input" placeholder="0" />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">حد النفاد (تنبيه)</label>
-                                    <input type="number" className="form-input" placeholder="10" />
+                                <div className="space-y-2 md:col-span-2">
+                                    <Label>وصف المنتج</Label>
+                                    <Textarea placeholder="اكتب وصف تفصيلي للمنتج..." rows={3} className="resize-none" />
                                 </div>
                             </div>
                         </div>
-                        <div className="modal-footer">
-                            <button className="btn btn-primary">
-                                <Plus size={18} />
-                                إضافة المنتج
-                            </button>
-                            <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                                إلغاء
-                            </button>
+
+                        <Separator className="md:col-span-2" />
+
+                        {/* Pricing & Shipping */}
+                        <div className="space-y-4 md:col-span-2">
+                            <h4 className="text-sm font-semibold text-blue-600">ب. بيانات السعر والشحن</h4>
+                            <div className="grid grid-cols-3 gap-4">
+                                <div className="space-y-2">
+                                    <Label>السعر (ج.م)</Label>
+                                    <Input type="number" placeholder="0.00" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>الوزن (كجم)</Label>
+                                    <Input type="number" placeholder="0.0" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>طريقة الشحن</Label>
+                                    <Select>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="اختر الطريقة" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="platform">شحن المنصة</SelectItem>
+                                            <SelectItem value="self">شحن ذاتي</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
 
-            {/* Product Analytics Modal */}
-            {showAnalytics && selectedProduct && (
-                <div className="modal-overlay" onClick={() => setShowAnalytics(false)}>
-                    <div className="modal" style={{ maxWidth: '600px' }} onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3 className="modal-title">تحليل أداء: {selectedProduct.name}</h3>
-                            <button className="modal-close" onClick={() => setShowAnalytics(false)}>
-                                <X size={18} />
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="grid grid-cols-2" style={{ gap: 'var(--spacing-md)' }}>
-                                <div style={{ padding: 'var(--spacing-lg)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                    <div className="flex items-center gap-sm mb-sm">
-                                        <Eye size={18} style={{ color: 'var(--info)' }} />
-                                        <span style={{ color: 'var(--text-muted)' }}>الزيارات</span>
-                                    </div>
-                                    <p style={{ fontSize: '24px', fontWeight: '700' }}>1,245</p>
-                                </div>
-                                <div style={{ padding: 'var(--spacing-lg)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                    <div className="flex items-center gap-sm mb-sm">
-                                        <ShoppingCart size={18} style={{ color: 'var(--warning)' }} />
-                                        <span style={{ color: 'var(--text-muted)' }}>الإضافة للعربة</span>
-                                    </div>
-                                    <p style={{ fontSize: '24px', fontWeight: '700' }}>342</p>
-                                </div>
-                                <div style={{ padding: 'var(--spacing-lg)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                    <div className="flex items-center gap-sm mb-sm">
-                                        <CheckCircle size={18} style={{ color: 'var(--success)' }} />
-                                        <span style={{ color: 'var(--text-muted)' }}>طلبات ناجحة</span>
-                                    </div>
-                                    <p style={{ fontSize: '24px', fontWeight: '700' }}>{selectedProduct.sales}</p>
-                                </div>
-                                <div style={{ padding: 'var(--spacing-lg)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                    <div className="flex items-center gap-sm mb-sm">
-                                        <RotateCcw size={18} style={{ color: 'var(--danger)' }} />
-                                        <span style={{ color: 'var(--text-muted)' }}>المرتجعات</span>
-                                    </div>
-                                    <p style={{ fontSize: '24px', fontWeight: '700' }}>8</p>
-                                </div>
-                                <div style={{ padding: 'var(--spacing-lg)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', gridColumn: 'span 2' }}>
-                                    <div className="flex items-center gap-sm mb-sm">
-                                        <Star size={18} style={{ color: 'var(--warning)' }} />
-                                        <span style={{ color: 'var(--text-muted)' }}>التقييمات</span>
-                                    </div>
-                                    <p style={{ fontSize: '24px', fontWeight: '700' }}>4.7 <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>(89 تقييم)</span></p>
-                                </div>
-                            </div>
+                    <DialogFooter className="gap-2 border-t border-slate-100 pt-4">
+                        <Button variant="outline" onClick={() => setShowAddModal(false)}>إلغاء</Button>
+                        <Button className="bg-blue-600 hover:bg-blue-700">حفظ المنتج</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
-                            <div style={{ marginTop: 'var(--spacing-xl)', padding: 'var(--spacing-lg)', background: 'var(--info-bg)', borderRadius: 'var(--radius-md)', border: '1px solid var(--info)' }}>
-                                <h4 style={{ color: 'var(--info)', marginBottom: 'var(--spacing-sm)' }}>💡 توصيات تحسين الأداء</h4>
-                                <ul style={{ paddingRight: 'var(--spacing-lg)', color: 'var(--text-secondary)', lineHeight: '1.8' }}>
-                                    <li>أضف المزيد من الصور عالية الجودة</li>
-                                    <li>حسّن العنوان بإضافة كلمات مفتاحية</li>
-                                    <li>فعّل عرض ترويجي لزيادة المبيعات</li>
+            {/* Analytics Modal */}
+            <Dialog open={showAnalyticsModal} onOpenChange={setShowAnalyticsModal}>
+                <DialogContent className="sm:max-w-[600px]">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2 text-lg font-bold text-slate-900 pb-4 border-b border-slate-100">
+                            تحليل أداء: {selectedProduct?.name}
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    {selectedProduct && (
+                        <div className="grid grid-cols-2 gap-4 py-4">
+                            <Card className="bg-slate-50 border-slate-100 shadow-none">
+                                <CardContent className="p-4">
+                                    <div className="flex items-center gap-2 mb-2 text-blue-600">
+                                        <Eye size={18} />
+                                        <span className="text-xs font-semibold uppercase">الزيارات</span>
+                                    </div>
+                                    <p className="text-2xl font-bold text-slate-900">1,245</p>
+                                </CardContent>
+                            </Card>
+                            <Card className="bg-slate-50 border-slate-100 shadow-none">
+                                <CardContent className="p-4">
+                                    <div className="flex items-center gap-2 mb-2 text-amber-600">
+                                        <ShoppingCart size={18} />
+                                        <span className="text-xs font-semibold uppercase">الإضافة للعربة</span>
+                                    </div>
+                                    <p className="text-2xl font-bold text-slate-900">342</p>
+                                </CardContent>
+                            </Card>
+                            <Card className="bg-slate-50 border-slate-100 shadow-none">
+                                <CardContent className="p-4">
+                                    <div className="flex items-center gap-2 mb-2 text-emerald-600">
+                                        <CheckCircle size={18} />
+                                        <span className="text-xs font-semibold uppercase">طلبات ناجحة</span>
+                                    </div>
+                                    <p className="text-2xl font-bold text-slate-900">{selectedProduct.sales}</p>
+                                </CardContent>
+                            </Card>
+                            <Card className="bg-slate-50 border-slate-100 shadow-none">
+                                <CardContent className="p-4">
+                                    <div className="flex items-center gap-2 mb-2 text-rose-600">
+                                        <RotateCcw size={18} />
+                                        <span className="text-xs font-semibold uppercase">المرتجعات</span>
+                                    </div>
+                                    <p className="text-2xl font-bold text-slate-900">8</p>
+                                </CardContent>
+                            </Card>
+
+                            <div className="col-span-2 bg-blue-50/50 rounded-lg p-4 border border-blue-100">
+                                <h4 className="flex items-center gap-2 font-semibold text-blue-700 mb-2">
+                                    <Star size={16} />
+                                    توصيات تحسين الأداء
+                                </h4>
+                                <ul className="list-disc list-inside text-sm text-slate-600 space-y-1">
+                                    <li>أضف المزيد من الصور عالية الجودة لزيادة معدل التحويل</li>
+                                    <li>حسّن العنوان بإضافة كلمات مفتاحية (مثل: 5G, 256GB)</li>
+                                    <li>المنتج يحقق مبيعات جيدة، فكر في عمل خصم لزيادة الكمية المباعة</li>
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                </div>
-            )}
+                    )}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

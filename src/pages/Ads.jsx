@@ -14,6 +14,40 @@ import {
     DollarSign
 } from 'lucide-react';
 import { useState } from 'react';
+import React from 'react';
+
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 const ads = [
     {
@@ -123,21 +157,21 @@ export default function Ads() {
     const [showModal, setShowModal] = useState(false);
 
     return (
-        <div>
+        <div className="flex flex-col gap-6">
             {/* Page Header */}
-            <div className="page-header flex items-center justify-between">
+            <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="page-title">الإعلانات المدفوعة</h2>
-                    <p className="page-subtitle">إدارة حملاتك الإعلانية وتتبع الأداء</p>
+                    <h2 className="text-2xl font-bold text-slate-900">الإعلانات المدفوعة</h2>
+                    <p className="text-sm text-slate-500 mt-1">إدارة حملاتك الإعلانية وتتبع الأداء</p>
                 </div>
-                <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+                <Button onClick={() => setShowModal(true)} className="bg-blue-600 hover:bg-blue-700 gap-2">
                     <Plus size={18} />
                     إنشاء إعلان جديد
-                </button>
+                </Button>
             </div>
 
             {/* Enhanced Stats Cards with Sparklines */}
-            <div className="grid grid-cols-4 mb-lg" style={{ gap: 'var(--spacing-md)' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {statsCards.map((card) => {
                     const maxVal = Math.max(...card.sparkline);
                     const points = card.sparkline.map((val, i) =>
@@ -146,156 +180,146 @@ export default function Ads() {
                     const areaPoints = `0,50 ${points} 100,50`;
 
                     return (
-                        <div key={card.id} className="stats-card">
-                            {/* Row 1: Icon (left) + Label (right) */}
-                            <div className="stats-card-row">
-                                <div className="stats-card-icon" style={{ background: `${card.color}15`, color: card.color }}>
-                                    {card.id === 1 && <Eye size={20} strokeWidth={1.5} />}
-                                    {card.id === 2 && <Target size={20} strokeWidth={1.5} />}
-                                    {card.id === 3 && <ShoppingCart size={20} strokeWidth={1.5} />}
-                                    {card.id === 4 && <DollarSign size={20} strokeWidth={1.5} />}
+                        <Card key={card.id} className="bg-white border-slate-200 shadow-sm overflow-hidden">
+                            <CardContent className="p-5">
+                                {/* Row 1: Icon (left) + Label (right) */}
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="text-sm text-slate-500 font-medium font-cairo">{card.label}</div>
+                                    <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-opacity-10" style={{ backgroundColor: `${card.color}15`, color: card.color }}>
+                                        {card.id === 1 && <Eye size={20} strokeWidth={1.5} />}
+                                        {card.id === 2 && <Target size={20} strokeWidth={1.5} />}
+                                        {card.id === 3 && <ShoppingCart size={20} strokeWidth={1.5} />}
+                                        {card.id === 4 && <DollarSign size={20} strokeWidth={1.5} />}
+                                    </div>
                                 </div>
-                                <div className="stats-card-label">{card.label}</div>
-                            </div>
 
-                            {/* Row 2: Value + Unit (left) + Change (right) */}
-                            <div className="stats-card-row stats-card-main">
-                                <div className="stats-card-value-group">
-                                    <span className="stats-card-value">{card.value}</span>
-                                    {card.unit && <span className="stats-card-unit">{card.unit}</span>}
+                                {/* Row 2: Value + Unit (left) + Change (right) */}
+                                <div className="flex items-end justify-between mb-4">
+                                    <div className="flex items-baseline gap-1">
+                                        <span className="text-2xl font-bold text-slate-900">{card.value}</span>
+                                        {card.unit && <span className="text-sm text-slate-500">{card.unit}</span>}
+                                    </div>
+                                    <div className={`flex items-center text-xs font-semibold ${card.positive ? 'text-emerald-600' : 'text-red-600'}`}>
+                                        <span dir="ltr">{card.change}</span>
+                                        {card.positive ? <TrendingUp size={16} className="ml-1" /> : <TrendingDown size={16} className="ml-1" />}
+                                    </div>
                                 </div>
-                                <div className={`stats-card-change ${card.positive ? 'positive' : 'negative'}`}>
-                                    <span>{card.change}</span>
-                                    {card.positive ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
-                                </div>
-                            </div>
 
-                            {/* Row 3: Area Chart */}
-                            <div className="stats-card-chart">
-                                <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none">
-                                    <defs>
-                                        <linearGradient id={`gradient-${card.id}`} x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stopColor={card.color} stopOpacity="0.25" />
-                                            <stop offset="100%" stopColor={card.color} stopOpacity="0.02" />
-                                        </linearGradient>
-                                    </defs>
-                                    <polygon
-                                        points={areaPoints}
-                                        fill={`url(#gradient-${card.id})`}
-                                    />
-                                    <polyline
-                                        points={points}
-                                        fill="none"
-                                        stroke={card.color}
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                            </div>
-                        </div>
+                                {/* Row 3: Area Chart */}
+                                <div className="h-12 w-full">
+                                    <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none">
+                                        <defs>
+                                            <linearGradient id={`gradient-${card.id}`} x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stopColor={card.color} stopOpacity="0.25" />
+                                                <stop offset="100%" stopColor={card.color} stopOpacity="0.02" />
+                                            </linearGradient>
+                                        </defs>
+                                        <polygon
+                                            points={areaPoints}
+                                            fill={`url(#gradient-${card.id})`}
+                                        />
+                                        <polyline
+                                            points={points}
+                                            fill="none"
+                                            stroke={card.color}
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </div>
+                            </CardContent>
+                        </Card>
                     );
                 })}
             </div>
 
             {/* Campaign Cards - Modern Card Layout */}
-            <div className="card mb-lg">
-                <div className="card-header">
-                    <h3 className="card-title" style={{ fontSize: 18, fontWeight: 700 }}>الحملات الإعلانية</h3>
-                    <div className="flex items-center gap-sm">
-                        <button className="btn btn-secondary" style={{ fontSize: 13, padding: '8px 16px' }}>
-                            <Calendar size={16} />
-                            فلترة
-                        </button>
-                    </div>
-                </div>
+            <Card className="bg-white border-slate-200 shadow-sm">
+                <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-slate-50">
+                    <CardTitle className="text-lg font-bold text-slate-800">الحملات الإعلانية</CardTitle>
+                    <Button variant="outline" size="sm" className="gap-2">
+                        <Calendar size={16} />
+                        فلترة
+                    </Button>
+                </CardHeader>
 
-                <div className="grid grid-cols-1" style={{ gap: 'var(--spacing-md)' }}>
+                <CardContent className="p-4 space-y-4">
                     {ads.map((ad) => (
-                        <div key={ad.id} style={{
-                            background: 'var(--bg-card)',
-                            border: '1px solid var(--border-color)',
-                            borderRadius: 'var(--radius-lg)',
-                            padding: 'var(--spacing-lg)',
-                            transition: 'all var(--transition-fast)'
-                        }}>
+                        <div key={ad.id} className="bg-slate-50/50 border border-slate-200 rounded-xl p-6 hover:border-blue-200 transition-all duration-200">
                             {/* Header Row */}
-                            <div className="flex items-start justify-between mb-md">
-                                <div className="flex items-center gap-md">
-                                    <div style={{
-                                        width: 48,
-                                        height: 48,
-                                        background: 'var(--bg-input)',
-                                        borderRadius: 'var(--radius-md)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontSize: 20
-                                    }}>
+                            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-2xl border border-slate-100 shadow-sm">
                                         📱
                                     </div>
                                     <div>
-                                        <h4 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>
+                                        <h4 className="text-base font-bold text-slate-900 mb-1">
                                             {ad.product}
                                         </h4>
-                                        <span className="badge badge-info" style={{ fontSize: 11 }}>{ad.page}</span>
+                                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 font-normal">
+                                            {ad.page}
+                                        </Badge>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-sm">
-                                    <span className={`badge badge-${ad.status === 'active' ? 'success' : ad.status === 'paused' ? 'warning' : 'secondary'}`}>
+                                <div className="flex items-center gap-2">
+                                    <Badge variant="secondary" className={`font-medium ${ad.status === 'active' ? 'bg-emerald-50 text-emerald-700' :
+                                            ad.status === 'paused' ? 'bg-amber-50 text-amber-700' :
+                                                'bg-slate-100 text-slate-600'
+                                        }`}>
                                         {ad.status === 'active' ? 'نشط' : ad.status === 'paused' ? 'متوقف' : 'منتهي'}
-                                    </span>
+                                    </Badge>
                                     {ad.status === 'active' && (
-                                        <button className="btn btn-warning btn-sm">
-                                            <Pause size={14} />
-                                        </button>
+                                        <Button size="icon" variant="ghost" className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-full">
+                                            <Pause size={16} />
+                                        </Button>
                                     )}
                                     {ad.status === 'paused' && (
-                                        <button className="btn btn-success btn-sm">
-                                            <Play size={14} />
-                                        </button>
+                                        <Button size="icon" variant="ghost" className="h-8 w-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-full">
+                                            <Play size={16} />
+                                        </Button>
                                     )}
-                                    <button className="btn btn-secondary btn-sm">
-                                        <MoreVertical size={14} />
-                                    </button>
+                                    <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-400 hover:text-slate-600 rounded-full">
+                                        <MoreVertical size={16} />
+                                    </Button>
                                 </div>
                             </div>
 
                             {/* Stats Grid */}
-                            <div className="grid grid-cols-6" style={{ gap: 'var(--spacing-lg)', marginBottom: 'var(--spacing-md)' }}>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 mb-6">
                                 <div>
-                                    <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>المشاهدات</p>
-                                    <p style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>
+                                    <p className="text-xs text-slate-500 mb-1">المشاهدات</p>
+                                    <p className="text-lg font-bold text-slate-900">
                                         {ad.views.toLocaleString('en-US')}
                                     </p>
                                 </div>
                                 <div>
-                                    <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>النقرات</p>
-                                    <p style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>
+                                    <p className="text-xs text-slate-500 mb-1">النقرات</p>
+                                    <p className="text-lg font-bold text-slate-900">
                                         {ad.clicks.toLocaleString('en-US')}
                                     </p>
                                 </div>
                                 <div>
-                                    <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>معدل النقر</p>
-                                    <p style={{ fontSize: 18, fontWeight: 700, color: '#8b5cf6' }}>
+                                    <p className="text-xs text-slate-500 mb-1">معدل النقر</p>
+                                    <p className="text-lg font-bold text-purple-600">
                                         {ad.ctr}%
                                     </p>
                                 </div>
                                 <div>
-                                    <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>الطلبات</p>
-                                    <p style={{ fontSize: 18, fontWeight: 700, color: '#10b981' }}>
+                                    <p className="text-xs text-slate-500 mb-1">الطلبات</p>
+                                    <p className="text-lg font-bold text-emerald-600">
                                         {ad.orders}
                                     </p>
                                 </div>
                                 <div>
-                                    <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>العائد</p>
-                                    <p style={{ fontSize: 18, fontWeight: 700, color: '#10b981' }}>
-                                        {ad.revenue.toLocaleString('en-US')} ج.م
+                                    <p className="text-xs text-slate-500 mb-1">العائد</p>
+                                    <p className="text-lg font-bold text-emerald-600">
+                                        {ad.revenue.toLocaleString('en-US')} <span className="text-xs">ج.م</span>
                                     </p>
                                 </div>
                                 <div>
-                                    <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>ROI</p>
-                                    <p style={{ fontSize: 18, fontWeight: 700, color: '#f59e0b' }}>
+                                    <p className="text-xs text-slate-500 mb-1">ROI</p>
+                                    <p className="text-lg font-bold text-amber-500">
                                         {ad.roi}%
                                     </p>
                                 </div>
@@ -303,172 +327,142 @@ export default function Ads() {
 
                             {/* Budget Progress */}
                             <div>
-                                <div className="flex items-center justify-between mb-xs">
-                                    <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
-                                        الميزانية: {ad.spent.toLocaleString('en-US')} / {ad.budget.toLocaleString('en-US')} ج.م
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-xs text-slate-500">
+                                        الميزانية: <span className="font-medium text-slate-700">{ad.spent.toLocaleString('en-US')}</span> / {ad.budget.toLocaleString('en-US')} ج.م
                                     </span>
-                                    <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent-primary)' }}>
+                                    <span className="text-xs font-bold text-blue-600">
                                         {Math.round((ad.spent / ad.budget) * 100)}%
                                     </span>
                                 </div>
-                                <div style={{
-                                    height: '6px',
-                                    background: 'var(--bg-input)',
-                                    borderRadius: 'var(--radius-full)',
-                                    overflow: 'hidden'
-                                }}>
-                                    <div style={{
-                                        width: `${(ad.spent / ad.budget) * 100}%`,
-                                        height: '100%',
-                                        background: 'linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%)',
-                                        borderRadius: 'var(--radius-full)',
-                                        transition: 'width var(--transition-base)'
-                                    }}></div>
+                                <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-blue-600 rounded-full transition-all duration-500"
+                                        style={{ width: `${(ad.spent / ad.budget) * 100}%` }}
+                                    ></div>
                                 </div>
                             </div>
                         </div>
                     ))}
-                </div>
-            </div>
+                </CardContent>
+            </Card>
 
             {/* Payment History */}
-            <div className="card">
-                <div className="card-header">
-                    <h3 className="card-title" style={{ fontSize: 18, fontWeight: 700 }}>سجل المدفوعات</h3>
-                </div>
-                <div className="grid grid-cols-1" style={{ gap: 'var(--spacing-sm)' }}>
+            <Card className="bg-white border-slate-200 shadow-sm">
+                <CardHeader className="pb-4 border-b border-slate-50">
+                    <CardTitle className="text-lg font-bold text-slate-800">سجل المدفوعات</CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 space-y-3">
                     {paymentHistory.map((payment) => (
-                        <div key={payment.id} style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            padding: 'var(--spacing-md)',
-                            background: 'var(--bg-input)',
-                            borderRadius: 'var(--radius-md)',
-                            transition: 'all var(--transition-fast)'
-                        }}>
-                            <div className="flex items-center gap-md">
-                                <div style={{
-                                    width: 40,
-                                    height: 40,
-                                    background: '#10b98115',
-                                    borderRadius: 'var(--radius-md)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    color: '#10b981'
-                                }}>
+                        <div key={payment.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-100">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
                                     <CreditCard size={20} />
                                 </div>
                                 <div>
-                                    <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 2 }}>
+                                    <p className="font-semibold text-slate-900 text-sm">
                                         {payment.product}
                                     </p>
-                                    <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                                    <p className="text-xs text-slate-500 mt-0.5">
                                         {payment.type} • {payment.date}
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-md">
-                                <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>
+                            <div className="flex items-center gap-4">
+                                <p className="font-bold text-slate-900">
                                     {payment.amount.toLocaleString('en-US')} ج.م
                                 </p>
-                                <span className="badge badge-success">تم الدفع</span>
+                                <Badge variant="outline" className="text-emerald-600 border-emerald-200 bg-emerald-50">تم الدفع</Badge>
                             </div>
                         </div>
                     ))}
-                </div>
-            </div>
+                </CardContent>
+            </Card>
 
             {/* Enhanced Modal */}
-            {showModal && (
-                <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                    <div className="modal" style={{ maxWidth: '600px' }} onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3 className="modal-title">إنشاء إعلان جديد</h3>
-                            <button className="modal-close" onClick={() => setShowModal(false)}>
-                                <X size={18} />
-                            </button>
+            <Dialog open={showModal} onOpenChange={setShowModal}>
+                <DialogContent className="sm:max-w-[600px] bg-white">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4">
+                            إنشاء إعلان جديد
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    <div className="py-4 space-y-4">
+                        <div className="space-y-2">
+                            <Label>اختر المنتج</Label>
+                            <Select>
+                                <SelectTrigger className="bg-white border-slate-200">
+                                    <SelectValue placeholder="اختر المنتج" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="s24">هاتف سامسونج Galaxy S24</SelectItem>
+                                    <SelectItem value="airpods">سماعات AirPods Pro</SelectItem>
+                                    <SelectItem value="gt4">ساعة Huawei GT4</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
-                        <div className="modal-body">
-                            <div className="form-group">
-                                <label className="form-label">اختر المنتج</label>
-                                <select className="form-select">
-                                    <option>هاتف سامسونج Galaxy S24</option>
-                                    <option>سماعات AirPods Pro</option>
-                                    <option>ساعة Huawei GT4</option>
-                                </select>
+                        <div className="space-y-2">
+                            <Label>صفحة العرض</Label>
+                            <Select>
+                                <SelectTrigger className="bg-white border-slate-200">
+                                    <SelectValue placeholder="اختر مكان العرض" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="home">الصفحة الرئيسية</SelectItem>
+                                    <SelectItem value="category">صفحة الفئة</SelectItem>
+                                    <SelectItem value="search">صفحة البحث</SelectItem>
+                                    <SelectItem value="featured">صفحة المنتجات المميزة</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label>الميزانية (ج.م)</Label>
+                                <Input type="number" placeholder="1000" className="bg-white border-slate-200" />
                             </div>
-                            <div className="form-group">
-                                <label className="form-label">صفحة العرض</label>
-                                <select className="form-select">
-                                    <option>الصفحة الرئيسية</option>
-                                    <option>صفحة الفئة</option>
-                                    <option>صفحة البحث</option>
-                                    <option>صفحة المنتجات المميزة</option>
-                                </select>
-                            </div>
-                            <div className="grid grid-cols-2" style={{ gap: 'var(--spacing-md)' }}>
-                                <div className="form-group">
-                                    <label className="form-label">الميزانية (ج.م)</label>
-                                    <input type="number" className="form-input" placeholder="1000" />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">المدة (أيام)</label>
-                                    <input type="number" className="form-input" placeholder="7" />
-                                </div>
-                            </div>
-
-                            {/* Estimated Performance */}
-                            <div style={{
-                                padding: 'var(--spacing-lg)',
-                                background: 'linear-gradient(135deg, #eff6ff 0%, #faf5ff 100%)',
-                                borderRadius: 'var(--radius-lg)',
-                                marginTop: 'var(--spacing-md)',
-                                border: '1px solid #e0e7ff'
-                            }}>
-                                <h4 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 'var(--spacing-sm)' }}>
-                                    الأداء المتوقع
-                                </h4>
-                                <div className="grid grid-cols-3" style={{ gap: 'var(--spacing-md)' }}>
-                                    <div>
-                                        <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>مشاهدات متوقعة</p>
-                                        <p style={{ fontSize: 16, fontWeight: 700, color: '#3b82f6' }}>~8,500</p>
-                                    </div>
-                                    <div>
-                                        <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>نقرات متوقعة</p>
-                                        <p style={{ fontSize: 16, fontWeight: 700, color: '#8b5cf6' }}>~600</p>
-                                    </div>
-                                    <div>
-                                        <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>ROI متوقع</p>
-                                        <p style={{ fontSize: 16, fontWeight: 700, color: '#10b981' }}>~180%</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div style={{
-                                padding: 'var(--spacing-md)',
-                                background: 'var(--info-bg)',
-                                borderRadius: 'var(--radius-md)',
-                                marginTop: 'var(--spacing-md)',
-                                fontSize: 13,
-                                color: 'var(--text-secondary)'
-                            }}>
-                                💡 سيتم خصم المبلغ من محفظة التاجر عند بدء الإعلان
+                            <div className="space-y-2">
+                                <Label>المدة (أيام)</Label>
+                                <Input type="number" placeholder="7" className="bg-white border-slate-200" />
                             </div>
                         </div>
-                        <div className="modal-footer">
-                            <button className="btn btn-primary">
-                                <CreditCard size={18} />
-                                الدفع وبدء الإعلان
-                            </button>
-                            <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                                إلغاء
-                            </button>
+
+                        {/* Estimated Performance */}
+                        <div className="bg-blue-50/50 rounded-xl p-4 border border-blue-100">
+                            <h4 className="font-bold text-sm text-blue-900 mb-3">
+                                الأداء المتوقع
+                            </h4>
+                            <div className="grid grid-cols-3 gap-4">
+                                <div>
+                                    <p className="text-[10px] text-blue-600/70 mb-1">مشاهدات متوقعة</p>
+                                    <p className="font-bold text-blue-700">~8,500</p>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] text-blue-600/70 mb-1">نقرات متوقعة</p>
+                                    <p className="font-bold text-purple-700">~600</p>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] text-blue-600/70 mb-1">ROI متوقع</p>
+                                    <p className="font-bold text-emerald-600">~180%</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-amber-50 rounded-lg p-3 text-xs text-amber-700 border border-amber-100 flex items-center gap-2">
+                            <span>💡</span>
+                            سيتم خصم المبلغ من محفظة التاجر عند بدء الإعلان
                         </div>
                     </div>
-                </div>
-            )}
+
+                    <DialogFooter className="gap-2 border-t border-slate-100 pt-4">
+                        <Button variant="outline" onClick={() => setShowModal(false)}>إلغاء</Button>
+                        <Button className="bg-blue-600 hover:bg-blue-700 gap-2">
+                            <CreditCard size={18} />
+                            الدفع وبدء الإعلان
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

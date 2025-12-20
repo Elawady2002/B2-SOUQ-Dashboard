@@ -1,8 +1,18 @@
+/* Google Fonts Import - Must be first */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
+
+/* Tailwind CSS */
+/* stylelint-disable-next-line at-rule-no-unknown */
+@tailwind base;
+/* stylelint-disable-next-line at-rule-no-unknown */
+@tailwind components;
+/* stylelint-disable-next-line at-rule-no-unknown */
+@tailwind utilities;
+
 /* =====================================
    Seller Dashboard - B2 Style Design System
    Arabic RTL - Light Theme - Fully Responsive
    ===================================== */
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
 
 /* CSS Variables - Design Tokens */
 :root {
@@ -1722,4 +1732,132 @@ a:hover {
 
 .btn-view-all-arrow:hover .arrow-icon {
   transform: translateX(-4px);
+}
+/* Custom styles for react-international-phone */
+.react-international-phone-input-container {
+  display: flex;
+  gap: 0.5rem;
+  direction: ltr;
+}
+
+.react-international-phone-input-container .react-international-phone-input {
+  height: 3rem;
+  border-radius: 0.375rem;
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  width: 100%;
+  direction: ltr;
+}
+
+.react-international-phone-input-container .react-international-phone-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(221.2 83.2% 53.3%);
+  border-color: transparent;
+}
+
+.react-international-phone-country-selector-button {
+  height: 3rem !important;
+  border-radius: 0.375rem;
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem 0.75rem;
+  background: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.react-international-phone-country-selector-button:hover {
+  background: #f8fafc;
+}
+
+.react-international-phone-country-selector-dropdown {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 50;
+}
+/* Override react-international-phone styles to match shadcn design */
+.react-international-phone-input-container {
+  display: flex;
+  gap: 0;
+  direction: ltr;
+}
+
+.react-international-phone-input-container .react-international-phone-country-selector-button {
+  height: 3rem;
+  border: 1px solid hsl(214.3 31.8% 91.4%);
+  border-radius: 0.375rem 0 0 0.375rem;
+  border-right: none;
+  padding: 0.5rem 0.75rem;
+  background: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.react-international-phone-input-container .react-international-phone-country-selector-button:hover {
+  background: hsl(210 40% 98%);
+}
+
+.react-international-phone-input-container .react-international-phone-country-selector-button:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: hsl(221.2 83.2% 53.3%);
+  ring-offset: 2px;
+}
+
+.react-international-phone-input-container .react-international-phone-input {
+  height: 3rem;
+  border: 1px solid hsl(214.3 31.8% 91.4%);
+  border-radius: 0 0.375rem 0.375rem 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  width: 100%;
+  direction: ltr;
+  background: white;
+  transition: all 0.2s;
+}
+
+.react-international-phone-input-container .react-international-phone-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(221.2 83.2% 53.3%);
+  border-color: transparent;
+}
+
+.react-international-phone-input-container .react-international-phone-input::placeholder {
+  color: hsl(215.4 16.3% 46.9%);
+}
+
+.react-international-phone-country-selector-dropdown {
+  background: white;
+  border: 1px solid hsl(214.3 31.8% 91.4%);
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 50;
+  margin-top: 0.25rem;
+}
+
+.react-international-phone-country-selector-dropdown__list-item {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.react-international-phone-country-selector-dropdown__list-item:hover {
+  background: hsl(210 40% 96.1%);
+}
+
+.react-international-phone-country-selector-dropdown__list-item--selected {
+  background: hsl(210 40% 96.1%);
+}
+
+.react-international-phone-country-selector-dropdown__list-item--focused {
+  background: hsl(210 40% 98%);
 }

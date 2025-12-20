@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import React from 'react';
 import {
     RotateCcw,
     Package,
@@ -10,9 +12,36 @@ import {
     X,
     MapPin,
     Truck,
-    Home
+    Home,
+    Filter,
+    Search
 } from 'lucide-react';
-import { useState } from 'react';
+
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 
 const returns = [
     {
@@ -82,393 +111,292 @@ const returns = [
 ];
 
 const statusConfig = {
-    pending: { label: 'قيد المراجعة', color: '#f59e0b', bgColor: '#fffbeb', icon: Clock },
-    approved: { label: 'تمت الموافقة', color: '#3b82f6', bgColor: '#eff6ff', icon: CheckCircle },
-    rejected: { label: 'مرفوض', color: '#ef4444', bgColor: '#fef2f2', icon: XCircle },
-    completed: { label: 'مكتمل', color: '#10b981', bgColor: '#f0fdf4', icon: CheckCircle },
+    pending: { label: 'قيد المراجعة', color: 'bg-amber-50 text-amber-700', icon: Clock },
+    approved: { label: 'تمت الموافقة', color: 'bg-blue-50 text-blue-700', icon: CheckCircle },
+    rejected: { label: 'مرفوض', color: 'bg-red-50 text-red-700', icon: XCircle },
+    completed: { label: 'مكتمل', color: 'bg-emerald-50 text-emerald-700', icon: CheckCircle },
 };
 
 const shippingMethods = {
-    platform_full: { label: 'شحن المنصة', icon: Package, color: '#10b981' },
-    platform_ship: { label: 'شحن المنصة', icon: Truck, color: '#3b82f6' },
-    self_ship: { label: 'شحن ذاتي', icon: Home, color: '#f59e0b' },
+    platform_full: { label: 'شحن المنصة', icon: Package, color: 'text-emerald-600 bg-emerald-50' },
+    platform_ship: { label: 'شحن المنصة', icon: Truck, color: 'text-blue-600 bg-blue-50' },
+    self_ship: { label: 'شحن ذاتي', icon: Home, color: 'text-amber-600 bg-amber-50' },
 };
 
 const originalStatusConfig = {
-    completed: { label: 'مكتمل', color: '#10b981' },
-    cancelled: { label: 'ملغي', color: '#ef4444' },
+    completed: { label: 'مكتمل', color: 'bg-emerald-50 text-emerald-700' },
+    cancelled: { label: 'ملغي', color: 'bg-red-50 text-red-700' },
 };
 
 export default function Returns() {
     const [selectedReturn, setSelectedReturn] = useState(null);
 
     return (
-        <div>
+        <div className="flex flex-col gap-6">
             {/* Page Header */}
-            <div className="page-header">
-                <h2 className="page-title">المرتجعات والنزاعات</h2>
-                <p className="page-subtitle">إدارة طلبات الإرجاع والنزاعات مع العملاء</p>
+            <div>
+                <h2 className="text-2xl font-bold text-slate-900">المرتجعات والنزاعات</h2>
+                <p className="text-sm text-slate-500 mt-1">إدارة طلبات الإرجاع والنزاعات مع العملاء</p>
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-4 mb-xl" style={{ gap: 'var(--spacing-md)' }}>
-                <div style={{
-                    padding: '20px',
-                    background: '#fffbeb',
-                    borderRadius: 'var(--radius-lg)',
-                    border: '1px solid #f1f5f9'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>قيد المراجعة</div>
-                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#f59e0b', lineHeight: 1 }}>5</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+                            <Clock size={20} />
                         </div>
-                        <div style={{
-                            width: '44px',
-                            height: '44px',
-                            borderRadius: 'var(--radius-lg)',
-                            background: '#f59e0b15',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#f59e0b'
-                        }}>
-                            <Clock size={22} />
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">قيد المراجعة</p>
+                            <p className="text-lg font-bold text-slate-900">5</p>
                         </div>
-                    </div>
-                </div>
-                <div style={{
-                    padding: '20px',
-                    background: '#eff6ff',
-                    borderRadius: 'var(--radius-lg)',
-                    border: '1px solid #f1f5f9'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>في الطريق</div>
-                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#3b82f6', lineHeight: 1 }}>3</div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                            <RotateCcw size={20} />
                         </div>
-                        <div style={{
-                            width: '44px',
-                            height: '44px',
-                            borderRadius: 'var(--radius-lg)',
-                            background: '#3b82f615',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#3b82f6'
-                        }}>
-                            <RotateCcw size={22} />
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">في الطريق</p>
+                            <p className="text-lg font-bold text-slate-900">3</p>
                         </div>
-                    </div>
-                </div>
-                <div style={{
-                    padding: '20px',
-                    background: '#f0fdf4',
-                    borderRadius: 'var(--radius-lg)',
-                    border: '1px solid #f1f5f9'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>مكتمل</div>
-                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#10b981', lineHeight: 1 }}>28</div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                            <CheckCircle size={20} />
                         </div>
-                        <div style={{
-                            width: '44px',
-                            height: '44px',
-                            borderRadius: 'var(--radius-lg)',
-                            background: '#10b98115',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#10b981'
-                        }}>
-                            <CheckCircle size={22} />
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">مكتمل</p>
+                            <p className="text-lg font-bold text-slate-900">28</p>
                         </div>
-                    </div>
-                </div>
-                <div style={{
-                    padding: '20px',
-                    background: '#fef2f2',
-                    borderRadius: 'var(--radius-lg)',
-                    border: '1px solid #f1f5f9'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>نزاعات مفتوحة</div>
-                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#ef4444', lineHeight: 1 }}>2</div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-600">
+                            <AlertTriangle size={20} />
                         </div>
-                        <div style={{
-                            width: '44px',
-                            height: '44px',
-                            borderRadius: 'var(--radius-lg)',
-                            background: '#ef444415',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#ef4444'
-                        }}>
-                            <AlertTriangle size={22} />
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">نزاعات مفتوحة</p>
+                            <p className="text-lg font-bold text-slate-900">2</p>
                         </div>
-                    </div>
-                </div>
+                    </CardContent>
+                </Card>
             </div>
 
             {/* Returns Table */}
-            <div className="card">
-                <div className="card-header">
-                    <h3 className="card-title">جدول طلبات الإرجاع</h3>
-                </div>
-                <div className="table-container">
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>رقم الطلب</th>
-                                <th>المنتج</th>
-                                <th>SKU</th>
-                                <th>الفئة</th>
-                                <th>الكمية</th>
-                                <th>السعر/وحدة</th>
-                                <th>الإجمالي</th>
-                                <th>سبب الإرجاع</th>
-                                <th>حالة الإرجاع</th>
-                                <th>طريقة الشحن</th>
-                                <th>العنوان</th>
-                                <th>حالة الطلب</th>
-                                <th>الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+            <Card className="bg-white border-slate-200 shadow-sm">
+                <CardHeader className="pb-4 border-b border-slate-50">
+                    <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg font-bold text-slate-800">جدول طلبات الإرجاع</CardTitle>
+                        <div className="relative w-full md:w-64">
+                            <Search className="absolute right-3 top-2.5 h-4 w-4 text-slate-400" />
+                            <Input
+                                placeholder="بحث برقم الإرجاع..."
+                                className="pr-9 bg-slate-50 border-slate-200"
+                            />
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                    <Table>
+                        <TableHeader className="bg-slate-50/50">
+                            <TableRow className="hover:bg-transparent border-slate-100">
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">رقم الطلب</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتج</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">SKU</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الفئة</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الكمية</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">السعر/وحدة</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الإجمالي</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">سبب الإرجاع</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">حالة الإرجاع</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">طريقة الشحن</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">العنوان</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">حالة الطلب</TableHead>
+                                <TableHead className="text-center h-10 w-[50px]"></TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
                             {returns.map((item) => {
                                 const status = statusConfig[item.status];
+                                const StatusIcon = status.icon;
                                 const shipping = shippingMethods[item.shippingMethod];
                                 const originalStatus = originalStatusConfig[item.originalStatus];
                                 return (
-                                    <tr key={item.id}>
-                                        <td>
+                                    <TableRow key={item.id} className="border-slate-50 hover:bg-slate-50/50">
+                                        <TableCell>
                                             <div>
-                                                <p style={{ fontFamily: 'monospace', fontWeight: '600', fontSize: '13px', color: '#475569' }}>{item.id}</p>
-                                                <p style={{ fontSize: '11px', color: '#94a3b8', fontFamily: 'monospace' }}>{item.orderId}</p>
+                                                <p className="font-mono font-semibold text-xs text-slate-600">{item.id}</p>
+                                                <p className="font-mono text-[10px] text-slate-400 bg-slate-50 px-1 rounded w-fit mt-1">{item.orderId}</p>
                                             </div>
-                                        </td>
-                                        <td style={{ fontWeight: '600', fontSize: '14px', color: '#1e293b' }}>{item.product}</td>
-                                        <td style={{ fontFamily: 'monospace', fontSize: '13px', color: '#64748b' }}>{item.sku}</td>
-                                        <td style={{ fontSize: '13px', color: '#475569' }}>{item.category}</td>
-                                        <td style={{ fontSize: '14px', fontWeight: 600, color: '#1e293b' }}>{item.quantity}</td>
-                                        <td style={{ fontSize: '13px', color: '#475569' }}>{item.unitPrice.toLocaleString('en-US')} ج.م</td>
-                                        <td style={{ fontWeight: '700', fontSize: '15px', color: '#ef4444' }}>{item.total.toLocaleString('en-US')} ج.م</td>
-                                        <td>
-                                            <span style={{
-                                                padding: '6px 12px',
-                                                borderRadius: 'var(--radius-md)',
-                                                background: '#fffbeb',
-                                                color: '#f59e0b',
-                                                fontSize: '12px',
-                                                fontWeight: 600
-                                            }}>{item.reason}</span>
-                                        </td>
-                                        <td>
-                                            <span style={{
-                                                padding: '6px 12px',
-                                                borderRadius: 'var(--radius-md)',
-                                                background: status.bgColor,
-                                                color: status.color,
-                                                fontSize: '12px',
-                                                fontWeight: 600,
-                                                display: 'inline-flex',
-                                                alignItems: 'center',
-                                                gap: '4px'
-                                            }}>
-                                                <status.icon size={14} />
+                                        </TableCell>
+                                        <TableCell className="font-medium text-slate-900 text-sm max-w-[150px] truncate" title={item.product}>{item.product}</TableCell>
+                                        <TableCell className="font-mono text-xs text-slate-500">{item.sku}</TableCell>
+                                        <TableCell className="text-slate-600 text-sm">{item.category}</TableCell>
+                                        <TableCell className="text-center font-bold text-slate-900">{item.quantity}</TableCell>
+                                        <TableCell className="text-slate-600 text-sm">{item.unitPrice.toLocaleString('en-US')} ج.م</TableCell>
+                                        <TableCell className="font-bold text-red-600 text-sm">{item.total.toLocaleString('en-US')} ج.م</TableCell>
+                                        <TableCell className="text-center">
+                                            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-100 font-normal whitespace-nowrap">
+                                                {item.reason}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-center">
+                                            <Badge variant="secondary" className={`${status.color} gap-1 font-normal whitespace-nowrap`}>
+                                                <StatusIcon size={12} />
                                                 {status.label}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span style={{
-                                                padding: '6px 12px',
-                                                borderRadius: 'var(--radius-md)',
-                                                background: `${shipping.color}15`,
-                                                color: shipping.color,
-                                                fontSize: '12px',
-                                                fontWeight: 600,
-                                                display: 'inline-flex',
-                                                alignItems: 'center',
-                                                gap: '4px'
-                                            }}>
-                                                <shipping.icon size={14} />
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-center">
+                                            <Badge variant="secondary" className={`${shipping.color} gap-1 font-normal whitespace-nowrap`}>
+                                                {React.createElement(shipping.icon, { size: 12 })}
                                                 {shipping.label}
-                                            </span>
-                                        </td>
-                                        <td style={{ fontSize: '13px', color: '#64748b', maxWidth: '200px' }}>{item.address}</td>
-                                        <td>
-                                            <span style={{
-                                                padding: '6px 12px',
-                                                borderRadius: 'var(--radius-md)',
-                                                background: `${originalStatus.color}15`,
-                                                color: originalStatus.color,
-                                                fontSize: '12px',
-                                                fontWeight: 600
-                                            }}>{originalStatus.label}</span>
-                                        </td>
-                                        <td>
-                                            <button
-                                                className="action-btn action-btn-view"
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-xs text-slate-500 max-w-[150px] truncate" title={item.address}>{item.address}</TableCell>
+                                        <TableCell className="text-center">
+                                            <Badge variant="secondary" className={`${originalStatus.color} font-normal whitespace-nowrap`}>
+                                                {originalStatus.label}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-8 w-8 text-slate-400 hover:text-blue-600 hover:bg-blue-50"
                                                 onClick={() => setSelectedReturn(item)}
-                                                style={{ padding: '8px', minWidth: '40px' }}
                                                 title="عرض التفاصيل"
                                             >
-                                                <Eye size={18} />
-                                            </button>
-                                        </td>
-                                    </tr>
+                                                <Eye size={16} />
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
                                 );
                             })}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
 
             {/* Return Details Modal */}
-            {selectedReturn && (
-                <div className="modal-overlay" onClick={() => setSelectedReturn(null)}>
-                    <div className="modal" style={{ maxWidth: '700px' }} onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3 className="modal-title">تفاصيل طلب الإرجاع: {selectedReturn.id}</h3>
-                            <button className="modal-close" onClick={() => setSelectedReturn(null)}>
-                                <X size={18} />
-                            </button>
-                        </div>
-                        <div className="modal-body">
+            <Dialog open={!!selectedReturn} onOpenChange={(open) => !open && setSelectedReturn(null)}>
+                <DialogContent className="sm:max-w-[700px] bg-white">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4">
+                            تفاصيل طلب الإرجاع: {selectedReturn?.id}
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    {selectedReturn && (
+                        <div className="py-4 space-y-6">
                             {/* Status & Shipping */}
-                            <div className="grid grid-cols-2 mb-lg" style={{ gap: 'var(--spacing-md)' }}>
-                                <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                    <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>حالة الإرجاع</span>
-                                    <div style={{ marginTop: '8px' }}>
-                                        <span style={{
-                                            padding: '8px 16px',
-                                            borderRadius: 'var(--radius-md)',
-                                            background: statusConfig[selectedReturn.status].bgColor,
-                                            color: statusConfig[selectedReturn.status].color,
-                                            fontSize: '13px',
-                                            fontWeight: 600,
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            gap: '6px'
-                                        }}>
-                                            {React.createElement(statusConfig[selectedReturn.status].icon, { size: 16 })}
-                                            {statusConfig[selectedReturn.status].label}
-                                        </span>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                                    <p className="text-xs text-slate-500 mb-2">حالة الإرجاع</p>
+                                    <div className="flex items-center gap-2">
+                                        {React.createElement(statusConfig[selectedReturn.status].icon, { size: 18, className: statusConfig[selectedReturn.status].color.split(' ')[1] })}
+                                        <span className="font-semibold text-slate-900">{statusConfig[selectedReturn.status].label}</span>
                                     </div>
                                 </div>
-                                <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                    <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>طريقة الشحن</span>
-                                    <div style={{ marginTop: '8px' }}>
-                                        <span style={{
-                                            padding: '8px 16px',
-                                            borderRadius: 'var(--radius-md)',
-                                            background: `${shippingMethods[selectedReturn.shippingMethod].color}15`,
-                                            color: shippingMethods[selectedReturn.shippingMethod].color,
-                                            fontSize: '13px',
-                                            fontWeight: 600,
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            gap: '6px'
-                                        }}>
-                                            {React.createElement(shippingMethods[selectedReturn.shippingMethod].icon, { size: 16 })}
-                                            {shippingMethods[selectedReturn.shippingMethod].label}
-                                        </span>
+                                <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                                    <p className="text-xs text-slate-500 mb-2">طريقة الشحن</p>
+                                    <div className="flex items-center gap-2">
+                                        {React.createElement(shippingMethods[selectedReturn.shippingMethod].icon, { size: 18, className: shippingMethods[selectedReturn.shippingMethod].color.split(' ')[0] })}
+                                        <span className="font-semibold text-slate-900">{shippingMethods[selectedReturn.shippingMethod].label}</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Order Info */}
-                            <div className="mb-lg">
-                                <h4 style={{ marginBottom: 'var(--spacing-md)', fontSize: '15px', fontWeight: 600 }}>معلومات الطلب</h4>
-                                <div className="grid grid-cols-2" style={{ gap: 'var(--spacing-md)' }}>
-                                    <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                        <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>رقم الإرجاع</p>
-                                        <p style={{ fontWeight: '600', fontFamily: 'monospace' }}>{selectedReturn.id}</p>
+                            <div>
+                                <h4 className="font-semibold text-slate-900 mb-3">معلومات الطلب</h4>
+                                <div className="grid grid-cols-2 gap-4 bg-white border border-slate-200 rounded-lg p-4">
+                                    <div>
+                                        <p className="text-xs text-slate-500">رقم الإرجاع</p>
+                                        <p className="font-mono font-medium text-slate-900">{selectedReturn.id}</p>
                                     </div>
-                                    <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                        <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>رقم الطلب الأصلي</p>
-                                        <p style={{ fontWeight: '600', fontFamily: 'monospace' }}>{selectedReturn.orderId}</p>
+                                    <div>
+                                        <p className="text-xs text-slate-500">رقم الطلب الأصلي</p>
+                                        <p className="font-mono font-medium text-slate-900">{selectedReturn.orderId}</p>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Product Info */}
-                            <div className="mb-lg">
-                                <h4 style={{ marginBottom: 'var(--spacing-md)', fontSize: '15px', fontWeight: 600 }}>معلومات المنتج</h4>
-                                <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                    <div className="flex items-center gap-md mb-md">
-                                        <div style={{ width: '50px', height: '50px', background: 'var(--bg-card)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <Package size={24} style={{ color: 'var(--text-muted)' }} />
+                            <div>
+                                <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                                    <Package size={16} className="text-blue-600" />
+                                    معلومات المنتج
+                                </h4>
+                                <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+                                    <div className="flex items-start gap-4 mb-4">
+                                        <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-slate-200 shadow-sm">
+                                            <Package size={24} className="text-slate-400" />
                                         </div>
-                                        <div style={{ flex: 1 }}>
-                                            <p style={{ fontWeight: '600', fontSize: '15px' }}>{selectedReturn.product}</p>
-                                            <p style={{ fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'monospace' }}>SKU: {selectedReturn.sku}</p>
+                                        <div className="flex-1">
+                                            <p className="font-bold text-slate-900 text-sm">{selectedReturn.product}</p>
+                                            <p className="text-xs text-slate-500 font-mono mt-1">SKU: {selectedReturn.sku}</p>
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-3" style={{ gap: 'var(--spacing-sm)' }}>
+                                    <div className="grid grid-cols-3 gap-4 border-t border-slate-200 pt-4">
                                         <div>
-                                            <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>الفئة</p>
-                                            <p style={{ fontWeight: '500' }}>{selectedReturn.category}</p>
+                                            <p className="text-xs text-slate-500">الفئة</p>
+                                            <p className="font-medium text-slate-900">{selectedReturn.category}</p>
                                         </div>
                                         <div>
-                                            <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>الكمية</p>
-                                            <p style={{ fontWeight: '600' }}>{selectedReturn.quantity}</p>
+                                            <p className="text-xs text-slate-500">الكمية</p>
+                                            <p className="font-bold text-slate-900">{selectedReturn.quantity}</p>
                                         </div>
                                         <div>
-                                            <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>السعر</p>
-                                            <p style={{ fontWeight: '600', color: 'var(--danger)' }}>{selectedReturn.total.toLocaleString('en-US')} ج.م</p>
+                                            <p className="text-xs text-slate-500">المبلغ المسترد</p>
+                                            <p className="font-bold text-red-600">{selectedReturn.total.toLocaleString('en-US')} ج.م</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Return Reason & Address */}
-                            <div className="grid grid-cols-2 mb-lg" style={{ gap: 'var(--spacing-md)' }}>
-                                <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                    <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>سبب الإرجاع</p>
-                                    <p style={{ fontWeight: '600', color: 'var(--warning)' }}>{selectedReturn.reason}</p>
+                            {/* Reason & Address */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="p-4 bg-amber-50 rounded-lg border border-amber-100">
+                                    <p className="text-xs text-amber-600/70 mb-1">سبب الإرجاع</p>
+                                    <p className="font-bold text-amber-700">{selectedReturn.reason}</p>
                                 </div>
-                                <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                    <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>التاريخ</p>
-                                    <p style={{ fontWeight: '600' }}>{selectedReturn.date}</p>
+                                <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                                    <p className="text-xs text-slate-500 mb-1">تاريخ الطلب</p>
+                                    <p className="font-bold text-slate-900">{selectedReturn.date}</p>
                                 </div>
-                            </div>
-
-                            {/* Address */}
-                            <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                <div className="flex items-center gap-md">
-                                    <MapPin size={18} style={{ color: 'var(--text-muted)' }} />
+                                <div className="col-span-2 p-4 bg-slate-50 rounded-lg border border-slate-100 flex items-start gap-3">
+                                    <MapPin size={18} className="text-slate-400 mt-0.5" />
                                     <div>
-                                        <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>عنوان الاستلام</p>
-                                        <p style={{ fontWeight: '600' }}>{selectedReturn.address}</p>
+                                        <p className="text-xs text-slate-500 mb-1">عنوان الاستلام</p>
+                                        <p className="font-medium text-slate-900">{selectedReturn.address}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="modal-footer">
-                            {selectedReturn.status === 'pending' && (
-                                <>
-                                    <button className="btn btn-success">
-                                        <CheckCircle size={18} />
-                                        قبول الإرجاع
-                                    </button>
-                                    <button className="btn btn-danger">
-                                        <XCircle size={18} />
-                                        رفض
-                                    </button>
-                                </>
-                            )}
-                            <button className="btn btn-secondary" onClick={() => setSelectedReturn(null)}>
-                                إغلاق
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+                    )}
+
+                    <DialogFooter className="gap-2 border-t border-slate-100 pt-4">
+                        <Button variant="outline" onClick={() => setSelectedReturn(null)}>إغلاق</Button>
+                        {selectedReturn && selectedReturn.status === 'pending' && (
+                            <>
+                                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                                    <CheckCircle size={16} className="ml-2" />
+                                    قبول الإرجاع
+                                </Button>
+                                <Button className="bg-red-600 hover:bg-red-700 text-white">
+                                    <XCircle size={16} className="ml-2" />
+                                    رفض الطلب
+                                </Button>
+                            </>
+                        )}
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

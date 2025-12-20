@@ -10,8 +10,44 @@ import {
     Edit,
     Clock,
     Eye,
-    X
+    MoreHorizontal,
+    Search
 } from 'lucide-react';
+
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 
 const inventoryItems = [
     {
@@ -85,318 +121,258 @@ const inventoryItems = [
     },
 ];
 
-const summaryCards = [
-    { label: 'إجمالي المنتجات', value: '10', color: '#10b981', bgColor: '#f0fdf4', icon: Package },
-    { label: 'منخفضة المخزون', value: '2', color: '#f59e0b', bgColor: '#fffbeb', icon: AlertTriangle },
-    { label: 'الكمية في المخزون', value: '2,450', unit: 'قطعة', color: '#3b82f6', bgColor: '#eff6ff', icon: Warehouse },
-    { label: 'مضافة حديثاً', value: '3', subtitle: 'آخر 7 أيام', color: '#8b5cf6', bgColor: '#faf5ff', icon: Clock },
-];
-
 export default function Inventory() {
     const [showMovements, setShowMovements] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
 
     const getQuantityColor = (qty, threshold) => {
-        if (qty === 0) return 'var(--danger)';
-        if (qty <= threshold) return 'var(--warning)';
-        return 'var(--success)';
+        if (qty === 0) return 'text-red-600';
+        if (qty <= threshold) return 'text-orange-600';
+        return 'text-emerald-600';
+    };
+
+    const handleViewMovements = (item) => {
+        setSelectedItem(item);
+        setShowMovements(true);
     };
 
     return (
-        <div>
+        <div className="flex flex-col gap-6">
             {/* Page Header */}
-            <div className="page-header">
-                <h2 className="page-title">المخزون</h2>
-                <p className="page-subtitle">إدارة ومتابعة مخزون منتجاتك</p>
+            <div className="flex items-center justify-between">
+                <div>
+                    <h2 className="text-2xl font-bold text-slate-900">المخزون</h2>
+                    <p className="text-sm text-slate-500 mt-1">إدارة ومتابعة مخزون منتجاتك</p>
+                </div>
+                <Button onClick={() => setShowAddModal(true)} className="bg-blue-600 hover:bg-blue-700 gap-2">
+                    <Plus size={18} />
+                    إضافة كمية
+                </Button>
             </div>
 
             {/* Summary Cards */}
-            <div className="grid grid-cols-4 mb-xl" style={{ gap: 'var(--spacing-md)' }}>
-                {summaryCards.map((card, idx) => (
-                    <div key={idx} style={{
-                        padding: '20px',
-                        background: card.bgColor,
-                        borderRadius: 'var(--radius-lg)',
-                        border: '1px solid #f1f5f9'
-                    }}>
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'flex-start',
-                            justifyContent: 'space-between',
-                            marginBottom: '12px'
-                        }}>
-                            <div style={{ flex: 1 }}>
-                                <div style={{
-                                    fontSize: '13px',
-                                    color: '#64748b',
-                                    fontWeight: 500,
-                                    marginBottom: '8px'
-                                }}>{card.label}</div>
-                                <div style={{
-                                    fontSize: '32px',
-                                    fontWeight: 700,
-                                    color: card.color,
-                                    lineHeight: 1
-                                }}>
-                                    {card.value}
-                                </div>
-                                {card.unit && <span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>{card.unit}</span>}
-                                {card.subtitle && <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '6px' }}>{card.subtitle}</p>}
-                            </div>
-                            <div style={{
-                                width: '44px',
-                                height: '44px',
-                                borderRadius: 'var(--radius-lg)',
-                                background: `${card.color}15`,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: card.color
-                            }}>
-                                <card.icon size={22} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center justify-between">
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium mb-1">إجمالي المنتجات</p>
+                            <p className="text-2xl font-bold text-emerald-600">10</p>
+                        </div>
+                        <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
+                            <Package size={20} />
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center justify-between">
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium mb-1">منخفضة المخزون</p>
+                            <p className="text-2xl font-bold text-amber-500">2</p>
+                        </div>
+                        <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-500">
+                            <AlertTriangle size={20} />
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center justify-between">
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium mb-1">الكمية في المخزون</p>
+                            <div className="flex items-baseline gap-1">
+                                <p className="text-2xl font-bold text-blue-600">2,450</p>
+                                <span className="text-xs text-slate-500">قطعة</span>
                             </div>
                         </div>
-                    </div>
-                ))}
+                        <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                            <Warehouse size={20} />
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center justify-between">
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium mb-1">مضافة حديثاً</p>
+                            <p className="text-2xl font-bold text-purple-600">3</p>
+                            <p className="text-[10px] text-slate-400 mt-1">آخر 7 أيام</p>
+                        </div>
+                        <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600">
+                            <Clock size={20} />
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
 
             {/* Inventory Table */}
-            <div className="card">
-                <div className="card-header">
-                    <h3 className="card-title">جدول المخزون</h3>
-                    <button className="btn btn-primary btn-sm" onClick={() => setShowAddModal(true)}>
-                        <Plus size={16} />
-                        إضافة كمية
-                    </button>
-                </div>
-                <div className="table-container">
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>المنتج</th>
-                                <th>SKU</th>
-                                <th>الفئة</th>
-                                <th>السعر</th>
-                                <th>الأبعاد</th>
-                                <th>الكمية الحالية</th>
-                                <th>حد النفاذ</th>
-                                <th>طريقة الشحن</th>
-                                <th>العنوان</th>
-                                <th>الحركات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+            <Card className="bg-white border-slate-200 shadow-sm">
+                <CardHeader className="pb-4 border-b border-slate-50">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <CardTitle className="text-lg font-bold text-slate-800">جدول المخزون</CardTitle>
+                        <div className="relative w-full md:w-64">
+                            <Search className="absolute right-3 top-2.5 h-4 w-4 text-slate-400" />
+                            <Input
+                                placeholder="بحث عن منتج..."
+                                className="pr-9 bg-slate-50 border-slate-200"
+                            />
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                    <Table>
+                        <TableHeader>
+                            <TableRow className="hover:bg-transparent border-slate-100">
+                                <TableHead className="text-right h-12">المنتج</TableHead>
+                                <TableHead className="text-right h-12">SKU</TableHead>
+                                <TableHead className="text-right h-12">الفئة</TableHead>
+                                <TableHead className="text-right h-12">السعر</TableHead>
+                                <TableHead className="text-center h-12">الكمية الحالية</TableHead>
+                                <TableHead className="text-center h-12">حد النفاذ</TableHead>
+                                <TableHead className="text-center h-12">الشحن</TableHead>
+                                <TableHead className="text-right h-12">العنوان</TableHead>
+                                <TableHead className="text-center h-12 w-[50px]"></TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
                             {inventoryItems.map((item) => (
-                                <tr key={item.id}>
-                                    <td>
-                                        <div className="flex items-center gap-md">
-                                            <img
-                                                src={item.image}
-                                                alt={item.name}
-                                                style={{
-                                                    width: '50px',
-                                                    height: '50px',
-                                                    borderRadius: 'var(--radius-md)',
-                                                    objectFit: 'cover',
-                                                    border: '1px solid #e2e8f0'
-                                                }}
-                                            />
-                                            <span style={{ fontWeight: '600', fontSize: '14px', color: '#1e293b' }}>{item.name}</span>
+                                <TableRow key={item.id} className="border-slate-50 hover:bg-slate-50/50">
+                                    <TableCell className="font-medium">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-lg bg-slate-100 overflow-hidden shrink-0 border border-slate-100">
+                                                <img
+                                                    src={item.image}
+                                                    alt={item.name}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
+                                            <span className="text-slate-700 text-sm">{item.name}</span>
                                         </div>
-                                    </td>
-                                    <td style={{ fontFamily: 'monospace', fontSize: '13px', color: '#64748b', fontWeight: 500 }}>{item.sku}</td>
-                                    <td style={{ fontSize: '14px', color: '#475569' }}>{item.category}</td>
-                                    <td style={{ fontSize: '14px', fontWeight: 600, color: '#0f172a' }}>{item.price.toLocaleString('en-US')} ج.م</td>
-                                    <td style={{ fontSize: '13px', color: '#64748b' }}>{item.dimensions}</td>
-                                    <td>
-                                        <span style={{
-                                            color: getQuantityColor(item.quantity, item.threshold),
-                                            fontWeight: '700',
-                                            fontSize: '18px'
-                                        }}>
+                                    </TableCell>
+                                    <TableCell className="text-slate-500 font-mono text-xs">{item.sku}</TableCell>
+                                    <TableCell className="text-slate-600 text-sm">{item.category}</TableCell>
+                                    <TableCell className="font-bold text-slate-900">{item.price.toLocaleString('en-US')} ج.م</TableCell>
+                                    <TableCell className="text-center">
+                                        <span className={`font-bold text-lg ${getQuantityColor(item.quantity, item.threshold)}`}>
                                             {item.quantity}
                                         </span>
-                                    </td>
-                                    <td style={{ fontSize: '14px', color: '#64748b', fontWeight: 500 }}>{item.threshold}</td>
-                                    <td>
-                                        <span style={{
-                                            padding: '6px 12px',
-                                            borderRadius: 'var(--radius-md)',
-                                            background: '#dbeafe',
-                                            color: '#1e40af',
-                                            fontSize: '13px',
-                                            fontWeight: 600
-                                        }}>{item.shipping}</span>
-                                    </td>
-                                    <td style={{ fontSize: '13px', maxWidth: '180px', color: '#475569' }}>{item.address}</td>
-                                    <td>
-                                        <button
-                                            className="action-btn action-btn-edit"
-                                            onClick={() => {
-                                                setSelectedItem(item);
-                                                setShowMovements(true);
-                                            }}
-                                            style={{ fontSize: '13px', padding: '8px', minWidth: '40px' }}
+                                    </TableCell>
+                                    <TableCell className="text-center text-slate-500 font-medium">{item.threshold}</TableCell>
+                                    <TableCell className="text-center">
+                                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-100 font-normal">
+                                            {item.shipping}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-slate-500 text-xs max-w-[180px]">{item.address}</TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-50"
+                                            onClick={() => handleViewMovements(item)}
                                             title="عرض الحركات"
                                         >
-                                            <Eye size={18} />
-                                        </button>
-                                    </td>
-                                </tr>
+                                            <Eye size={16} />
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
                             ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
 
             {/* Movements Modal */}
-            {showMovements && selectedItem && (
-                <div className="modal-overlay" onClick={() => setShowMovements(false)}>
-                    <div className="modal" style={{ maxWidth: '600px' }} onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3 className="modal-title">سجل حركات: {selectedItem.name}</h3>
-                            <button className="modal-close" onClick={() => setShowMovements(false)}>
-                                <X size={18} />
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="flex items-center justify-between mb-lg" style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                <span style={{ color: 'var(--text-muted)' }}>الكمية الحالية</span>
-                                <span style={{
-                                    fontSize: '24px',
-                                    fontWeight: '700',
-                                    color: getQuantityColor(selectedItem.quantity, selectedItem.threshold)
-                                }}>
+            <Dialog open={showMovements} onOpenChange={setShowMovements}>
+                <DialogContent className="sm:max-w-[600px] bg-white">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4">
+                            سجل حركات: {selectedItem?.name}
+                        </DialogTitle>
+                    </DialogHeader>
+                    {selectedItem && (
+                        <div className="py-4">
+                            <div className="flex items-center justify-between mb-6 p-4 bg-slate-50 rounded-lg border border-slate-100">
+                                <span className="text-slate-500 font-medium">الكمية الحالية</span>
+                                <span className={`text-2xl font-bold ${getQuantityColor(selectedItem.quantity, selectedItem.threshold)}`}>
                                     {selectedItem.quantity} قطعة
                                 </span>
                             </div>
 
-                            <h4 style={{ marginBottom: 'var(--spacing-md)' }}>سجل الحركات</h4>
-                            <div className="flex flex-col gap-md">
+                            <h4 className="text-sm font-bold text-slate-900 mb-4">سجل الحركات</h4>
+                            <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
                                 {selectedItem.movements.map((movement, idx) => (
-                                    <div key={idx} style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 'var(--spacing-md)',
-                                        padding: 'var(--spacing-md)',
-                                        background: 'var(--bg-secondary)',
-                                        borderRadius: 'var(--radius-md)',
-                                        borderRight: `4px solid ${movement.type === 'add' ? 'var(--success)' : movement.type === 'return' ? 'var(--info)' : 'var(--danger)'}`
-                                    }}>
-                                        <div style={{
-                                            width: '40px',
-                                            height: '40px',
-                                            borderRadius: 'var(--radius-md)',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            background: movement.type === 'add' ? 'var(--success-bg)' : movement.type === 'return' ? 'var(--info-bg)' : 'var(--danger-bg)',
-                                            color: movement.type === 'add' ? 'var(--success)' : movement.type === 'return' ? 'var(--info)' : 'var(--danger)'
-                                        }}>
-                                            {movement.type === 'add' ? <ArrowUp size={20} /> :
-                                                movement.type === 'return' ? <RotateCcw size={20} /> : <ArrowDown size={20} />}
+                                    <div key={idx} className="flex items-center gap-4 p-3 bg-white border border-slate-100 rounded-lg shadow-sm hover:border-slate-200 transition-colors">
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${movement.type === 'add' ? 'bg-emerald-50 text-emerald-600' :
+                                            movement.type === 'return' ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600'
+                                            }`}>
+                                            {movement.type === 'add' ? <ArrowUp size={18} /> :
+                                                movement.type === 'return' ? <RotateCcw size={18} /> :
+                                                    <ArrowDown size={18} />}
                                         </div>
-                                        <div style={{ flex: 1 }}>
-                                            <p style={{ fontWeight: '600' }}>
-                                                {movement.type === 'add' ? 'إضافة' : movement.type === 'return' ? 'مرتجع' : 'خصم'}
-                                                {' '}
-                                                <span style={{ color: movement.type === 'add' ? 'var(--success)' : 'var(--danger)' }}>
+                                        <div className="flex-1">
+                                            <div className="flex items-center justify-between mb-1">
+                                                <p className="font-semibold text-slate-900 text-sm">
+                                                    {movement.type === 'add' ? 'إضافة مخزون' : movement.type === 'return' ? 'مرتجع من عميل' : 'عملية بيع'}
+                                                </p>
+                                                <span className={`font-bold text-sm ${movement.type === 'add' ? 'text-emerald-600' : 'text-red-600'
+                                                    }`}>
                                                     {movement.type === 'add' ? '+' : '-'}{movement.qty}
                                                 </span>
-                                            </p>
-                                            <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{movement.note}</p>
+                                            </div>
+                                            <div className="flex items-center justify-between text-xs text-slate-500">
+                                                <span>{movement.note}</span>
+                                                <span>{movement.date}</span>
+                                            </div>
                                         </div>
-                                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{movement.date}</span>
                                     </div>
                                 ))}
                             </div>
-
-                            <div className="flex gap-md mt-lg">
-                                <button className="btn btn-success" style={{ flex: 1 }}>
-                                    <Plus size={18} />
-                                    إضافة كمية
-                                </button>
-                                <button className="btn btn-secondary" style={{ flex: 1 }}>
-                                    <Edit size={18} />
-                                    تعديل
-                                </button>
-                            </div>
                         </div>
-                    </div>
-                </div>
-            )}
+                    )}
+                    <DialogFooter className="gap-2 border-t border-slate-100 pt-4">
+                        <Button variant="outline" className="flex-1" onClick={() => setShowMovements(false)}>إغلاق</Button>
+                        <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
+                            <Plus size={16} className="ml-2" />
+                            إضافة حركة يدوية
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
             {/* Add Quantity Modal */}
-            {showAddModal && (
-                <div className="modal-overlay" onClick={() => setShowAddModal(false)}>
-                    <div className="modal" style={{ maxWidth: '500px' }} onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3 className="modal-title">إضافة كمية للمخزون</h3>
-                            <button className="modal-close" onClick={() => setShowAddModal(false)}>
-                                <X size={18} />
-                            </button>
+            <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
+                <DialogContent className="sm:max-w-[500px] bg-white">
+                    <DialogHeader>
+                        <DialogTitle className="text-lg font-bold text-slate-900 pb-4 border-b border-slate-100">إضافة كمية للمخزون</DialogTitle>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                            <Label>المنتج</Label>
+                            <Select>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="اختر المنتج" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {inventoryItems.map(item => (
+                                        <SelectItem key={item.id} value={item.id.toString()}>{item.name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
-                        <div className="modal-body">
-                            <div className="flex flex-col gap-md">
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, fontSize: '14px' }}>المنتج</label>
-                                    <select style={{
-                                        width: '100%',
-                                        padding: '10px 14px',
-                                        borderRadius: 'var(--radius-md)',
-                                        border: '1px solid #e2e8f0',
-                                        fontSize: '14px'
-                                    }}>
-                                        <option value="">اختر المنتج</option>
-                                        {inventoryItems.map(item => (
-                                            <option key={item.id} value={item.id}>{item.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, fontSize: '14px' }}>الكمية</label>
-                                    <input
-                                        type="number"
-                                        placeholder="أدخل الكمية"
-                                        style={{
-                                            width: '100%',
-                                            padding: '10px 14px',
-                                            borderRadius: 'var(--radius-md)',
-                                            border: '1px solid #e2e8f0',
-                                            fontSize: '14px'
-                                        }}
-                                    />
-                                </div>
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, fontSize: '14px' }}>ملاحظات</label>
-                                    <textarea
-                                        placeholder="ملاحظات إضافية (اختياري)"
-                                        rows={3}
-                                        style={{
-                                            width: '100%',
-                                            padding: '10px 14px',
-                                            borderRadius: 'var(--radius-md)',
-                                            border: '1px solid #e2e8f0',
-                                            fontSize: '14px',
-                                            resize: 'vertical'
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                            <div className="flex gap-md mt-lg">
-                                <button className="btn btn-primary" style={{ flex: 1 }}>
-                                    <Plus size={18} />
-                                    إضافة
-                                </button>
-                                <button className="btn btn-secondary" style={{ flex: 1 }} onClick={() => setShowAddModal(false)}>
-                                    إلغاء
-                                </button>
-                            </div>
+                        <div className="space-y-2">
+                            <Label>الكمية</Label>
+                            <Input type="number" placeholder="أدخل الكمية" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label>ملاحظات</Label>
+                            <Textarea placeholder="ملاحظات إضافية (اختياري)" />
                         </div>
                     </div>
-                </div>
-            )}
+                    <DialogFooter className="gap-2">
+                        <Button variant="outline" onClick={() => setShowAddModal(false)}>إلغاء</Button>
+                        <Button className="bg-blue-600 hover:bg-blue-700">إضافة</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

@@ -14,9 +14,44 @@ import {
     Users,
     DollarSign,
     Gift,
-    Tag
+    Tag,
+    Trash
 } from 'lucide-react';
 import { useState } from 'react';
+import React from 'react';
+
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const platformCampaigns = [
     {
@@ -132,470 +167,370 @@ export default function Campaigns() {
     const totalVisits = storeCampaigns.reduce((sum, c) => sum + c.visits, 0);
 
     return (
-        <div>
+        <div className="flex flex-col gap-6">
             {/* Page Header */}
-            <div className="page-header flex items-center justify-between">
+            <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="page-title">الحملات والعروض</h2>
-                    <p className="page-subtitle">إدارة حملات المنصة وعروض متجرك</p>
+                    <h2 className="text-2xl font-bold text-slate-900">الحملات والعروض</h2>
+                    <p className="text-sm text-slate-500 mt-1">إدارة حملات المنصة وعروض متجرك</p>
                 </div>
-                <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+                <Button onClick={() => setShowModal(true)} className="bg-blue-600 hover:bg-blue-700 gap-2">
                     <Plus size={18} />
                     إنشاء عرض جديد
-                </button>
+                </Button>
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-4 mb-xl" style={{ gap: 'var(--spacing-md)' }}>
-                <div style={{
-                    padding: '20px',
-                    background: '#eff6ff',
-                    borderRadius: 'var(--radius-lg)',
-                    border: '1px solid #f1f5f9'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>حملات نشطة</div>
-                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#3b82f6', lineHeight: 1 }}>{activeCampaigns}</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center justify-between">
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium mb-1">حملات نشطة</p>
+                            <p className="text-3xl font-bold text-blue-600">{activeCampaigns}</p>
                         </div>
-                        <div style={{
-                            width: '44px',
-                            height: '44px',
-                            borderRadius: 'var(--radius-lg)',
-                            background: '#3b82f615',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#3b82f6'
-                        }}>
-                            <Megaphone size={22} />
+                        <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+                            <Megaphone size={24} />
                         </div>
-                    </div>
-                </div>
-                <div style={{
-                    padding: '20px',
-                    background: '#f0fdf4',
-                    borderRadius: 'var(--radius-lg)',
-                    border: '1px solid #f1f5f9'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>المبيعات من العروض</div>
-                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#10b981', lineHeight: 1 }}>{totalSales}</div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center justify-between">
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium mb-1">المبيعات من العروض</p>
+                            <p className="text-3xl font-bold text-emerald-600">{totalSales}</p>
                         </div>
-                        <div style={{
-                            width: '44px',
-                            height: '44px',
-                            borderRadius: 'var(--radius-lg)',
-                            background: '#10b98115',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#10b981'
-                        }}>
-                            <ShoppingCart size={22} />
+                        <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+                            <ShoppingCart size={24} />
                         </div>
-                    </div>
-                </div>
-                <div style={{
-                    padding: '20px',
-                    background: '#faf5ff',
-                    borderRadius: 'var(--radius-lg)',
-                    border: '1px solid #f1f5f9'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>إجمالي العائد</div>
-                            <div style={{ fontSize: '28px', fontWeight: 700, color: '#8b5cf6', lineHeight: 1 }}>
-                                {totalRevenue.toLocaleString('en-US')}
-                                <span style={{ fontSize: '14px', color: '#64748b', marginRight: '4px' }}>ج.م</span>
-                            </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center justify-between">
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium mb-1">إجمالي العائد</p>
+                            <p className="text-2xl font-bold text-purple-600">
+                                {totalRevenue.toLocaleString('en-US')} <span className="text-sm font-normal text-slate-500">ج.م</span>
+                            </p>
                         </div>
-                        <div style={{
-                            width: '44px',
-                            height: '44px',
-                            borderRadius: 'var(--radius-lg)',
-                            background: '#8b5cf615',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#8b5cf6'
-                        }}>
-                            <TrendingUp size={22} />
+                        <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600">
+                            <TrendingUp size={24} />
                         </div>
-                    </div>
-                </div>
-                <div style={{
-                    padding: '20px',
-                    background: '#fffbeb',
-                    borderRadius: 'var(--radius-lg)',
-                    border: '1px solid #f1f5f9'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500, marginBottom: '8px' }}>الزيارات من العروض</div>
-                            <div style={{ fontSize: '32px', fontWeight: 700, color: '#f59e0b', lineHeight: 1 }}>{totalVisits.toLocaleString('en-US')}</div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center justify-between">
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium mb-1">الزيارات من العروض</p>
+                            <p className="text-3xl font-bold text-amber-500">{totalVisits.toLocaleString('en-US')}</p>
                         </div>
-                        <div style={{
-                            width: '44px',
-                            height: '44px',
-                            borderRadius: 'var(--radius-lg)',
-                            background: '#f59e0b15',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#f59e0b'
-                        }}>
-                            <Eye size={22} />
+                        <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500">
+                            <Eye size={24} />
                         </div>
-                    </div>
-                </div>
+                    </CardContent>
+                </Card>
             </div>
 
             {/* Platform Campaigns */}
-            <div className="card mb-lg">
-                <div className="card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <h3 className="card-title">حملات المنصة</h3>
-                    <span style={{
-                        padding: '6px 12px',
-                        borderRadius: 'var(--radius-md)',
-                        background: '#eff6ff',
-                        color: '#3b82f6',
-                        fontSize: '12px',
-                        fontWeight: 600
-                    }}>المنصة تتحكم في الحد الأدنى للسعر</span>
-                </div>
-                <div className="grid grid-cols-3" style={{ gap: 'var(--spacing-md)', padding: 'var(--spacing-lg)' }}>
-                    {platformCampaigns.map((campaign) => (
-                        <div key={campaign.id} style={{
-                            padding: '20px',
-                            background: campaign.status === 'active' ? '#f0fdf4' : campaign.status === 'upcoming' ? '#eff6ff' : '#f8fafc',
-                            borderRadius: 'var(--radius-lg)',
-                            border: `2px solid ${campaign.status === 'active' ? '#10b981' : campaign.status === 'upcoming' ? '#3b82f6' : '#e2e8f0'}`
-                        }}>
-                            <div className="flex items-center justify-between mb-md">
-                                <h4 style={{ fontSize: '16px', fontWeight: '700', color: '#1e293b' }}>{campaign.name}</h4>
-                                <span style={{
-                                    padding: '4px 10px',
-                                    borderRadius: 'var(--radius-md)',
-                                    background: campaign.status === 'active' ? '#10b981' : campaign.status === 'upcoming' ? '#3b82f6' : '#94a3b8',
-                                    color: '#fff',
-                                    fontSize: '11px',
-                                    fontWeight: 600
-                                }}>
-                                    {campaign.status === 'active' ? 'نشط' : campaign.status === 'upcoming' ? 'قادم' : 'منتهي'}
-                                </span>
+            <Card className="bg-white border-slate-200 shadow-sm">
+                <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-slate-50">
+                    <CardTitle className="text-lg font-bold text-slate-800">حملات المنصة</CardTitle>
+                    <Badge variant="secondary" className="bg-blue-50 text-blue-700 font-normal">
+                        المنصة تتحكم في الحد الأدنى للسعر
+                    </Badge>
+                </CardHeader>
+                <CardContent className="p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {platformCampaigns.map((campaign) => (
+                            <div
+                                key={campaign.id}
+                                className={`rounded-xl border p-5 transition-all ${campaign.status === 'active'
+                                    ? 'bg-emerald-50/50 border-emerald-200 shadow-sm'
+                                    : campaign.status === 'upcoming'
+                                        ? 'bg-blue-50/50 border-blue-200 shadow-sm'
+                                        : 'bg-slate-50 border-slate-100 opacity-80'
+                                    }`}
+                            >
+                                <div className="flex items-center justify-between mb-3">
+                                    <h4 className="text-base font-bold text-slate-900">{campaign.name}</h4>
+                                    <Badge className={`${campaign.status === 'active' ? 'bg-emerald-500 hover:bg-emerald-600' :
+                                        campaign.status === 'upcoming' ? 'bg-blue-500 hover:bg-blue-600' :
+                                            'bg-slate-500 hover:bg-slate-600'
+                                        }`}>
+                                        {campaign.status === 'active' ? 'نشط' : campaign.status === 'upcoming' ? 'قادم' : 'منتهي'}
+                                    </Badge>
+                                </div>
+                                <p className="text-sm text-slate-600 mb-4 h-10">{campaign.description}</p>
+
+                                <div className="space-y-2 mb-4">
+                                    <div className="flex items-center gap-2">
+                                        <Percent size={14} className="text-emerald-600" />
+                                        <span className="text-sm font-semibold text-emerald-700">خصم {campaign.discount}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Calendar size={14} className="text-slate-400" />
+                                        <span className="text-xs text-slate-500">{campaign.startDate} - {campaign.endDate}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Tag size={14} className="text-slate-400" />
+                                        <span className="text-xs text-slate-500">{campaign.minPrice}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Gift size={14} className="text-slate-400" />
+                                        <span className="text-xs text-slate-500">{campaign.products} منتج مشارك</span>
+                                    </div>
+                                </div>
+
+                                {campaign.status !== 'ended' && (
+                                    <Button
+                                        className={`w-full ${campaign.joined
+                                            ? 'bg-emerald-600 hover:bg-emerald-700'
+                                            : 'bg-blue-600 hover:bg-blue-700'
+                                            }`}
+                                        disabled={campaign.joined}
+                                    >
+                                        {campaign.joined ? (
+                                            <>
+                                                <CheckCircle size={16} className="ml-2" />
+                                                منضم للحملة
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Plus size={16} className="ml-2" />
+                                                الانضمام للحملة
+                                            </>
+                                        )}
+                                    </Button>
+                                )}
                             </div>
-                            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '12px' }}>{campaign.description}</p>
-                            <div style={{ marginBottom: '16px' }}>
-                                <div className="flex items-center gap-sm mb-sm">
-                                    <Percent size={16} style={{ color: '#10b981' }} />
-                                    <span style={{ fontSize: '14px', fontWeight: 600, color: '#10b981' }}>خصم {campaign.discount}</span>
-                                </div>
-                                <div className="flex items-center gap-sm mb-sm">
-                                    <Calendar size={16} style={{ color: '#64748b' }} />
-                                    <span style={{ fontSize: '12px', color: '#64748b' }}>
-                                        {campaign.startDate} - {campaign.endDate}
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-sm mb-sm">
-                                    <Tag size={16} style={{ color: '#64748b' }} />
-                                    <span style={{ fontSize: '12px', color: '#64748b' }}>{campaign.minPrice}</span>
-                                </div>
-                                <div className="flex items-center gap-sm">
-                                    <Gift size={16} style={{ color: '#64748b' }} />
-                                    <span style={{ fontSize: '12px', color: '#64748b' }}>{campaign.products} منتج</span>
-                                </div>
-                            </div>
-                            {campaign.status !== 'ended' && (
-                                <button
-                                    className={`btn ${campaign.joined ? 'btn-success' : 'btn-primary'}`}
-                                    style={{ width: '100%', fontSize: '13px', padding: '10px' }}
-                                    disabled={campaign.joined}
-                                >
-                                    {campaign.joined ? (
-                                        <>
-                                            <CheckCircle size={16} />
-                                            منضم للحملة
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Plus size={16} />
-                                            الانضمام للحملة
-                                        </>
-                                    )}
-                                </button>
-                            )}
-                        </div>
-                    ))}
-                </div>
-            </div>
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
 
             {/* Store Campaigns */}
-            <div className="card">
-                <div className="card-header">
-                    <h3 className="card-title">عروض متجرك</h3>
-                </div>
-                <div className="table-container">
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>اسم العرض</th>
-                                <th>النوع</th>
-                                <th>الخصم</th>
-                                <th>المنتجات</th>
-                                <th>المبيعات</th>
-                                <th>الزيارات</th>
-                                <th>العائد</th>
-                                <th>تأثير الربح</th>
-                                <th>الحالة</th>
-                                <th>الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+            <Card className="bg-white border-slate-200 shadow-sm">
+                <CardHeader className="pb-4 border-b border-slate-50">
+                    <CardTitle className="text-lg font-bold text-slate-800">عروض متجرك</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                    <Table>
+                        <TableHeader className="bg-slate-50/50">
+                            <TableRow className="hover:bg-transparent border-slate-100">
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">اسم العرض</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">النوع</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الخصم</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتجات</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المبيعات</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الزيارات</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">العائد</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">تأثير الربح</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الحالة</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الإجراءات</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
                             {storeCampaigns.map((campaign) => (
-                                <tr key={campaign.id}>
-                                    <td style={{ fontWeight: '600', fontSize: '14px', color: '#1e293b' }}>{campaign.name}</td>
-                                    <td>
-                                        <span style={{
-                                            padding: '6px 12px',
-                                            borderRadius: 'var(--radius-md)',
-                                            background: '#eff6ff',
-                                            color: '#3b82f6',
-                                            fontSize: '12px',
-                                            fontWeight: 600
-                                        }}>{campaign.typeLabel}</span>
-                                    </td>
-                                    <td style={{ color: '#10b981', fontWeight: '700', fontSize: '14px' }}>{campaign.discount}</td>
-                                    <td style={{ fontSize: '13px', color: '#475569' }}>{campaign.products} منتج</td>
-                                    <td style={{ fontSize: '14px', fontWeight: 600, color: '#1e293b' }}>{campaign.sales}</td>
-                                    <td style={{ fontSize: '13px', color: '#475569' }}>{campaign.visits.toLocaleString('en-US')}</td>
-                                    <td style={{ fontWeight: '700', fontSize: '14px', color: '#8b5cf6' }}>{campaign.revenue.toLocaleString('en-US')} ج.م</td>
-                                    <td style={{ fontWeight: '700', fontSize: '14px', color: '#10b981' }}>+{campaign.profit.toLocaleString('en-US')} ج.م</td>
-                                    <td>
-                                        <span style={{
-                                            padding: '6px 12px',
-                                            borderRadius: 'var(--radius-md)',
-                                            background: campaign.status === 'active' ? '#f0fdf4' : '#fef2f2',
-                                            color: campaign.status === 'active' ? '#10b981' : '#ef4444',
-                                            fontSize: '12px',
-                                            fontWeight: 600
-                                        }}>
+                                <TableRow key={campaign.id} className="hover:bg-slate-50/50">
+                                    <TableCell className="font-semibold text-slate-800 text-sm py-3">{campaign.name}</TableCell>
+                                    <TableCell className="py-3">
+                                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 font-normal whitespace-nowrap">
+                                            {campaign.typeLabel}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="font-bold text-emerald-600 py-3">{campaign.discount}</TableCell>
+                                    <TableCell className="text-xs text-slate-500 py-3">{campaign.products} منتج</TableCell>
+                                    <TableCell className="text-sm font-medium text-slate-700 py-3">{campaign.sales}</TableCell>
+                                    <TableCell className="text-xs text-slate-500 py-3">{campaign.visits.toLocaleString('en-US')}</TableCell>
+                                    <TableCell className="font-bold text-purple-600 py-3">{campaign.revenue.toLocaleString('en-US')} ج.م</TableCell>
+                                    <TableCell className="font-bold text-emerald-600 py-3">+{campaign.profit.toLocaleString('en-US')} ج.م</TableCell>
+                                    <TableCell className="text-center py-3">
+                                        <Badge variant="secondary" className={`font-normal whitespace-nowrap ${campaign.status === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                                            }`}>
                                             {campaign.status === 'active' ? 'نشط' : 'منتهي'}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div className="flex items-center gap-sm">
-                                            <button
-                                                className="action-btn action-btn-view"
-                                                title="تقرير الحملة"
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="py-3">
+                                        <div className="flex items-center justify-center gap-1">
+                                            <Button
+                                                size="icon"
+                                                variant="ghost"
+                                                className="h-8 w-8 text-blue-600 hover:bg-blue-50 rounded-full"
                                                 onClick={() => {
                                                     setSelectedCampaign(campaign);
                                                     setShowReportModal(true);
                                                 }}
+                                                title="تقرير الحملة"
                                             >
                                                 <BarChart3 size={16} />
-                                            </button>
-                                            <button
-                                                className="action-btn action-btn-edit"
+                                            </Button>
+                                            <Button
+                                                size="icon"
+                                                variant="ghost"
+                                                className="h-8 w-8 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full"
                                                 title="تعديل"
                                             >
                                                 <Edit size={16} />
-                                            </button>
+                                            </Button>
                                         </div>
-                                    </td>
-                                </tr>
+                                    </TableCell>
+                                </TableRow>
                             ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
 
             {/* Create Campaign Modal */}
-            {showModal && (
-                <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                    <div className="modal" style={{ maxWidth: '600px' }} onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3 className="modal-title">إنشاء عرض جديد</h3>
-                            <button className="modal-close" onClick={() => setShowModal(false)}>
-                                <X size={18} />
-                            </button>
+            <Dialog open={showModal} onOpenChange={setShowModal}>
+                <DialogContent className="sm:max-w-[600px] bg-white">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4">
+                            إنشاء عرض جديد
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    <div className="py-4 space-y-4">
+                        <div className="space-y-2">
+                            <Label>اسم العرض</Label>
+                            <Input placeholder="مثال: خصم 20% على الهواتف" className="bg-white border-slate-200" />
                         </div>
-                        <div className="modal-body">
-                            <div className="form-group">
-                                <label className="form-label">اسم العرض</label>
-                                <input type="text" className="form-input" placeholder="مثال: خصم 20% على الهواتف" />
+
+                        <div className="space-y-2">
+                            <Label>نوع العرض</Label>
+                            <Select>
+                                <SelectTrigger className="bg-white border-slate-200">
+                                    <SelectValue placeholder="اختر نوع العرض" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="price_discount">تخفيض السعر</SelectItem>
+                                    <SelectItem value="group_discount">خصم على مجموعة منتجات</SelectItem>
+                                    <SelectItem value="multi_piece">عرض على أكثر من قطعة</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label>نسبة الخصم (%)</Label>
+                                <Input type="number" placeholder="15" className="bg-white border-slate-200" />
                             </div>
-                            <div className="form-group">
-                                <label className="form-label">نوع العرض</label>
-                                <select className="form-select">
-                                    <option value="price_discount">تخفيض السعر</option>
-                                    <option value="group_discount">خصم على مجموعة منتجات</option>
-                                    <option value="multi_piece">عرض على أكثر من قطعة</option>
-                                </select>
-                            </div>
-                            <div className="grid grid-cols-2" style={{ gap: 'var(--spacing-md)' }}>
-                                <div className="form-group">
-                                    <label className="form-label">نسبة الخصم (%)</label>
-                                    <input type="number" className="form-input" placeholder="15" min="1" max="100" />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">المنتجات</label>
-                                    <select className="form-select">
-                                        <option>اختر المنتجات</option>
-                                        <option>هاتف سامسونج Galaxy S24</option>
-                                        <option>سماعات AirPods Pro</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">تاريخ البداية</label>
-                                    <input type="date" className="form-input" />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">تاريخ النهاية</label>
-                                    <input type="date" className="form-input" />
-                                </div>
+                            <div className="space-y-2">
+                                <Label>المنتجات</Label>
+                                <Select>
+                                    <SelectTrigger className="bg-white border-slate-200">
+                                        <SelectValue placeholder="اختر المنتجات" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="all">كل المنتجات</SelectItem>
+                                        <SelectItem value="phones">هواتف</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
                         </div>
-                        <div className="modal-footer">
-                            <button className="btn btn-primary">
-                                <Plus size={18} />
-                                إنشاء العرض
-                            </button>
-                            <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                                إلغاء
-                            </button>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label>تاريخ البداية</Label>
+                                <Input type="date" className="bg-white border-slate-200" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>تاريخ النهاية</Label>
+                                <Input type="date" className="bg-white border-slate-200" />
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+
+                    <DialogFooter className="gap-2 border-t border-slate-100 pt-4">
+                        <Button variant="outline" onClick={() => setShowModal(false)}>إلغاء</Button>
+                        <Button className="bg-blue-600 hover:bg-blue-700 text-white gap-2">
+                            <Plus size={18} />
+                            إنشاء العرض
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
             {/* Campaign Report Modal */}
-            {showReportModal && selectedCampaign && (
-                <div className="modal-overlay" onClick={() => setShowReportModal(false)}>
-                    <div className="modal" style={{ maxWidth: '700px' }} onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3 className="modal-title">تقرير الحملة: {selectedCampaign.name}</h3>
-                            <button className="modal-close" onClick={() => setShowReportModal(false)}>
-                                <X size={18} />
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            {/* Campaign Stats */}
-                            <div className="grid grid-cols-2 mb-lg" style={{ gap: 'var(--spacing-md)' }}>
-                                <div style={{ padding: 'var(--spacing-md)', background: '#f0fdf4', borderRadius: 'var(--radius-md)' }}>
-                                    <div className="flex items-center gap-md">
-                                        <div style={{
-                                            width: '40px',
-                                            height: '40px',
-                                            borderRadius: 'var(--radius-md)',
-                                            background: '#10b98115',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            color: '#10b981'
-                                        }}>
-                                            <ShoppingCart size={20} />
-                                        </div>
-                                        <div>
-                                            <p style={{ fontSize: '12px', color: '#64748b' }}>المبيعات الناتجة</p>
-                                            <p style={{ fontSize: '20px', fontWeight: 700, color: '#10b981' }}>{selectedCampaign.sales}</p>
-                                        </div>
+            <Dialog open={showReportModal} onOpenChange={setShowReportModal}>
+                <DialogContent className="sm:max-w-[700px] bg-white">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4">
+                            تقرير الحملة: {selectedCampaign?.name}
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    {selectedCampaign && (
+                        <div className="py-4 space-y-6">
+                            {/* Stats */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100 flex items-center gap-4">
+                                    <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600">
+                                        <ShoppingCart size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-slate-500">المبيعات الناتجة</p>
+                                        <p className="text-xl font-bold text-emerald-700">{selectedCampaign.sales}</p>
                                     </div>
                                 </div>
-                                <div style={{ padding: 'var(--spacing-md)', background: '#fffbeb', borderRadius: 'var(--radius-md)' }}>
-                                    <div className="flex items-center gap-md">
-                                        <div style={{
-                                            width: '40px',
-                                            height: '40px',
-                                            borderRadius: 'var(--radius-md)',
-                                            background: '#f59e0b15',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            color: '#f59e0b'
-                                        }}>
-                                            <Users size={20} />
-                                        </div>
-                                        <div>
-                                            <p style={{ fontSize: '12px', color: '#64748b' }}>الزيارات</p>
-                                            <p style={{ fontSize: '20px', fontWeight: 700, color: '#f59e0b' }}>{selectedCampaign.visits.toLocaleString('en-US')}</p>
-                                        </div>
+                                <div className="p-4 bg-amber-50 rounded-xl border border-amber-100 flex items-center gap-4">
+                                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center text-amber-600">
+                                        <Users size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-slate-500">الزيارات</p>
+                                        <p className="text-xl font-bold text-amber-700">{selectedCampaign.visits.toLocaleString('en-US')}</p>
                                     </div>
                                 </div>
-                                <div style={{ padding: 'var(--spacing-md)', background: '#faf5ff', borderRadius: 'var(--radius-md)' }}>
-                                    <div className="flex items-center gap-md">
-                                        <div style={{
-                                            width: '40px',
-                                            height: '40px',
-                                            borderRadius: 'var(--radius-md)',
-                                            background: '#8b5cf615',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            color: '#8b5cf6'
-                                        }}>
-                                            <TrendingUp size={20} />
-                                        </div>
-                                        <div>
-                                            <p style={{ fontSize: '12px', color: '#64748b' }}>العائد</p>
-                                            <p style={{ fontSize: '20px', fontWeight: 700, color: '#8b5cf6' }}>{selectedCampaign.revenue.toLocaleString('en-US')} ج.م</p>
-                                        </div>
+                                <div className="p-4 bg-purple-50 rounded-xl border border-purple-100 flex items-center gap-4">
+                                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600">
+                                        <TrendingUp size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-slate-500">العائد</p>
+                                        <p className="text-xl font-bold text-purple-700">{selectedCampaign.revenue.toLocaleString('en-US')} ج.م</p>
                                     </div>
                                 </div>
-                                <div style={{ padding: 'var(--spacing-md)', background: '#eff6ff', borderRadius: 'var(--radius-md)' }}>
-                                    <div className="flex items-center gap-md">
-                                        <div style={{
-                                            width: '40px',
-                                            height: '40px',
-                                            borderRadius: 'var(--radius-md)',
-                                            background: '#3b82f615',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            color: '#3b82f6'
-                                        }}>
-                                            <DollarSign size={20} />
-                                        </div>
-                                        <div>
-                                            <p style={{ fontSize: '12px', color: '#64748b' }}>تأثير على الربح</p>
-                                            <p style={{ fontSize: '20px', fontWeight: 700, color: '#3b82f6' }}>+{selectedCampaign.profit.toLocaleString('en-US')} ج.م</p>
-                                        </div>
+                                <div className="p-4 bg-blue-50 rounded-xl border border-blue-100 flex items-center gap-4">
+                                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
+                                        <DollarSign size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-slate-500">تأثير على الربح</p>
+                                        <p className="text-xl font-bold text-blue-700">+{selectedCampaign.profit.toLocaleString('en-US')} ج.م</p>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Campaign Details */}
-                            <div style={{ padding: 'var(--spacing-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                                <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: 'var(--spacing-md)' }}>تفاصيل الحملة</h4>
-                                <div className="grid grid-cols-2" style={{ gap: 'var(--spacing-sm)' }}>
-                                    <div>
-                                        <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>نوع العرض</p>
-                                        <p style={{ fontWeight: 600 }}>{selectedCampaign.typeLabel}</p>
+                            {/* Details Table */}
+                            <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
+                                <h4 className="font-bold text-slate-900 mb-4 text-sm">تفاصيل الحملة</h4>
+                                <div className="grid grid-cols-2 gap-y-4 gap-x-8">
+                                    <div className="flex flex-col">
+                                        <span className="text-xs text-slate-500 mb-1">نوع العرض</span>
+                                        <span className="font-semibold text-slate-900">{selectedCampaign.typeLabel}</span>
                                     </div>
-                                    <div>
-                                        <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>نسبة الخصم</p>
-                                        <p style={{ fontWeight: 600, color: '#10b981' }}>{selectedCampaign.discount}</p>
+                                    <div className="flex flex-col">
+                                        <span className="text-xs text-slate-500 mb-1">نسبة الخصم</span>
+                                        <span className="font-bold text-emerald-600">{selectedCampaign.discount}</span>
                                     </div>
-                                    <div>
-                                        <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>عدد المنتجات</p>
-                                        <p style={{ fontWeight: 600 }}>{selectedCampaign.products} منتج</p>
+                                    <div className="flex flex-col">
+                                        <span className="text-xs text-slate-500 mb-1">عدد المنتجات</span>
+                                        <span className="font-semibold text-slate-900">{selectedCampaign.products} منتج</span>
                                     </div>
-                                    <div>
-                                        <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>الفترة</p>
-                                        <p style={{ fontWeight: 600, fontSize: '12px' }}>{selectedCampaign.startDate} - {selectedCampaign.endDate}</p>
+                                    <div className="flex flex-col">
+                                        <span className="text-xs text-slate-500 mb-1">الفترة</span>
+                                        <span className="font-medium text-slate-700 text-xs font-mono">{selectedCampaign.startDate} - {selectedCampaign.endDate}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="modal-footer">
-                            <button className="btn btn-secondary" onClick={() => setShowReportModal(false)}>
-                                إغلاق
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+                    )}
+
+                    <DialogFooter>
+                        <Button variant="secondary" onClick={() => setShowReportModal(false)}>إغلاق</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
