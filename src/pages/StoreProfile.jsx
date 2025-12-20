@@ -89,7 +89,7 @@ export default function StoreProfile() {
     const [address, setAddress] = useState('56 شارع عبد السلام عارف بأسوان');
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-8">
             {/* Page Header */}
             <div className="flex items-center justify-between">
                 <div>
@@ -106,7 +106,7 @@ export default function StoreProfile() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 items-start">
 
                 {/* Main Content */}
                 <div className="flex flex-col gap-6">
@@ -472,7 +472,7 @@ export default function StoreProfile() {
                 </div>
 
                 {/* Sidebar - Quick Actions & Status */}
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-8">
 
                     {/* Store Status Card */}
                     <Card className="border-slate-100 shadow-sm bg-white">

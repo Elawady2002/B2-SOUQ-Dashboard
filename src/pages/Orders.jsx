@@ -145,6 +145,16 @@ export default function Orders() {
     const [activeFilter, setActiveFilter] = useState('all');
     const [selectedOrder, setSelectedOrder] = useState(null);
 
+    // دالة إخفاء رقم الهاتف للخصوصية
+    const maskPhoneNumber = (phone) => {
+        // مثال: "+20 123 456 7890" -> "+20 ••• ••• 7890"
+        const parts = phone.split(' ');
+        if (parts.length >= 4) {
+            return `${parts[0]} ••• ••• ${parts[parts.length - 1]}`;
+        }
+        return phone;
+    };
+
     const filteredOrders = activeFilter === 'all'
         ? orders
         : orders.filter(o => o.status === activeFilter);
@@ -293,7 +303,7 @@ export default function Orders() {
                                         <TableCell>
                                             <div>
                                                 <p className="font-medium text-slate-900 text-sm">{order.customer}</p>
-                                                <p className="text-xs text-slate-400 font-mono text-right" dir="ltr">{order.phone}</p>
+                                                <p className="text-xs text-slate-400 font-mono text-right" dir="ltr">{maskPhoneNumber(order.phone)}</p>
                                             </div>
                                         </TableCell>
                                         <TableCell>
@@ -303,7 +313,7 @@ export default function Orders() {
                                                 ))}
                                             </div>
                                         </TableCell>
-                                        <TableCell className="font-bold text-blue-600">{order.total.toLocaleString('en-US')} ج.م</TableCell>
+                                        <TableCell className="font-bold text-slate-900">{order.total.toLocaleString('en-US')} ج.م</TableCell>
                                         <TableCell className="text-center">
                                             <Badge variant="secondary" className={`${shipping.color} font-normal whitespace-nowrap`}>
                                                 {shipping.label}

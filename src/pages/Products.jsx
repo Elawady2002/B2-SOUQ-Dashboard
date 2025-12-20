@@ -312,9 +312,7 @@ export default function Products() {
                                         <TableCell className="text-slate-600">{product.category}</TableCell>
                                         <TableCell className="font-bold text-slate-900">{product.price.toLocaleString('en-US')} ج.م</TableCell>
                                         <TableCell className="text-center">
-                                            <span className={`font-semibold ${product.quantity <= 5 ? 'text-red-600' :
-                                                product.quantity <= 20 ? 'text-orange-600' : 'text-emerald-600'
-                                                }`}>
+                                            <span className={`font-semibold ${product.quantity <= 5 ? 'text-red-600' : 'text-slate-900'}`}>
                                                 {product.quantity}
                                             </span>
                                         </TableCell>

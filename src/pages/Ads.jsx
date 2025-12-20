@@ -155,6 +155,9 @@ const paymentHistory = [
 
 export default function Ads() {
     const [showModal, setShowModal] = useState(false);
+    const [currentStep, setCurrentStep] = useState(1);
+    const [showBudgetDepletedState, setShowBudgetDepletedState] = useState(false);
+    const [showNoAdsState, setShowNoAdsState] = useState(false);
 
     return (
         <div className="flex flex-col gap-6">
@@ -170,180 +173,179 @@ export default function Ads() {
                 </Button>
             </div>
 
-            {/* Enhanced Stats Cards with Sparklines */}
+            {/* Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {statsCards.map((card) => {
-                    const maxVal = Math.max(...card.sparkline);
-                    const points = card.sparkline.map((val, i) =>
-                        `${(i / (card.sparkline.length - 1)) * 100},${50 - (val / maxVal) * 40}`
-                    ).join(' ');
-                    const areaPoints = `0,50 ${points} 100,50`;
-
-                    return (
-                        <Card key={card.id} className="bg-white border-slate-200 shadow-sm overflow-hidden">
-                            <CardContent className="p-5">
-                                {/* Row 1: Icon (left) + Label (right) */}
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="text-sm text-slate-500 font-medium font-cairo">{card.label}</div>
-                                    <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-opacity-10" style={{ backgroundColor: `${card.color}15`, color: card.color }}>
-                                        {card.id === 1 && <Eye size={20} strokeWidth={1.5} />}
-                                        {card.id === 2 && <Target size={20} strokeWidth={1.5} />}
-                                        {card.id === 3 && <ShoppingCart size={20} strokeWidth={1.5} />}
-                                        {card.id === 4 && <DollarSign size={20} strokeWidth={1.5} />}
-                                    </div>
-                                </div>
-
-                                {/* Row 2: Value + Unit (left) + Change (right) */}
-                                <div className="flex items-end justify-between mb-4">
-                                    <div className="flex items-baseline gap-1">
-                                        <span className="text-2xl font-bold text-slate-900">{card.value}</span>
-                                        {card.unit && <span className="text-sm text-slate-500">{card.unit}</span>}
-                                    </div>
-                                    <div className={`flex items-center text-xs font-semibold ${card.positive ? 'text-emerald-600' : 'text-red-600'}`}>
-                                        <span dir="ltr">{card.change}</span>
-                                        {card.positive ? <TrendingUp size={16} className="ml-1" /> : <TrendingDown size={16} className="ml-1" />}
-                                    </div>
-                                </div>
-
-                                {/* Row 3: Area Chart */}
-                                <div className="h-12 w-full">
-                                    <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none">
-                                        <defs>
-                                            <linearGradient id={`gradient-${card.id}`} x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="0%" stopColor={card.color} stopOpacity="0.25" />
-                                                <stop offset="100%" stopColor={card.color} stopOpacity="0.02" />
-                                            </linearGradient>
-                                        </defs>
-                                        <polygon
-                                            points={areaPoints}
-                                            fill={`url(#gradient-${card.id})`}
-                                        />
-                                        <polyline
-                                            points={points}
-                                            fill="none"
-                                            stroke={card.color}
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    );
-                })}
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                            <Eye size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">إجمالي المشاهدات</p>
+                            <p className="text-lg font-bold text-slate-900">20,400</p>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
+                            <Target size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">النقرات</p>
+                            <p className="text-lg font-bold text-slate-900">1,490</p>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                            <ShoppingCart size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">الطلبات</p>
+                            <p className="text-lg font-bold text-slate-900">85</p>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+                            <DollarSign size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">العائد</p>
+                            <p className="text-lg font-bold text-slate-900">96,700 ج.م</p>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
 
-            {/* Campaign Cards - Modern Card Layout */}
+            {/* Budget Depleted State */}
+            {showBudgetDepletedState && (
+                <Card className="bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 shadow-sm">
+                    <CardContent className="p-6">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
+                                <CreditCard className="text-amber-600" size={24} />
+                            </div>
+                            <div className="flex-1">
+                                <h4 className="text-lg font-bold text-amber-900 mb-1">نفذت الميزانية المخصصة</h4>
+                                <p className="text-sm text-amber-700">تم استنفاد ميزانية الإعلان. قم بإعادة تعبئة الرصيد لمواصلة الحملة</p>
+                            </div>
+                            <Button className="bg-amber-600 hover:bg-amber-700 text-white gap-2">
+                                <CreditCard size={18} />
+                                إعادة تعبئة الرصيد
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
+            {/* No Ads Empty State */}
+            {showNoAdsState && (
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-12 text-center">
+                        <div className="max-w-md mx-auto">
+                            <div className="w-20 h-20 rounded-full bg-blue-50 mx-auto mb-6 flex items-center justify-center">
+                                <Target className="text-blue-600" size={40} />
+                            </div>
+                            <h3 className="text-xl font-bold text-slate-900 mb-2">لا توجد حملات إعلانية</h3>
+                            <p className="text-slate-500 mb-6">ابدأ أول حملة إعلانية لك وزد من مبيعاتك ووصولك للعملاء</p>
+                            <Button onClick={() => setShowModal(true)} className="bg-blue-600 hover:bg-blue-700 gap-2">
+                                <Plus size={18} />
+                                إنشاء إعلان جديد
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
+            {/* Ads Table */}
             <Card className="bg-white border-slate-200 shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-slate-50">
-                    <CardTitle className="text-lg font-bold text-slate-800">الحملات الإعلانية</CardTitle>
-                    <Button variant="outline" size="sm" className="gap-2">
-                        <Calendar size={16} />
-                        فلترة
-                    </Button>
+                <CardHeader className="pb-4 border-b border-slate-50">
+                    <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg font-bold text-slate-800">الحملات الإعلانية</CardTitle>
+                        <Button variant="outline" size="sm" className="gap-2">
+                            <Calendar size={16} />
+                            فلترة
+                        </Button>
+                    </div>
                 </CardHeader>
 
-                <CardContent className="p-4 space-y-4">
-                    {ads.map((ad) => (
-                        <div key={ad.id} className="bg-slate-50/50 border border-slate-200 rounded-xl p-6 hover:border-blue-200 transition-all duration-200">
-                            {/* Header Row */}
-                            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-2xl border border-slate-100 shadow-sm">
-                                        📱
-                                    </div>
-                                    <div>
-                                        <h4 className="text-base font-bold text-slate-900 mb-1">
-                                            {ad.product}
-                                        </h4>
+                <CardContent className="p-0">
+                    <Table>
+                        <TableHeader className="bg-slate-50/50">
+                            <TableRow className="hover:bg-transparent border-slate-100">
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتج</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الصفحة</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الميزانية</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المشاهدات</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">النقرات</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الطلبات</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">العائد</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الحالة</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الإجراءات</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {ads.map((ad) => (
+                                <TableRow key={ad.id} className="border-slate-50 hover:bg-slate-50/50">
+                                    <TableCell className="py-3">
+                                        <div>
+                                            <p className="font-semibold text-slate-800 text-sm">{ad.product}</p>
+                                            <p className="text-xs text-slate-500">{ad.duration}</p>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="py-3">
                                         <Badge variant="secondary" className="bg-blue-50 text-blue-700 font-normal">
                                             {ad.page}
                                         </Badge>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Badge variant="secondary" className={`font-medium ${ad.status === 'active' ? 'bg-emerald-50 text-emerald-700' :
+                                    </TableCell>
+                                    <TableCell className="py-3">
+                                        <div>
+                                            <p className="text-sm font-medium text-slate-700">{ad.spent.toLocaleString('en-US')} / {ad.budget.toLocaleString('en-US')} ج.م</p>
+                                            <div className="h-1 w-20 bg-slate-100 rounded-full overflow-hidden mt-1">
+                                                <div
+                                                    className="h-full bg-blue-600 rounded-full"
+                                                    style={{ width: `${(ad.spent / ad.budget) * 100}%` }}
+                                                ></div>
+                                            </div>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="text-sm font-medium text-slate-700 py-3">{ad.views.toLocaleString('en-US')}</TableCell>
+                                    <TableCell className="text-sm font-medium text-slate-700 py-3">{ad.clicks.toLocaleString('en-US')}</TableCell>
+                                    <TableCell className="text-sm font-bold text-slate-900 py-3">{ad.orders}</TableCell>
+                                    <TableCell className="font-bold text-slate-900 py-3">{ad.revenue.toLocaleString('en-US')} ج.م</TableCell>
+                                    <TableCell className="text-center py-3">
+                                        <Badge variant="secondary" className={`font-normal ${ad.status === 'active' ? 'bg-emerald-50 text-emerald-700' :
                                             ad.status === 'paused' ? 'bg-amber-50 text-amber-700' :
                                                 'bg-slate-100 text-slate-600'
-                                        }`}>
-                                        {ad.status === 'active' ? 'نشط' : ad.status === 'paused' ? 'متوقف' : 'منتهي'}
-                                    </Badge>
-                                    {ad.status === 'active' && (
-                                        <Button size="icon" variant="ghost" className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-full">
-                                            <Pause size={16} />
-                                        </Button>
-                                    )}
-                                    {ad.status === 'paused' && (
-                                        <Button size="icon" variant="ghost" className="h-8 w-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-full">
-                                            <Play size={16} />
-                                        </Button>
-                                    )}
-                                    <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-400 hover:text-slate-600 rounded-full">
-                                        <MoreVertical size={16} />
-                                    </Button>
-                                </div>
-                            </div>
-
-                            {/* Stats Grid */}
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 mb-6">
-                                <div>
-                                    <p className="text-xs text-slate-500 mb-1">المشاهدات</p>
-                                    <p className="text-lg font-bold text-slate-900">
-                                        {ad.views.toLocaleString('en-US')}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-slate-500 mb-1">النقرات</p>
-                                    <p className="text-lg font-bold text-slate-900">
-                                        {ad.clicks.toLocaleString('en-US')}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-slate-500 mb-1">معدل النقر</p>
-                                    <p className="text-lg font-bold text-purple-600">
-                                        {ad.ctr}%
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-slate-500 mb-1">الطلبات</p>
-                                    <p className="text-lg font-bold text-emerald-600">
-                                        {ad.orders}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-slate-500 mb-1">العائد</p>
-                                    <p className="text-lg font-bold text-emerald-600">
-                                        {ad.revenue.toLocaleString('en-US')} <span className="text-xs">ج.م</span>
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-slate-500 mb-1">ROI</p>
-                                    <p className="text-lg font-bold text-amber-500">
-                                        {ad.roi}%
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Budget Progress */}
-                            <div>
-                                <div className="flex items-center justify-between mb-2">
-                                    <span className="text-xs text-slate-500">
-                                        الميزانية: <span className="font-medium text-slate-700">{ad.spent.toLocaleString('en-US')}</span> / {ad.budget.toLocaleString('en-US')} ج.م
-                                    </span>
-                                    <span className="text-xs font-bold text-blue-600">
-                                        {Math.round((ad.spent / ad.budget) * 100)}%
-                                    </span>
-                                </div>
-                                <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                                    <div
-                                        className="h-full bg-blue-600 rounded-full transition-all duration-500"
-                                        style={{ width: `${(ad.spent / ad.budget) * 100}%` }}
-                                    ></div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                                            }`}>
+                                            {ad.status === 'active' ? 'نشط' : ad.status === 'paused' ? 'متوقف' : 'منتهي'}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="py-3">
+                                        <div className="flex items-center justify-center gap-1">
+                                            {ad.status === 'active' && (
+                                                <Button size="icon" variant="ghost" className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-full">
+                                                    <Pause size={16} />
+                                                </Button>
+                                            )}
+                                            {ad.status === 'paused' && (
+                                                <Button size="icon" variant="ghost" className="h-8 w-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-full">
+                                                    <Play size={16} />
+                                                </Button>
+                                            )}
+                                            <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-400 hover:text-slate-600 rounded-full">
+                                                <MoreVertical size={16} />
+                                            </Button>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
                 </CardContent>
             </Card>
 
@@ -379,87 +381,201 @@ export default function Ads() {
                 </CardContent>
             </Card>
 
-            {/* Enhanced Modal */}
-            <Dialog open={showModal} onOpenChange={setShowModal}>
-                <DialogContent className="sm:max-w-[600px] bg-white">
+            {/* Enhanced Multi-Step Modal */}
+            <Dialog open={showModal} onOpenChange={(open) => { setShowModal(open); if (!open) setCurrentStep(1); }}>
+                <DialogContent className="sm:max-w-[700px] bg-white">
                     <DialogHeader>
-                        <DialogTitle className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4">
+                        <DialogTitle className="text-xl font-bold text-slate-900 pb-4">
                             إنشاء إعلان جديد
                         </DialogTitle>
+                        {/* Progress Steps */}
+                        <div className="flex items-center gap-2 pt-4">
+                            {[1, 2, 3, 4].map((step) => (
+                                <div key={step} className="flex items-center flex-1">
+                                    <div className={`flex items-center gap-2 flex-1 ${step <= currentStep ? 'opacity-100' : 'opacity-40'
+                                        }`}>
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step < currentStep ? 'bg-blue-600 text-white' :
+                                            step === currentStep ? 'bg-blue-600 text-white' :
+                                                'bg-slate-200 text-slate-500'
+                                            }`}>
+                                            {step < currentStep ? '✓' : step}
+                                        </div>
+                                        <div className="text-xs font-medium text-slate-700">
+                                            {step === 1 && 'المنتج'}
+                                            {step === 2 && 'الجمهور'}
+                                            {step === 3 && 'الميزانية'}
+                                            {step === 4 && 'المعاينة'}
+                                        </div>
+                                    </div>
+                                    {step < 4 && (
+                                        <div className={`h-0.5 w-full mx-2 ${step < currentStep ? 'bg-blue-600' : 'bg-slate-200'
+                                            }`} />
+                                    )}
+                                </div>
+                            ))}
+                        </div>
                     </DialogHeader>
 
-                    <div className="py-4 space-y-4">
-                        <div className="space-y-2">
-                            <Label>اختر المنتج</Label>
-                            <Select>
-                                <SelectTrigger className="bg-white border-slate-200">
-                                    <SelectValue placeholder="اختر المنتج" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="s24">هاتف سامسونج Galaxy S24</SelectItem>
-                                    <SelectItem value="airpods">سماعات AirPods Pro</SelectItem>
-                                    <SelectItem value="gt4">ساعة Huawei GT4</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="space-y-2">
-                            <Label>صفحة العرض</Label>
-                            <Select>
-                                <SelectTrigger className="bg-white border-slate-200">
-                                    <SelectValue placeholder="اختر مكان العرض" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="home">الصفحة الرئيسية</SelectItem>
-                                    <SelectItem value="category">صفحة الفئة</SelectItem>
-                                    <SelectItem value="search">صفحة البحث</SelectItem>
-                                    <SelectItem value="featured">صفحة المنتجات المميزة</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label>الميزانية (ج.م)</Label>
-                                <Input type="number" placeholder="1000" className="bg-white border-slate-200" />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>المدة (أيام)</Label>
-                                <Input type="number" placeholder="7" className="bg-white border-slate-200" />
-                            </div>
-                        </div>
+                    <div className="py-4 space-y-4 min-h-[300px]">
+                        {/* Step 1: Product Selection */}
+                        {currentStep === 1 && (
+                            <>
+                                <div className="space-y-2">
+                                    <Label>اختر المنتج</Label>
+                                    <Select>
+                                        <SelectTrigger className="bg-white border-slate-200">
+                                            <SelectValue placeholder="اختر المنتج" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="s24">هاتف سامسونج Galaxy S24</SelectItem>
+                                            <SelectItem value="airpods">سماعات AirPods Pro</SelectItem>
+                                            <SelectItem value="gt4">ساعة Huawei GT4</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>صفحة العرض</Label>
+                                    <Select>
+                                        <SelectTrigger className="bg-white border-slate-200">
+                                            <SelectValue placeholder="اختر مكان العرض" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="home">الصفحة الرئيسية</SelectItem>
+                                            <SelectItem value="category">صفحة الفئة</SelectItem>
+                                            <SelectItem value="search">صفحة البحث</SelectItem>
+                                            <SelectItem value="featured">صفحة المنتجات المميزة</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </>
+                        )}
 
-                        {/* Estimated Performance */}
-                        <div className="bg-blue-50/50 rounded-xl p-4 border border-blue-100">
-                            <h4 className="font-bold text-sm text-blue-900 mb-3">
-                                الأداء المتوقع
-                            </h4>
-                            <div className="grid grid-cols-3 gap-4">
-                                <div>
-                                    <p className="text-[10px] text-blue-600/70 mb-1">مشاهدات متوقعة</p>
-                                    <p className="font-bold text-blue-700">~8,500</p>
+                        {/* Step 2: Audience Targeting */}
+                        {currentStep === 2 && (
+                            <>
+                                <div className="space-y-2">
+                                    <Label>استهداف الجمهور</Label>
+                                    <Select>
+                                        <SelectTrigger className="bg-white border-slate-200">
+                                            <SelectValue placeholder="اختر الفئة المستهدفة" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all">جميع العملاء</SelectItem>
+                                            <SelectItem value="male">الرجال (18-45)</SelectItem>
+                                            <SelectItem value="female">النساء (18-45)</SelectItem>
+                                            <SelectItem value="tech">مهتمين بالتكنولوجيا</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
-                                <div>
-                                    <p className="text-[10px] text-blue-600/70 mb-1">نقرات متوقعة</p>
-                                    <p className="font-bold text-purple-700">~600</p>
+                                <div className="space-y-2">
+                                    <Label>المنطقة الجغرافية</Label>
+                                    <Select>
+                                        <SelectTrigger className="bg-white border-slate-200">
+                                            <SelectValue placeholder="اختر المنطقة" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all">جميع المناطق</SelectItem>
+                                            <SelectItem value="cairo">القاهرة</SelectItem>
+                                            <SelectItem value="alex">الإسكندرية</SelectItem>
+                                            <SelectItem value="giza">الجيزة</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
-                                <div>
-                                    <p className="text-[10px] text-blue-600/70 mb-1">ROI متوقع</p>
-                                    <p className="font-bold text-emerald-600">~180%</p>
+                            </>
+                        )}
+
+                        {/* Step 3: Budget & Duration */}
+                        {currentStep === 3 && (
+                            <>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label>الميزانية (ج.م)</Label>
+                                        <Input type="number" placeholder="1000" className="bg-white border-slate-200" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>المدة (أيام)</Label>
+                                        <Input type="number" placeholder="7" className="bg-white border-slate-200" />
+                                    </div>
+                                </div>
+                                <div className="bg-blue-50/50 rounded-xl p-4 border border-blue-100">
+                                    <h4 className="font-bold text-sm text-blue-900 mb-3">
+                                        الأداء المتوقع
+                                    </h4>
+                                    <div className="grid grid-cols-3 gap-4">
+                                        <div>
+                                            <p className="text-[10px] text-blue-600/70 mb-1">مشاهدات متوقعة</p>
+                                            <p className="font-bold text-blue-700">~8,500</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] text-blue-600/70 mb-1">نقرات متوقعة</p>
+                                            <p className="font-bold text-purple-700">~600</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] text-blue-600/70 mb-1">ROI متوقع</p>
+                                            <p className="font-bold text-emerald-600">~180%</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="bg-amber-50 rounded-lg p-3 text-xs text-amber-700 border border-amber-100 flex items-center gap-2">
+                                    <span>💡</span>
+                                    سيتم خصم المبلغ من محفظة التاجر عند بدء الإعلان
+                                </div>
+                            </>
+                        )}
+
+                        {/* Step 4: Preview & Confirm */}
+                        {currentStep === 4 && (
+                            <div className="bg-slate-50 rounded-xl p-6 space-y-4">
+                                <h4 className="font-bold text-lg text-slate-900 mb-4">ملخص الحملة</h4>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="bg-white p-4 rounded-lg">
+                                        <p className="text-xs text-slate-500 mb-1">المنتج</p>
+                                        <p className="font-semibold text-slate-900">هاتف سامسونج Galaxy S24</p>
+                                    </div>
+                                    <div className="bg-white p-4 rounded-lg">
+                                        <p className="text-xs text-slate-500 mb-1">صفحة العرض</p>
+                                        <p className="font-semibold text-slate-900">الصفحة الرئيسية</p>
+                                    </div>
+                                    <div className="bg-white p-4 rounded-lg">
+                                        <p className="text-xs text-slate-500 mb-1">الجمهور المستهدف</p>
+                                        <p className="font-semibold text-slate-900">جميع العملاء</p>
+                                    </div>
+                                    <div className="bg-white p-4 rounded-lg">
+                                        <p className="text-xs text-slate-500 mb-1">المنطقة</p>
+                                        <p className="font-semibold text-slate-900">جميع المناطق</p>
+                                    </div>
+                                    <div className="bg-white p-4 rounded-lg">
+                                        <p className="text-xs text-slate-500 mb-1">الميزانية</p>
+                                        <p className="font-semibold text-emerald-600">1,000 ج.م</p>
+                                    </div>
+                                    <div className="bg-white p-4 rounded-lg">
+                                        <p className="text-xs text-slate-500 mb-1">المدة</p>
+                                        <p className="font-semibold text-blue-600">7 أيام</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div className="bg-amber-50 rounded-lg p-3 text-xs text-amber-700 border border-amber-100 flex items-center gap-2">
-                            <span>💡</span>
-                            سيتم خصم المبلغ من محفظة التاجر عند بدء الإعلان
-                        </div>
+                        )}
                     </div>
 
                     <DialogFooter className="gap-2 border-t border-slate-100 pt-4">
-                        <Button variant="outline" onClick={() => setShowModal(false)}>إلغاء</Button>
-                        <Button className="bg-blue-600 hover:bg-blue-700 gap-2">
-                            <CreditCard size={18} />
-                            الدفع وبدء الإعلان
-                        </Button>
+                        <Button variant="outline" onClick={() => { setShowModal(false); setCurrentStep(1); }}>إلغاء</Button>
+                        <div className="flex gap-2">
+                            {currentStep > 1 && (
+                                <Button variant="outline" onClick={() => setCurrentStep(currentStep - 1)}>
+                                    السابق
+                                </Button>
+                            )}
+                            {currentStep < 4 ? (
+                                <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => setCurrentStep(currentStep + 1)}>
+                                    التالي
+                                </Button>
+                            ) : (
+                                <Button className="bg-blue-600 hover:bg-blue-700 gap-2">
+                                    <CreditCard size={18} />
+                                    الدفع وبدء الإعلان
+                                </Button>
+                            )}
+                        </div>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

@@ -129,7 +129,7 @@ export default function Inventory() {
     const getQuantityColor = (qty, threshold) => {
         if (qty === 0) return 'text-red-600';
         if (qty <= threshold) return 'text-orange-600';
-        return 'text-emerald-600';
+        return 'text-slate-900';
     };
 
     const handleViewMovements = (item) => {
@@ -157,7 +157,7 @@ export default function Inventory() {
                     <CardContent className="p-4 flex items-center justify-between">
                         <div>
                             <p className="text-xs text-slate-500 font-medium mb-1">إجمالي المنتجات</p>
-                            <p className="text-2xl font-bold text-emerald-600">10</p>
+                            <p className="text-2xl font-bold text-slate-900">10</p>
                         </div>
                         <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
                             <Package size={20} />
@@ -180,7 +180,7 @@ export default function Inventory() {
                         <div>
                             <p className="text-xs text-slate-500 font-medium mb-1">الكمية في المخزون</p>
                             <div className="flex items-baseline gap-1">
-                                <p className="text-2xl font-bold text-blue-600">2,450</p>
+                                <p className="text-2xl font-bold text-slate-900">2,450</p>
                                 <span className="text-xs text-slate-500">قطعة</span>
                             </div>
                         </div>
@@ -193,7 +193,7 @@ export default function Inventory() {
                     <CardContent className="p-4 flex items-center justify-between">
                         <div>
                             <p className="text-xs text-slate-500 font-medium mb-1">مضافة حديثاً</p>
-                            <p className="text-2xl font-bold text-purple-600">3</p>
+                            <p className="text-2xl font-bold text-slate-900">3</p>
                             <p className="text-[10px] text-slate-400 mt-1">آخر 7 أيام</p>
                         </div>
                         <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600">

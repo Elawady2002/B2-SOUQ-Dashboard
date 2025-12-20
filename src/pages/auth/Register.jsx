@@ -144,7 +144,7 @@ export default function Register() {
                             <FieldLabel htmlFor="phone">رقم الهاتف</FieldLabel>
                             <div className="flex gap-2">
                                 <Select value={phoneCountryCode} onValueChange={setPhoneCountryCode}>
-                                    <SelectTrigger className="h-12 w-[100px] font-medium">
+                                    <SelectTrigger className="h-12 w-[80px] font-medium">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent className="font-medium">

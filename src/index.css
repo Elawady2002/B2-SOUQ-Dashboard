@@ -1,5 +1,6 @@
 /* Google Fonts Import - Must be first */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
 
 /* Tailwind CSS */
 /* stylelint-disable-next-line at-rule-no-unknown */
@@ -75,7 +76,7 @@
   --radius-full: 9999px;
 
   /* Typography */
-  --font-family: 'Cairo', sans-serif;
+  --font-family: 'IBM Plex Sans', 'Cairo', sans-serif;
   --font-size-xs: 11px;
   --font-size-sm: 13px;
   --font-size-base: 14px;
@@ -1733,6 +1734,7 @@ a:hover {
 .btn-view-all-arrow:hover .arrow-icon {
   transform: translateX(-4px);
 }
+
 /* Custom styles for react-international-phone */
 .react-international-phone-input-container {
   display: flex;
@@ -1780,6 +1782,7 @@ a:hover {
   overflow-y: auto;
   z-index: 50;
 }
+
 /* Override react-international-phone styles to match shadcn design */
 .react-international-phone-input-container {
   display: flex;

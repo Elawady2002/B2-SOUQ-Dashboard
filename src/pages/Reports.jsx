@@ -171,61 +171,63 @@ export default function Reports() {
                 </Button>
             </div>
 
-            {/* Simple Stats Cards with Sparklines */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
-                {reportCards.map((card, idx) => {
-                    const maxVal = Math.max(...card.sparkline);
-                    const points = card.sparkline.map((val, i) =>
-                        `${(i / (card.sparkline.length - 1)) * 100},${50 - (val / maxVal) * 40}`
-                    ).join(' ');
-                    const areaPoints = `0,50 ${points} 100,50`;
-
-                    return (
-                        <Card key={idx} className="bg-white border-slate-200 shadow-sm overflow-hidden">
-                            <CardContent className="p-4">
-                                {/* Row 1: Icon + Label */}
-                                <div className="flex items-center justify-between mb-3">
-                                    <div className="text-xs text-slate-500 font-medium">{card.label}</div>
-                                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
-                                        <card.icon size={16} strokeWidth={1.5} />
-                                    </div>
-                                </div>
-
-                                {/* Row 2: Value + Change */}
-                                <div className="flex items-baseline gap-1 mb-2">
-                                    <span className="text-lg font-bold text-slate-900">{card.value}</span>
-                                    {card.unit && <span className="text-xs text-slate-500">{card.unit}</span>}
-                                </div>
-
-                                <div className={`flex items-center text-xs font-semibold mb-3 ${card.positive ? 'text-emerald-600' : 'text-red-600'}`}>
-                                    <span dir="ltr">{card.change}</span>
-                                    {card.positive ? <TrendingUp size={14} className="ml-1" /> : <TrendingDown size={14} className="ml-1" />}
-                                </div>
-
-                                {/* Row 3: Simple Chart */}
-                                <div className="h-8 w-full opacity-60">
-                                    <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none">
-                                        <defs>
-                                            <linearGradient id={`gradient-${idx}`} x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.2" />
-                                                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.02" />
-                                            </linearGradient>
-                                        </defs>
-                                        <polygon points={areaPoints} fill={`url(#gradient-${idx})`} />
-                                        <polyline
-                                            points={points}
-                                            fill="none"
-                                            stroke="#3b82f6"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    );
-                })}
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                            <ShoppingCart size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">إجمالي المبيعات</p>
+                            <p className="text-lg font-bold text-slate-900">425,800 ج.م</p>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                            <DollarSign size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">صافي الأرباح</p>
+                            <p className="text-lg font-bold text-slate-900">89,300 ج.م</p>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
+                            <Percent size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">الخصومات</p>
+                            <p className="text-lg font-bold text-slate-900">12,450 ج.م</p>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+                            <Truck size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">تكلفة الشحن</p>
+                            <p className="text-lg font-bold text-slate-900">18,200 ج.م</p>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white border-slate-200 shadow-sm">
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-600">
+                            <RotateCcw size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">المرتجعات</p>
+                            <p className="text-lg font-bold text-slate-900">8,650 ج.م</p>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
 
             {/* Charts Row */}
@@ -235,7 +237,7 @@ export default function Reports() {
                     <CardHeader className="pb-2">
                         <CardTitle className="text-lg font-bold text-slate-800">المبيعات حسب نوع الشحن</CardTitle>
                     </CardHeader>
-                    <CardContent className="h-[280px] p-4">
+                    <CardContent className="h-[220px] p-4">
                         <Doughnut
                             data={salesByShippingData}
                             options={{
@@ -263,7 +265,7 @@ export default function Reports() {
                     <CardHeader className="pb-2">
                         <CardTitle className="text-lg font-bold text-slate-800">المبيعات والأرباح الشهرية</CardTitle>
                     </CardHeader>
-                    <CardContent className="h-[280px] p-4">
+                    <CardContent className="h-[220px] p-4">
                         <Bar
                             data={monthlySalesData}
                             options={{
@@ -324,7 +326,7 @@ export default function Reports() {
                                     <TableRow key={idx} className="hover:bg-slate-50/50">
                                         <TableCell className="font-semibold text-slate-700 py-3">{city.city}</TableCell>
                                         <TableCell className="text-slate-600 py-3">{city.orders}</TableCell>
-                                        <TableCell className="font-bold text-blue-600 py-3">{city.revenue}</TableCell>
+                                        <TableCell className="font-bold text-slate-900 py-3">{city.revenue}</TableCell>
                                         <TableCell className="py-3">
                                             <div className="flex items-center gap-3">
                                                 <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden max-w-[80px]">
@@ -363,7 +365,7 @@ export default function Reports() {
                                     <TableRow key={idx} className="hover:bg-slate-50/50">
                                         <TableCell className="font-medium text-slate-700 text-sm py-3 max-w-[150px] truncate" title={product.name}>{product.name}</TableCell>
                                         <TableCell className="text-slate-600 py-3">{product.sales}</TableCell>
-                                        <TableCell className="font-bold text-blue-600 py-3">{product.revenue}</TableCell>
+                                        <TableCell className="font-bold text-slate-900 py-3">{product.revenue}</TableCell>
                                         <TableCell className="py-3">
                                             <Badge variant="secondary" className={`font-normal ${product.performance === 'excellent' ? 'bg-emerald-50 text-emerald-700' :
                                                 product.performance === 'good' ? 'bg-blue-50 text-blue-700' :

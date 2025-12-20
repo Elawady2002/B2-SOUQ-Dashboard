@@ -25,6 +25,7 @@ import ActivityIcon from '../../assets/icons/activity.svg';
 
 const mainNavItems = [
     { icon: HomeIcon, label: 'الرئيسية', path: '/' },
+    { icon: UserGearIcon, label: 'ملفي', path: '/seller-profile' },
     { icon: StoreIcon, label: 'المتجر', path: '/store-profile' },
     { icon: PackageIcon, label: 'المنتجات', path: '/products', badge: 3 },
     { icon: TruckIcon, label: 'الطلبات', path: '/orders', badge: 12 },
@@ -39,7 +40,6 @@ const marketingNavItems = [
 ];
 
 const settingsNavItems = [
-    { icon: UserGearIcon, label: 'ملفي', path: '/seller-profile' },
     { icon: UsersIcon, label: 'الموظفين', path: '/employees' },
     { icon: ActivityIcon, label: 'سجل النشاط', path: '/activity-log' },
     { icon: HeadsetIcon, label: 'الدعم', path: '/messages' },

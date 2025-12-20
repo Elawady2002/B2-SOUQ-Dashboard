@@ -183,48 +183,46 @@ export default function Campaigns() {
             {/* Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Card className="bg-white border-slate-200 shadow-sm">
-                    <CardContent className="p-4 flex items-center justify-between">
-                        <div>
-                            <p className="text-xs text-slate-500 font-medium mb-1">حملات نشطة</p>
-                            <p className="text-3xl font-bold text-blue-600">{activeCampaigns}</p>
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                            <Megaphone size={20} />
                         </div>
-                        <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
-                            <Megaphone size={24} />
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">حملات نشطة</p>
+                            <p className="text-lg font-bold text-slate-900">{activeCampaigns}</p>
                         </div>
                     </CardContent>
                 </Card>
                 <Card className="bg-white border-slate-200 shadow-sm">
-                    <CardContent className="p-4 flex items-center justify-between">
-                        <div>
-                            <p className="text-xs text-slate-500 font-medium mb-1">المبيعات من العروض</p>
-                            <p className="text-3xl font-bold text-emerald-600">{totalSales}</p>
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                            <ShoppingCart size={20} />
                         </div>
-                        <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
-                            <ShoppingCart size={24} />
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">المبيعات من العروض</p>
+                            <p className="text-lg font-bold text-slate-900">{totalSales}</p>
                         </div>
                     </CardContent>
                 </Card>
                 <Card className="bg-white border-slate-200 shadow-sm">
-                    <CardContent className="p-4 flex items-center justify-between">
-                        <div>
-                            <p className="text-xs text-slate-500 font-medium mb-1">إجمالي العائد</p>
-                            <p className="text-2xl font-bold text-purple-600">
-                                {totalRevenue.toLocaleString('en-US')} <span className="text-sm font-normal text-slate-500">ج.م</span>
-                            </p>
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
+                            <TrendingUp size={20} />
                         </div>
-                        <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600">
-                            <TrendingUp size={24} />
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">إجمالي العائد</p>
+                            <p className="text-lg font-bold text-slate-900">{totalRevenue.toLocaleString('en-US')} ج.م</p>
                         </div>
                     </CardContent>
                 </Card>
                 <Card className="bg-white border-slate-200 shadow-sm">
-                    <CardContent className="p-4 flex items-center justify-between">
-                        <div>
-                            <p className="text-xs text-slate-500 font-medium mb-1">الزيارات من العروض</p>
-                            <p className="text-3xl font-bold text-amber-500">{totalVisits.toLocaleString('en-US')}</p>
+                    <CardContent className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-500">
+                            <Eye size={20} />
                         </div>
-                        <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500">
-                            <Eye size={24} />
+                        <div>
+                            <p className="text-xs text-slate-500 font-medium">الزيارات من العروض</p>
+                            <p className="text-lg font-bold text-slate-900">{totalVisits.toLocaleString('en-US')}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -232,78 +230,75 @@ export default function Campaigns() {
 
             {/* Platform Campaigns */}
             <Card className="bg-white border-slate-200 shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-slate-50">
-                    <CardTitle className="text-lg font-bold text-slate-800">حملات المنصة</CardTitle>
-                    <Badge variant="secondary" className="bg-blue-50 text-blue-700 font-normal">
-                        المنصة تتحكم في الحد الأدنى للسعر
-                    </Badge>
-                </CardHeader>
-                <CardContent className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {platformCampaigns.map((campaign) => (
-                            <div
-                                key={campaign.id}
-                                className={`rounded-xl border p-5 transition-all ${campaign.status === 'active'
-                                    ? 'bg-emerald-50/50 border-emerald-200 shadow-sm'
-                                    : campaign.status === 'upcoming'
-                                        ? 'bg-blue-50/50 border-blue-200 shadow-sm'
-                                        : 'bg-slate-50 border-slate-100 opacity-80'
-                                    }`}
-                            >
-                                <div className="flex items-center justify-between mb-3">
-                                    <h4 className="text-base font-bold text-slate-900">{campaign.name}</h4>
-                                    <Badge className={`${campaign.status === 'active' ? 'bg-emerald-500 hover:bg-emerald-600' :
-                                        campaign.status === 'upcoming' ? 'bg-blue-500 hover:bg-blue-600' :
-                                            'bg-slate-500 hover:bg-slate-600'
-                                        }`}>
-                                        {campaign.status === 'active' ? 'نشط' : campaign.status === 'upcoming' ? 'قادم' : 'منتهي'}
-                                    </Badge>
-                                </div>
-                                <p className="text-sm text-slate-600 mb-4 h-10">{campaign.description}</p>
-
-                                <div className="space-y-2 mb-4">
-                                    <div className="flex items-center gap-2">
-                                        <Percent size={14} className="text-emerald-600" />
-                                        <span className="text-sm font-semibold text-emerald-700">خصم {campaign.discount}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Calendar size={14} className="text-slate-400" />
-                                        <span className="text-xs text-slate-500">{campaign.startDate} - {campaign.endDate}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Tag size={14} className="text-slate-400" />
-                                        <span className="text-xs text-slate-500">{campaign.minPrice}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Gift size={14} className="text-slate-400" />
-                                        <span className="text-xs text-slate-500">{campaign.products} منتج مشارك</span>
-                                    </div>
-                                </div>
-
-                                {campaign.status !== 'ended' && (
-                                    <Button
-                                        className={`w-full ${campaign.joined
-                                            ? 'bg-emerald-600 hover:bg-emerald-700'
-                                            : 'bg-blue-600 hover:bg-blue-700'
-                                            }`}
-                                        disabled={campaign.joined}
-                                    >
-                                        {campaign.joined ? (
-                                            <>
-                                                <CheckCircle size={16} className="ml-2" />
-                                                منضم للحملة
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Plus size={16} className="ml-2" />
-                                                الانضمام للحملة
-                                            </>
-                                        )}
-                                    </Button>
-                                )}
-                            </div>
-                        ))}
+                <CardHeader className="pb-4 border-b border-slate-50">
+                    <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg font-bold text-slate-800">حملات المنصة</CardTitle>
+                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 font-normal">
+                            المنصة تتحكم في الحد الأدنى للسعر
+                        </Badge>
                     </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                    <Table>
+                        <TableHeader className="bg-slate-50/50">
+                            <TableRow className="hover:bg-transparent border-slate-100">
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">اسم الحملة</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الوصف</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الخصم</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الفترة</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الحد الأدنى</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتجات</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الحالة</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الإجراء</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {platformCampaigns.map((campaign) => (
+                                <TableRow key={campaign.id} className="border-slate-50 hover:bg-slate-50/50">
+                                    <TableCell className="font-semibold text-slate-800 text-sm py-3">{campaign.name}</TableCell>
+                                    <TableCell className="text-slate-600 text-sm py-3 max-w-[200px]">{campaign.description}</TableCell>
+                                    <TableCell className="font-bold text-slate-900 py-3">{campaign.discount}</TableCell>
+                                    <TableCell className="text-xs text-slate-500 py-3 font-mono" dir="ltr">
+                                        {campaign.startDate} - {campaign.endDate}
+                                    </TableCell>
+                                    <TableCell className="text-xs text-slate-500 py-3">{campaign.minPrice}</TableCell>
+                                    <TableCell className="text-xs text-slate-500 py-3">{campaign.products} منتج</TableCell>
+                                    <TableCell className="text-center py-3">
+                                        <Badge className={`font-normal ${campaign.status === 'active' ? 'bg-emerald-500 hover:bg-emerald-600' :
+                                            campaign.status === 'upcoming' ? 'bg-blue-500 hover:bg-blue-600' :
+                                                'bg-slate-500 hover:bg-slate-600'
+                                            }`}>
+                                            {campaign.status === 'active' ? 'نشط' : campaign.status === 'upcoming' ? 'قادم' : 'منتهي'}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-center py-3">
+                                        {campaign.status !== 'ended' && (
+                                            <Button
+                                                size="sm"
+                                                className={`${campaign.joined
+                                                    ? 'bg-emerald-600 hover:bg-emerald-700'
+                                                    : 'bg-blue-600 hover:bg-blue-700'
+                                                    }`}
+                                                disabled={campaign.joined}
+                                            >
+                                                {campaign.joined ? (
+                                                    <>
+                                                        <CheckCircle size={14} className="ml-1" />
+                                                        منضم
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Plus size={14} className="ml-1" />
+                                                        انضم
+                                                    </>
+                                                )}
+                                            </Button>
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
                 </CardContent>
             </Card>
 
@@ -321,9 +316,7 @@ export default function Campaigns() {
                                 <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الخصم</TableHead>
                                 <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتجات</TableHead>
                                 <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المبيعات</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الزيارات</TableHead>
                                 <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">العائد</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">تأثير الربح</TableHead>
                                 <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الحالة</TableHead>
                                 <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الإجراءات</TableHead>
                             </TableRow>
@@ -337,12 +330,10 @@ export default function Campaigns() {
                                             {campaign.typeLabel}
                                         </Badge>
                                     </TableCell>
-                                    <TableCell className="font-bold text-emerald-600 py-3">{campaign.discount}</TableCell>
+                                    <TableCell className="font-bold text-slate-900 py-3">{campaign.discount}</TableCell>
                                     <TableCell className="text-xs text-slate-500 py-3">{campaign.products} منتج</TableCell>
                                     <TableCell className="text-sm font-medium text-slate-700 py-3">{campaign.sales}</TableCell>
-                                    <TableCell className="text-xs text-slate-500 py-3">{campaign.visits.toLocaleString('en-US')}</TableCell>
-                                    <TableCell className="font-bold text-purple-600 py-3">{campaign.revenue.toLocaleString('en-US')} ج.م</TableCell>
-                                    <TableCell className="font-bold text-emerald-600 py-3">+{campaign.profit.toLocaleString('en-US')} ج.م</TableCell>
+                                    <TableCell className="font-bold text-slate-900 py-3">{campaign.revenue.toLocaleString('en-US')} ج.م</TableCell>
                                     <TableCell className="text-center py-3">
                                         <Badge variant="secondary" className={`font-normal whitespace-nowrap ${campaign.status === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
                                             }`}>

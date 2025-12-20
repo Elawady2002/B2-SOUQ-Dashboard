@@ -345,28 +345,6 @@ export default function SellerProfile() {
                     </CardContent>
                 </Card>
             </div>
-
-            {/* Subscription Section */}
-            <Card className="border-slate-100 shadow-sm bg-white">
-                <CardHeader className="pb-2 border-b border-slate-50">
-                    <CardTitle className="text-lg font-bold text-slate-800">الترقيات المتاحة</CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <div className="text-sm text-slate-500 mb-1">الباقة الحالية</div>
-                            <div className="text-xl font-bold text-slate-900">{subscriptionInfo.plan}</div>
-                            <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
-                                <CalendarIcon size={12} />
-                                تنتهي في {subscriptionInfo.expiryDate}
-                            </div>
-                        </div>
-                        <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-100">
-                            ترقية الباقة
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
         </div>
     );
 }
