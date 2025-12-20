@@ -219,17 +219,17 @@ export default function Inventory() {
                 </CardHeader>
                 <CardContent className="p-0">
                     <Table>
-                        <TableHeader>
+                        <TableHeader className="bg-slate-50/50">
                             <TableRow className="hover:bg-transparent border-slate-100">
-                                <TableHead className="text-right h-12">المنتج</TableHead>
-                                <TableHead className="text-right h-12">SKU</TableHead>
-                                <TableHead className="text-right h-12">الفئة</TableHead>
-                                <TableHead className="text-right h-12">السعر</TableHead>
-                                <TableHead className="text-center h-12">الكمية الحالية</TableHead>
-                                <TableHead className="text-center h-12">حد النفاذ</TableHead>
-                                <TableHead className="text-center h-12">الشحن</TableHead>
-                                <TableHead className="text-right h-12">العنوان</TableHead>
-                                <TableHead className="text-center h-12 w-[50px]"></TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتج</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">SKU</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الفئة</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">السعر</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الكمية الحالية</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">حد النفاذ</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الشحن</TableHead>
+                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">العنوان</TableHead>
+                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600 w-[50px]"></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>

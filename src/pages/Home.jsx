@@ -411,11 +411,11 @@ export default function Home() {
                             </CardHeader>
                             <CardContent className="p-0 flex-1">
                                 <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead className="text-right">معرف الطلب</TableHead>
-                                            <TableHead className="text-right">المنتج</TableHead>
-                                            <TableHead className="text-right">المبلغ</TableHead>
+                                    <TableHeader className="bg-slate-50/50">
+                                        <TableRow className="hover:bg-transparent border-slate-100">
+                                            <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">معرف الطلب</TableHead>
+                                            <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتج</TableHead>
+                                            <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المبلغ</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -572,16 +572,16 @@ export default function Home() {
                         </CardHeader>
                         <CardContent>
                             <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead className="text-right">معرف المنتج</TableHead>
-                                        <TableHead className="text-right">اسم المنتج</TableHead>
-                                        <TableHead className="text-right">فئة</TableHead>
-                                        <TableHead className="text-right">التخفيض</TableHead>
-                                        <TableHead className="text-right">سعر</TableHead>
-                                        <TableHead className="text-right">حالة</TableHead>
-                                        <TableHead className="text-right">تاريخ الإضافة</TableHead>
-                                        <TableHead className="text-left">الإجراءات</TableHead>
+                                <TableHeader className="bg-slate-50/50">
+                                    <TableRow className="hover:bg-transparent border-slate-100">
+                                        <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">معرف المنتج</TableHead>
+                                        <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">اسم المنتج</TableHead>
+                                        <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">فئة</TableHead>
+                                        <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">التخفيض</TableHead>
+                                        <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">سعر</TableHead>
+                                        <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">حالة</TableHead>
+                                        <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">تاريخ الإضافة</TableHead>
+                                        <TableHead className="text-left h-10 text-xs font-semibold text-slate-600">الإجراءات</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
