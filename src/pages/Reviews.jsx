@@ -1,321 +1,165 @@
-import {
-    Star,
-    MessageCircle,
-    ThumbsUp,
-    ThumbsDown,
-    Reply,
-    HelpCircle,
-    X,
-    Send
-} from 'lucide-react';
-import { useState } from 'react';
+import { Star, ThumbsUp, ThumbsDown, MessageSquare } from 'lucide-react';
+
+const stats = [
+    { label: 'متوسط التقييم', value: '4.8', icon: Star, iconBg: '#fef3c7', iconColor: '#f59e0b' },
+    { label: 'تقييمات إيجابية', value: '2,245', icon: ThumbsUp, iconBg: '#d1fae5', iconColor: '#10b981' },
+    { label: 'تقييمات سلبية', value: '45', icon: ThumbsDown, iconBg: '#fee2e2', iconColor: '#ef4444' },
+];
 
 const reviews = [
     {
         id: 1,
-        customer: 'أحمد محمد',
-        avatar: 'https://i.pravatar.cc/150?img=12',
+        customer: { name: 'أحمد محمد', avatar: 'https://i.pravatar.cc/150?img=11' },
         product: 'هاتف سامسونج Galaxy S24',
         rating: 5,
-        comment: 'منتج ممتاز وجودة عالية جداً. الشحن كان سريع والتغليف محترم. أنصح بالشراء من هذا المتجر.',
+        text: 'منتج ممتاز وجودة عالية جداً. الشحن كان سريع والتغليف محترم. أنصح بالشراء من هذا المتجر.',
         date: '2024-12-18',
-        replied: true,
-        reply: 'شكراً لك على تقييمك الرائع! سعداء بخدمتك دائماً.'
     },
     {
         id: 2,
-        customer: 'سارة أحمد',
-        avatar: 'https://i.pravatar.cc/150?img=5',
+        customer: { name: 'سارة أحمد', avatar: 'https://i.pravatar.cc/150?img=5' },
         product: 'سماعات AirPods Pro',
-        rating: 4,
-        comment: 'السماعات ممتازة لكن التوصيل تأخر يومين عن الموعد المحدد.',
+        rating: 5,
+        text: 'السماعات ممتازة والصوت نقي جداً. تجربة شراء رائعة!',
         date: '2024-12-17',
-        replied: false
     },
     {
         id: 3,
-        customer: 'محمود علي',
-        avatar: 'https://i.pravatar.cc/150?img=33',
+        customer: { name: 'محمود علي', avatar: 'https://i.pravatar.cc/150?img=12' },
         product: 'شاحن لاسلكي',
-        rating: 3,
-        comment: 'المنتج جيد لكن الجودة أقل قليلاً مما توقعت.',
+        rating: 4,
+        text: 'الشاحن جيد وسرعة الشحن مقبولة. الجودة ممتازة بالنسبة للسعر.',
         date: '2024-12-16',
-        replied: false
     },
     {
         id: 4,
-        customer: 'فاطمة حسن',
-        avatar: 'https://i.pravatar.cc/150?img=9',
-        product: 'ساعة Huawei GT4',
+        customer: { name: 'نورهان طه', avatar: 'https://i.pravatar.cc/150?img=9' },
+        product: 'ساعة Apple Watch',
         rating: 5,
-        comment: 'أفضل ساعة ذكية اشتريتها! شكراً للمتجر على الخدمة الممتازة.',
+        text: 'ساعة رائعة! التوصيل كان سريع جداً وخدمة العملاء ممتازة.',
         date: '2024-12-15',
-        replied: true,
-        reply: 'شكراً لثقتك بنا! نتمنى لك استخداماً ممتعاً.'
+    },
+    {
+        id: 5,
+        customer: { name: 'يوسف أحمد', avatar: 'https://i.pravatar.cc/150?img=15' },
+        product: 'لابتوب MacBook',
+        rating: 5,
+        text: 'أفضل متجر اشتريت منه! التغليف احترافي والمنتج أصلي 100%.',
+        date: '2024-12-14',
+    },
+    {
+        id: 6,
+        customer: { name: 'مريم حسن', avatar: 'https://i.pravatar.cc/150?img=32' },
+        product: 'كاميرا Canon',
+        rating: 4,
+        text: 'كاميرا ممتازة وجودة تصوير عالية. سعيدة بالشراء.',
+        date: '2024-12-13',
     },
 ];
 
-const questions = [
-    {
-        id: 1,
-        customer: 'علي محمود',
-        product: 'هاتف سامسونج Galaxy S24',
-        question: 'هل الهاتف يدعم شبكات 5G في مصر؟',
-        date: '2024-12-18',
-        answered: true,
-        answer: 'نعم، الهاتف يدعم جميع شبكات 5G المتاحة في مصر.'
-    },
-    {
-        id: 2,
-        customer: 'نور محمد',
-        product: 'سماعات AirPods Pro',
-        question: 'ما مدة الضمان على هذا المنتج؟',
-        date: '2024-12-17',
-        answered: false
-    },
-    {
-        id: 3,
-        customer: 'ياسر أحمد',
-        product: 'شاحن لاسلكي',
-        question: 'هل يعمل مع هواتف Samsung أم Apple فقط؟',
-        date: '2024-12-16',
-        answered: false
-    },
-];
+const renderStars = (rating) => {
+    return (
+        <div style={{ display: 'flex', gap: '2px' }}>
+            {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                    key={star}
+                    size={16}
+                    fill={star <= rating ? '#f59e0b' : 'transparent'}
+                    color={star <= rating ? '#f59e0b' : '#e2e8f0'}
+                />
+            ))}
+        </div>
+    );
+};
 
 export default function Reviews() {
-    const [activeTab, setActiveTab] = useState('reviews');
-    const [replyModal, setReplyModal] = useState(null);
-
-    const renderStars = (rating) => {
-        return [...Array(5)].map((_, i) => (
-            <Star
-                key={i}
-                size={16}
-                fill={i < rating ? '#f59e0b' : 'transparent'}
-                color={i < rating ? '#f59e0b' : '#cbd5e1'}
-            />
-        ));
-    };
-
     return (
         <div>
-            {/* Page Header */}
-            <div className="page-header">
-                <h2 className="page-title">التقييمات والأسئلة</h2>
-                <p className="page-subtitle">إدارة تقييمات العملاء والرد على أسئلتهم</p>
+            {/* Header */}
+            <div style={{ marginBottom: '24px' }}>
+                <h2 className="page-title">التقييمات</h2>
+                <p className="page-subtitle">إدارة تقييمات العملاء والرد عليها</p>
             </div>
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-4 mb-lg" style={{ gap: 'var(--spacing-md)' }}>
-                <div className="stats-card">
-                    <div className="stats-card-icon" style={{ background: '#fef3c7', color: '#f59e0b' }}>
-                        <Star size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">متوسط التقييم</div>
-                        <div className="stats-card-value">4.8</div>
-                    </div>
-                </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon" style={{ background: '#d1fae5', color: '#10b981' }}>
-                        <ThumbsUp size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">تقييمات إيجابية</div>
-                        <div className="stats-card-value">2,245</div>
-                    </div>
-                </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon" style={{ background: '#fee2e2', color: '#ef4444' }}>
-                        <ThumbsDown size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">تقييمات سلبية</div>
-                        <div className="stats-card-value">45</div>
-                    </div>
-                </div>
-                <div className="stats-card">
-                    <div className="stats-card-icon" style={{ background: '#eff6ff', color: '#3b82f6' }}>
-                        <HelpCircle size={24} />
-                    </div>
-                    <div className="stats-card-content">
-                        <div className="stats-card-label">أسئلة بانتظار الرد</div>
-                        <div className="stats-card-value">12</div>
-                    </div>
-                </div>
+            {/* Stats */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '32px' }}>
+                {stats.map((stat, idx) => {
+                    const IconComponent = stat.icon;
+                    return (
+                        <div key={idx} style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                            <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: stat.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
+                                <IconComponent size={22} color={stat.iconColor} />
+                            </div>
+                            <p style={{ fontSize: '28px', fontWeight: 700, color: '#1e293b', marginBottom: '4px' }}>{stat.value}</p>
+                            <p style={{ fontSize: '13px', color: '#64748b' }}>{stat.label}</p>
+                        </div>
+                    );
+                })}
             </div>
 
-            {/* Tabs */}
-            <div className="card mb-lg">
-                <div className="flex gap-sm">
-                    <button
-                        className={`chart-filter-btn ${activeTab === 'reviews' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('reviews')}
+            {/* Reviews Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+                {reviews.map((review) => (
+                    <div
+                        key={review.id}
+                        style={{
+                            background: 'white',
+                            borderRadius: '16px',
+                            padding: '24px',
+                            border: '1px solid #e2e8f0',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            position: 'relative',
+                            transition: 'box-shadow 0.2s, transform 0.2s',
+                            cursor: 'pointer'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.08)';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.boxShadow = 'none';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                        }}
                     >
-                        <Star size={16} />
-                        التقييمات ({reviews.length})
-                    </button>
-                    <button
-                        className={`chart-filter-btn ${activeTab === 'questions' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('questions')}
-                    >
-                        <HelpCircle size={16} />
-                        الأسئلة ({questions.length})
-                    </button>
-                </div>
-            </div>
-
-            {/* Reviews Tab */}
-            {activeTab === 'reviews' && (
-                <div className="flex flex-col gap-md">
-                    {reviews.map((review) => (
-                        <div key={review.id} className="card">
-                            <div className="flex items-start gap-md">
-                                <img
-                                    src={review.avatar}
-                                    alt={review.customer}
-                                    style={{
-                                        width: '48px',
-                                        height: '48px',
-                                        borderRadius: 'var(--radius-md)',
-                                        objectFit: 'cover',
-                                        flexShrink: 0
-                                    }}
-                                />
-                                <div style={{ flex: 1 }}>
-                                    <div className="flex items-center justify-between mb-sm">
-                                        <div>
-                                            <h4 style={{ fontWeight: '600', fontSize: 15 }}>{review.customer}</h4>
-                                            <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{review.product}</p>
-                                        </div>
-                                        <div className="flex items-center gap-sm">
-                                            <div className="flex">{renderStars(review.rating)}</div>
-                                            <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{review.date}</span>
-                                        </div>
-                                    </div>
-                                    <p style={{ lineHeight: '1.7', marginBottom: 'var(--spacing-md)', fontSize: 14 }}>{review.comment}</p>
-
-                                    {review.replied && (
-                                        <div style={{
-                                            padding: 'var(--spacing-md)',
-                                            background: '#eff6ff',
-                                            borderRadius: 'var(--radius-md)',
-                                            borderRight: '3px solid #3b82f6',
-                                            marginBottom: 'var(--spacing-sm)'
-                                        }}>
-                                            <p style={{ fontSize: '12px', color: '#3b82f6', marginBottom: '4px', fontWeight: 600 }}>ردك:</p>
-                                            <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{review.reply}</p>
-                                        </div>
-                                    )}
-
-                                    {!review.replied && (
-                                        <button className="btn btn-primary btn-sm" onClick={() => setReplyModal(review)}>
-                                            <Reply size={14} />
-                                            الرد على التقييم
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
+                        {/* Quote Icon */}
+                        <div style={{ position: 'absolute', top: '20px', left: '20px', opacity: 0.15 }}>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="#2563eb">
+                                <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z" />
+                            </svg>
                         </div>
-                    ))}
-                </div>
-            )}
 
-            {/* Questions Tab */}
-            {activeTab === 'questions' && (
-                <div className="flex flex-col gap-md">
-                    {questions.map((question) => (
-                        <div key={question.id} className="card">
-                            <div className="flex items-start gap-md">
-                                <div style={{
-                                    width: '48px',
-                                    height: '48px',
-                                    background: '#eff6ff',
-                                    borderRadius: 'var(--radius-md)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    color: '#3b82f6',
-                                    flexShrink: 0
-                                }}>
-                                    <HelpCircle size={24} />
-                                </div>
-                                <div style={{ flex: 1 }}>
-                                    <div className="flex items-center justify-between mb-sm">
-                                        <div>
-                                            <h4 style={{ fontWeight: '600', fontSize: 15 }}>{question.customer}</h4>
-                                            <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{question.product}</p>
-                                        </div>
-                                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{question.date}</span>
-                                    </div>
-                                    <p style={{ lineHeight: '1.7', marginBottom: 'var(--spacing-md)', fontWeight: '500', fontSize: 14 }}>
-                                        {question.question}
-                                    </p>
-
-                                    {question.answered && (
-                                        <div style={{
-                                            padding: 'var(--spacing-md)',
-                                            background: '#d1fae5',
-                                            borderRadius: 'var(--radius-md)',
-                                            borderRight: '3px solid #10b981',
-                                            marginBottom: 'var(--spacing-sm)'
-                                        }}>
-                                            <p style={{ fontSize: '12px', color: '#10b981', marginBottom: '4px', fontWeight: 600 }}>إجابتك:</p>
-                                            <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{question.answer}</p>
-                                        </div>
-                                    )}
-
-                                    {!question.answered && (
-                                        <button className="btn btn-primary btn-sm">
-                                            <MessageCircle size={14} />
-                                            الرد على السؤال
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
+                        {/* Stars */}
+                        <div style={{ marginBottom: '16px' }}>
+                            {renderStars(review.rating)}
                         </div>
-                    ))}
-                </div>
-            )}
 
-            {/* Reply Modal */}
-            {replyModal && (
-                <div className="modal-overlay" onClick={() => setReplyModal(null)}>
-                    <div className="modal" style={{ maxWidth: '500px' }} onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3 className="modal-title">الرد على تقييم {replyModal.customer}</h3>
-                            <button className="modal-close" onClick={() => setReplyModal(null)}>
-                                <X size={18} />
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            <div style={{
-                                padding: 'var(--spacing-md)',
-                                background: 'var(--bg-input)',
-                                borderRadius: 'var(--radius-md)',
-                                marginBottom: 'var(--spacing-lg)'
-                            }}>
-                                <div className="flex mb-sm">{renderStars(replyModal.rating)}</div>
-                                <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>"{replyModal.comment}"</p>
+                        {/* Review Text */}
+                        <p style={{
+                            fontSize: '14px',
+                            color: '#1e293b',
+                            lineHeight: 1.7,
+                            flex: 1,
+                            marginBottom: '20px'
+                        }}>
+                            {review.text}
+                        </p>
+
+                        {/* Customer Info */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '16px', borderTop: '1px solid #f1f5f9' }}>
+                            <img
+                                src={review.customer.avatar}
+                                alt=""
+                                style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+                            />
+                            <div>
+                                <p style={{ fontWeight: 600, fontSize: '14px', color: '#1e293b' }}>{review.customer.name}</p>
+                                <p style={{ fontSize: '12px', color: '#2563eb' }}>{review.product}</p>
                             </div>
-                            <div className="form-group">
-                                <label className="form-label">ردك</label>
-                                <textarea className="form-textarea" placeholder="اكتب ردك هنا..." rows={4}></textarea>
-                            </div>
-                        </div>
-                        <div className="modal-footer">
-                            <button className="btn btn-primary">
-                                <Send size={18} />
-                                إرسال الرد
-                            </button>
-                            <button className="btn btn-secondary" onClick={() => setReplyModal(null)}>
-                                إلغاء
-                            </button>
                         </div>
                     </div>
-                </div>
-            )}
+                ))}
+            </div>
         </div>
     );
 }

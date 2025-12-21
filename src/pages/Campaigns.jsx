@@ -15,7 +15,11 @@ import {
     DollarSign,
     Gift,
     Tag,
-    Trash
+    Trash,
+    Sparkles,
+    Zap,
+    ArrowLeft,
+    Package
 } from 'lucide-react';
 import { useState } from 'react';
 import React from 'react';
@@ -25,6 +29,7 @@ import {
     CardContent,
     CardHeader,
     CardTitle,
+    CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -61,10 +66,12 @@ const platformCampaigns = [
         discount: '30%',
         startDate: '2024-12-20',
         endDate: '2024-12-31',
-        minPrice: 'الحد الأدنى: 100 ج.م',
+        minPrice: 100,
         products: 150,
         status: 'upcoming',
-        joined: false
+        joined: false,
+        color: 'blue',
+        icon: Sparkles
     },
     {
         id: 2,
@@ -73,10 +80,12 @@ const platformCampaigns = [
         discount: '25%',
         startDate: '2024-12-15',
         endDate: '2024-12-25',
-        minPrice: 'الحد الأدنى: 80 ج.م',
+        minPrice: 80,
         products: 200,
         status: 'active',
-        joined: true
+        joined: true,
+        color: 'emerald',
+        icon: Gift
     },
     {
         id: 3,
@@ -85,10 +94,12 @@ const platformCampaigns = [
         discount: '50%',
         startDate: '2024-11-25',
         endDate: '2024-11-30',
-        minPrice: 'الحد الأدنى: 50 ج.م',
+        minPrice: 50,
         products: 300,
         status: 'ended',
-        joined: true
+        joined: true,
+        color: 'slate',
+        icon: Zap
     },
 ];
 
@@ -155,6 +166,18 @@ const storeCampaigns = [
     },
 ];
 
+const statusConfig = {
+    active: { label: 'نشط', bg: 'bg-emerald-100', text: 'text-emerald-700', dot: 'bg-emerald-500' },
+    upcoming: { label: 'قادم', bg: 'bg-blue-100', text: 'text-blue-700', dot: 'bg-blue-500' },
+    ended: { label: 'منتهي', bg: 'bg-slate-100', text: 'text-slate-600', dot: 'bg-slate-400' },
+};
+
+const typeConfig = {
+    price_discount: { color: 'bg-blue-50 text-blue-700 border-blue-200' },
+    multi_piece: { color: 'bg-purple-50 text-purple-700 border-purple-200' },
+    group_discount: { color: 'bg-orange-50 text-orange-700 border-orange-200' },
+};
+
 export default function Campaigns() {
     const [showModal, setShowModal] = useState(false);
     const [selectedCampaign, setSelectedCampaign] = useState(null);
@@ -181,191 +204,242 @@ export default function Campaigns() {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <Card className="bg-white border-slate-200 shadow-sm">
                     <CardContent className="p-4 flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                            <Megaphone size={20} />
+                        <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
+                            <Megaphone size={22} />
                         </div>
                         <div>
                             <p className="text-xs text-slate-500 font-medium">حملات نشطة</p>
-                            <p className="text-lg font-bold text-slate-900">{activeCampaigns}</p>
+                            <p className="text-xl font-bold text-slate-900">{activeCampaigns}</p>
                         </div>
                     </CardContent>
                 </Card>
                 <Card className="bg-white border-slate-200 shadow-sm">
                     <CardContent className="p-4 flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
-                            <ShoppingCart size={20} />
+                        <div className="w-11 h-11 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600">
+                            <ShoppingCart size={22} />
                         </div>
                         <div>
                             <p className="text-xs text-slate-500 font-medium">المبيعات من العروض</p>
-                            <p className="text-lg font-bold text-slate-900">{totalSales}</p>
+                            <p className="text-xl font-bold text-slate-900">{totalSales}</p>
                         </div>
                     </CardContent>
                 </Card>
                 <Card className="bg-white border-slate-200 shadow-sm">
                     <CardContent className="p-4 flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
-                            <TrendingUp size={20} />
+                        <div className="w-11 h-11 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
+                            <TrendingUp size={22} />
                         </div>
                         <div>
                             <p className="text-xs text-slate-500 font-medium">إجمالي العائد</p>
-                            <p className="text-lg font-bold text-slate-900">{totalRevenue.toLocaleString('en-US')} ج.م</p>
+                            <p className="text-xl font-bold text-slate-900">{totalRevenue.toLocaleString('en-US')} ج.م</p>
                         </div>
                     </CardContent>
                 </Card>
                 <Card className="bg-white border-slate-200 shadow-sm">
                     <CardContent className="p-4 flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-500">
-                            <Eye size={20} />
+                        <div className="w-11 h-11 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600">
+                            <Eye size={22} />
                         </div>
                         <div>
                             <p className="text-xs text-slate-500 font-medium">الزيارات من العروض</p>
-                            <p className="text-lg font-bold text-slate-900">{totalVisits.toLocaleString('en-US')}</p>
+                            <p className="text-xl font-bold text-slate-900">{totalVisits.toLocaleString('en-US')}</p>
                         </div>
                     </CardContent>
                 </Card>
             </div>
 
-            {/* Platform Campaigns */}
+            {/* Platform Campaigns - Card Based Design */}
             <Card className="bg-white border-slate-200 shadow-sm">
-                <CardHeader className="pb-4 border-b border-slate-50">
+                <CardHeader className="pb-4 border-b border-slate-100">
                     <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg font-bold text-slate-800">حملات المنصة</CardTitle>
-                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 font-normal">
-                            المنصة تتحكم في الحد الأدنى للسعر
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                                <Megaphone className="w-5 h-5 text-white" />
+                            </div>
+                            <div>
+                                <CardTitle className="text-lg font-bold text-slate-800">حملات المنصة</CardTitle>
+                                <CardDescription className="text-slate-500">انضم للحملات الرسمية واستفد من الدعم التسويقي</CardDescription>
+                            </div>
+                        </div>
+                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 font-medium">
+                            {platformCampaigns.filter(c => c.status === 'active').length} حملة نشطة
                         </Badge>
+                    </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {platformCampaigns.map((campaign) => {
+                            const status = statusConfig[campaign.status];
+                            const Icon = campaign.icon;
+                            const colorClasses = {
+                                blue: 'from-blue-500 to-indigo-600',
+                                emerald: 'from-emerald-500 to-teal-600',
+                                slate: 'from-slate-400 to-slate-500',
+                            };
+
+                            return (
+                                <div
+                                    key={campaign.id}
+                                    className={`relative rounded-2xl overflow-hidden border ${campaign.status === 'ended' ? 'border-slate-200 opacity-70' : 'border-slate-200'
+                                        }`}
+                                >
+                                    {/* Header with Gradient */}
+                                    <div className={`bg-gradient-to-r ${colorClasses[campaign.color]} p-4`}>
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">
+                                                    <Icon className="w-5 h-5 text-white" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-bold text-white text-sm">{campaign.name}</h3>
+                                                    <p className="text-white/80 text-xs">{campaign.description}</p>
+                                                </div>
+                                            </div>
+                                            <div className="text-2xl font-black text-white">{campaign.discount}</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Body */}
+                                    <div className="p-4 bg-white">
+                                        <div className="grid grid-cols-2 gap-3 mb-4">
+                                            <div className="bg-slate-50 rounded-lg p-2.5">
+                                                <p className="text-[10px] text-slate-500">الفترة</p>
+                                                <p className="text-xs font-semibold text-slate-800 font-mono" dir="ltr">
+                                                    {campaign.startDate.slice(5)} → {campaign.endDate.slice(5)}
+                                                </p>
+                                            </div>
+                                            <div className="bg-slate-50 rounded-lg p-2.5">
+                                                <p className="text-[10px] text-slate-500">الحد الأدنى</p>
+                                                <p className="text-xs font-semibold text-slate-800">{campaign.minPrice} ج.م</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <div className={`w-2 h-2 rounded-full ${status.dot}`}></div>
+                                                <span className={`text-xs font-medium ${status.text}`}>{status.label}</span>
+                                                <span className="text-xs text-slate-400">• {campaign.products} منتج</span>
+                                            </div>
+
+                                            {campaign.status !== 'ended' && (
+                                                <Button
+                                                    size="sm"
+                                                    className={`h-8 text-xs ${campaign.joined
+                                                            ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                                                            : 'bg-blue-600 hover:bg-blue-700 text-white'
+                                                        }`}
+                                                    disabled={campaign.joined}
+                                                >
+                                                    {campaign.joined ? (
+                                                        <>
+                                                            <CheckCircle size={14} className="ml-1" />
+                                                            منضم
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Plus size={14} className="ml-1" />
+                                                            انضم الآن
+                                                        </>
+                                                    )}
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Store Campaigns */}
+            <Card className="bg-white border-slate-200 shadow-sm">
+                <CardHeader className="pb-4 border-b border-slate-100">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
+                                <Tag className="w-5 h-5 text-white" />
+                            </div>
+                            <div>
+                                <CardTitle className="text-lg font-bold text-slate-800">عروض متجرك</CardTitle>
+                                <CardDescription className="text-slate-500">العروض الخاصة بمتجرك</CardDescription>
+                            </div>
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
                     <Table>
                         <TableHeader className="bg-slate-50/50">
                             <TableRow className="hover:bg-transparent border-slate-100">
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">اسم الحملة</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الوصف</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الخصم</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الفترة</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الحد الأدنى</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتجات</TableHead>
-                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الحالة</TableHead>
-                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الإجراء</TableHead>
+                                <TableHead className="text-right h-11 text-xs font-semibold text-slate-600">اسم العرض</TableHead>
+                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">النوع</TableHead>
+                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">الخصم</TableHead>
+                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">المنتجات</TableHead>
+                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">المبيعات</TableHead>
+                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">العائد</TableHead>
+                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">الحالة</TableHead>
+                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600 w-[80px]"></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {platformCampaigns.map((campaign) => (
-                                <TableRow key={campaign.id} className="border-slate-50 hover:bg-slate-50/50">
-                                    <TableCell className="font-semibold text-slate-800 text-sm py-3">{campaign.name}</TableCell>
-                                    <TableCell className="text-slate-600 text-sm py-3 max-w-[200px]">{campaign.description}</TableCell>
-                                    <TableCell className="font-bold text-slate-900 py-3">{campaign.discount}</TableCell>
-                                    <TableCell className="text-xs text-slate-500 py-3 font-mono" dir="ltr">
-                                        {campaign.startDate} - {campaign.endDate}
-                                    </TableCell>
-                                    <TableCell className="text-xs text-slate-500 py-3">{campaign.minPrice}</TableCell>
-                                    <TableCell className="text-xs text-slate-500 py-3">{campaign.products} منتج</TableCell>
-                                    <TableCell className="text-center py-3">
-                                        <Badge className={`font-normal ${campaign.status === 'active' ? 'bg-emerald-500 hover:bg-emerald-600' :
-                                            campaign.status === 'upcoming' ? 'bg-blue-500 hover:bg-blue-600' :
-                                                'bg-slate-500 hover:bg-slate-600'
-                                            }`}>
-                                            {campaign.status === 'active' ? 'نشط' : campaign.status === 'upcoming' ? 'قادم' : 'منتهي'}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="text-center py-3">
-                                        {campaign.status !== 'ended' && (
-                                            <Button
-                                                size="sm"
-                                                className={`${campaign.joined
-                                                    ? 'bg-emerald-600 hover:bg-emerald-700'
-                                                    : 'bg-blue-600 hover:bg-blue-700'
-                                                    }`}
-                                                disabled={campaign.joined}
-                                            >
-                                                {campaign.joined ? (
-                                                    <>
-                                                        <CheckCircle size={14} className="ml-1" />
-                                                        منضم
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Plus size={14} className="ml-1" />
-                                                        انضم
-                                                    </>
-                                                )}
-                                            </Button>
-                                        )}
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
+                            {storeCampaigns.map((campaign) => {
+                                const status = statusConfig[campaign.status];
+                                const type = typeConfig[campaign.type];
 
-            {/* Store Campaigns */}
-            <Card className="bg-white border-slate-200 shadow-sm">
-                <CardHeader className="pb-4 border-b border-slate-50">
-                    <CardTitle className="text-lg font-bold text-slate-800">عروض متجرك</CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                    <Table>
-                        <TableHeader className="bg-slate-50/50">
-                            <TableRow className="hover:bg-transparent border-slate-100">
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">اسم العرض</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">النوع</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الخصم</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتجات</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المبيعات</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">العائد</TableHead>
-                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الحالة</TableHead>
-                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الإجراءات</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {storeCampaigns.map((campaign) => (
-                                <TableRow key={campaign.id} className="hover:bg-slate-50/50">
-                                    <TableCell className="font-semibold text-slate-800 text-sm py-3">{campaign.name}</TableCell>
-                                    <TableCell className="py-3">
-                                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 font-normal whitespace-nowrap">
-                                            {campaign.typeLabel}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="font-bold text-slate-900 py-3">{campaign.discount}</TableCell>
-                                    <TableCell className="text-xs text-slate-500 py-3">{campaign.products} منتج</TableCell>
-                                    <TableCell className="text-sm font-medium text-slate-700 py-3">{campaign.sales}</TableCell>
-                                    <TableCell className="font-bold text-slate-900 py-3">{campaign.revenue.toLocaleString('en-US')} ج.م</TableCell>
-                                    <TableCell className="text-center py-3">
-                                        <Badge variant="secondary" className={`font-normal whitespace-nowrap ${campaign.status === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
-                                            }`}>
-                                            {campaign.status === 'active' ? 'نشط' : 'منتهي'}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="py-3">
-                                        <div className="flex items-center justify-center gap-1">
-                                            <Button
-                                                size="icon"
-                                                variant="ghost"
-                                                className="h-8 w-8 text-blue-600 hover:bg-blue-50 rounded-full"
-                                                onClick={() => {
-                                                    setSelectedCampaign(campaign);
-                                                    setShowReportModal(true);
-                                                }}
-                                                title="تقرير الحملة"
-                                            >
-                                                <BarChart3 size={16} />
-                                            </Button>
-                                            <Button
-                                                size="icon"
-                                                variant="ghost"
-                                                className="h-8 w-8 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full"
-                                                title="تعديل"
-                                            >
-                                                <Edit size={16} />
-                                            </Button>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                                return (
+                                    <TableRow key={campaign.id} className="hover:bg-slate-50/50 border-slate-50">
+                                        <TableCell className="font-semibold text-slate-800 text-sm py-4">{campaign.name}</TableCell>
+                                        <TableCell className="text-center py-4">
+                                            <Badge variant="outline" className={`${type.color} font-medium text-xs border`}>
+                                                {campaign.typeLabel}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-center py-4">
+                                            <span className="font-bold text-emerald-600">{campaign.discount}</span>
+                                        </TableCell>
+                                        <TableCell className="text-center text-slate-600 py-4">{campaign.products}</TableCell>
+                                        <TableCell className="text-center py-4">
+                                            <span className="font-semibold text-slate-800">{campaign.sales}</span>
+                                        </TableCell>
+                                        <TableCell className="text-center py-4">
+                                            <span className="font-bold text-slate-900">{campaign.revenue.toLocaleString('en-US')} ج.م</span>
+                                        </TableCell>
+                                        <TableCell className="text-center py-4">
+                                            <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${status.bg}`}>
+                                                <div className={`w-1.5 h-1.5 rounded-full ${status.dot}`}></div>
+                                                <span className={`text-xs font-medium ${status.text}`}>{status.label}</span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="py-4">
+                                            <div className="flex items-center justify-center gap-1">
+                                                <Button
+                                                    size="icon"
+                                                    variant="ghost"
+                                                    className="h-8 w-8 text-blue-600 hover:bg-blue-50 rounded-lg"
+                                                    onClick={() => {
+                                                        setSelectedCampaign(campaign);
+                                                        setShowReportModal(true);
+                                                    }}
+                                                    title="تقرير"
+                                                >
+                                                    <BarChart3 size={16} />
+                                                </Button>
+                                                <Button
+                                                    size="icon"
+                                                    variant="ghost"
+                                                    className="h-8 w-8 text-amber-600 hover:bg-amber-50 rounded-lg"
+                                                    title="تعديل"
+                                                >
+                                                    <Edit size={16} />
+                                                </Button>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
                         </TableBody>
                     </Table>
                 </CardContent>

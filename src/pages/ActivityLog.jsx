@@ -1,222 +1,170 @@
-import {
-    History,
-    User,
-    Package,
-    ShoppingCart,
-    Settings,
-    Edit,
-    Trash2,
-    Plus,
-    Bot,
-    Filter,
-    Calendar
-} from 'lucide-react';
 import { useState } from 'react';
+import { Package, ShoppingCart, Edit, Trash2, Plus, User, MapPin, ExternalLink, Filter, Calendar } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const activities = [
     {
         id: 1,
-        action: 'تعديل منتج',
+        employee: { name: 'أحمد محمد', role: 'مدير المنتجات', avatar: 'https://i.pravatar.cc/150?img=11' },
+        action: 'أضاف منتج جديد',
         target: 'هاتف سامسونج Galaxy S24',
-        user: 'أحمد محمد',
-        userType: 'employee',
-        details: 'تم تعديل السعر من 44,000 إلى 45,000 ج.م',
-        date: '2024-12-18 10:30',
-        icon: Package
+        location: 'القاهرة، مصر',
+        time: 'منذ 5 دقائق',
+        date: '21 ديسمبر 2024',
+        icon: Plus,
+        iconBg: '#d1fae5',
+        iconColor: '#10b981'
     },
     {
         id: 2,
-        action: 'تحديث حالة طلب',
-        target: 'ORD-2024-78432',
-        user: 'النظام الآلي',
-        userType: 'system',
-        details: 'تم تغيير الحالة من "جديد" إلى "تحت التجهيز"',
-        date: '2024-12-18 09:45',
-        icon: ShoppingCart
+        employee: { name: 'سارة أحمد', role: 'مسؤولة المخزون', avatar: 'https://i.pravatar.cc/150?img=5' },
+        action: 'عدّل سعر منتج',
+        target: 'سماعات AirPods Pro',
+        details: 'من 4,500 إلى 4,200 ج.م',
+        location: 'الإسكندرية، مصر',
+        time: 'منذ 15 دقيقة',
+        date: '21 ديسمبر 2024',
+        icon: Edit,
+        iconBg: '#dbeafe',
+        iconColor: '#2563eb'
     },
     {
         id: 3,
-        action: 'إضافة موظف',
-        target: 'محمد علي',
-        user: 'أحمد محمد',
-        userType: 'owner',
-        details: 'تم إضافة موظف جديد بصلاحية مسؤول المنتجات',
-        date: '2024-12-17 16:20',
-        icon: User
+        employee: { name: 'محمد علي', role: 'مسؤول الطلبات', avatar: 'https://i.pravatar.cc/150?img=12' },
+        action: 'حدّث حالة طلب',
+        target: 'ORD-2024-78432',
+        details: 'من "جديد" إلى "تحت التجهيز"',
+        location: 'الجيزة، مصر',
+        time: 'منذ 30 دقيقة',
+        date: '21 ديسمبر 2024',
+        icon: ShoppingCart,
+        iconBg: '#fef3c7',
+        iconColor: '#f59e0b'
     },
     {
         id: 4,
+        employee: { name: 'نورهان طه', role: 'مسؤولة المنتجات', avatar: 'https://i.pravatar.cc/150?img=9' },
         action: 'حذف منتج',
-        target: 'سماعة قديمة',
-        user: 'سارة أحمد',
-        userType: 'employee',
-        details: 'تم حذف المنتج من المتجر',
-        date: '2024-12-17 14:15',
-        icon: Trash2
+        target: 'كابل شحن قديم',
+        location: 'القاهرة، مصر',
+        time: 'منذ ساعة',
+        date: '21 ديسمبر 2024',
+        icon: Trash2,
+        iconBg: '#fee2e2',
+        iconColor: '#ef4444'
     },
     {
         id: 5,
-        action: 'تعديل إعدادات',
-        target: 'سياسة الشحن',
-        user: 'أحمد محمد',
-        userType: 'owner',
-        details: 'تم تعديل سياسة الشحن المجاني',
-        date: '2024-12-17 11:00',
-        icon: Settings
+        employee: { name: 'أحمد محمد', role: 'مدير المنتجات', avatar: 'https://i.pravatar.cc/150?img=11' },
+        action: 'أضاف 5 منتجات',
+        target: 'تشكيلة إكسسوارات',
+        location: 'القاهرة، مصر',
+        time: 'منذ 2 ساعة',
+        date: '21 ديسمبر 2024',
+        icon: Package,
+        iconBg: '#e0e7ff',
+        iconColor: '#6366f1'
     },
-    {
-        id: 6,
-        action: 'إضافة منتج',
-        target: 'ساعة Apple Watch',
-        user: 'محمد علي',
-        userType: 'employee',
-        details: 'تم إضافة منتج جديد بسعر 12,500 ج.م',
-        date: '2024-12-16 15:30',
-        icon: Plus
-    },
-    {
-        id: 7,
-        action: 'خصم مخزون',
-        target: 'شاحن لاسلكي',
-        user: 'النظام الآلي',
-        userType: 'system',
-        details: 'تم خصم 5 قطع بسبب طلب ORD-2024-78435',
-        date: '2024-12-16 12:45',
-        icon: Package
-    },
-];
-
-const userTypeConfig = {
-    owner: { label: 'المالك', color: '#3b82f6', bg: '#eff6ff' },
-    employee: { label: 'موظف', color: '#10b981', bg: '#d1fae5' },
-    system: { label: 'النظام', color: '#f59e0b', bg: '#fef3c7' },
-};
-
-const actionFilters = [
-    { id: 'all', label: 'الكل' },
-    { id: 'product', label: 'المنتجات' },
-    { id: 'order', label: 'الطلبات' },
-    { id: 'employee', label: 'الموظفين' },
-    { id: 'settings', label: 'الإعدادات' },
 ];
 
 export default function ActivityLog() {
-    const [activeFilter, setActiveFilter] = useState('all');
+    const navigate = useNavigate();
 
     return (
         <div>
-            {/* Page Header */}
-            <div className="page-header">
-                <h2 className="page-title">سجل النشاط</h2>
-                <p className="page-subtitle">تتبع جميع التعديلات والإجراءات في المتجر</p>
-            </div>
-
-            {/* Filters */}
-            <div className="card mb-lg">
-                <div className="flex items-center justify-between" style={{ flexWrap: 'wrap', gap: 'var(--spacing-md)' }}>
-                    <div className="flex items-center gap-md">
-                        <Filter size={18} style={{ color: 'var(--text-muted)' }} />
-                        <div className="flex gap-sm">
-                            {actionFilters.map((filter) => (
-                                <button
-                                    key={filter.id}
-                                    className={`chart-filter-btn ${activeFilter === filter.id ? 'active' : ''}`}
-                                    onClick={() => setActiveFilter(filter.id)}
-                                >
-                                    {filter.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-sm" style={{ color: 'var(--text-muted)', fontSize: 14 }}>
-                        <Calendar size={16} />
-                        <input type="date" className="form-input" style={{ width: 'auto', padding: '6px 12px', fontSize: 13 }} />
-                        <span>إلى</span>
-                        <input type="date" className="form-input" style={{ width: 'auto', padding: '6px 12px', fontSize: 13 }} />
-                    </div>
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <div>
+                    <h2 className="page-title">سجل النشاط</h2>
+                    <p className="page-subtitle">تتبع جميع الإجراءات التي قام بها فريق العمل</p>
+                </div>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                    <button style={{ padding: '10px 16px', background: 'white', border: '1px solid #e2e8f0', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', color: '#64748b' }}>
+                        <Filter size={16} /> تصفية
+                    </button>
+                    <button style={{ padding: '10px 16px', background: 'white', border: '1px solid #e2e8f0', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', color: '#64748b' }}>
+                        <Calendar size={16} /> اليوم
+                    </button>
                 </div>
             </div>
 
-            {/* Activity Timeline */}
-            <div className="card">
-                <div className="card-header">
-                    <h3 className="card-title">سجل الأحداث</h3>
-                    <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
-                        آخر 7 أيام
-                    </span>
-                </div>
-                <div className="flex flex-col">
-                    {activities.map((activity, idx) => {
-                        const userType = userTypeConfig[activity.userType];
-                        return (
-                            <div
-                                key={activity.id}
-                                style={{
-                                    display: 'flex',
-                                    gap: 'var(--spacing-md)',
-                                    padding: 'var(--spacing-lg) 0',
-                                    borderBottom: idx < activities.length - 1 ? '1px solid var(--border-color)' : 'none'
-                                }}
-                            >
-                                {/* Timeline Icon */}
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    <div style={{
-                                        width: '40px',
-                                        height: '40px',
-                                        borderRadius: 'var(--radius-md)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        background: userType.bg,
-                                        color: userType.color,
-                                        flexShrink: 0
-                                    }}>
-                                        {activity.userType === 'system' ? <Bot size={20} /> : <activity.icon size={20} />}
-                                    </div>
-                                    {idx < activities.length - 1 && (
-                                        <div style={{
-                                            width: '2px',
-                                            flex: 1,
-                                            background: 'var(--border-color)',
-                                            marginTop: 'var(--spacing-sm)'
-                                        }}></div>
-                                    )}
+            {/* Activity List */}
+            <div style={{ background: 'white', borderRadius: '16px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+                {activities.map((activity, idx) => {
+                    const IconComponent = activity.icon;
+                    return (
+                        <div
+                            key={activity.id}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'flex-start',
+                                gap: '16px',
+                                padding: '20px 24px',
+                                borderBottom: idx < activities.length - 1 ? '1px solid #f1f5f9' : 'none'
+                            }}
+                        >
+                            {/* Employee Avatar */}
+                            <img
+                                src={activity.employee.avatar}
+                                alt=""
+                                style={{ width: '48px', height: '48px', borderRadius: '50%', flexShrink: 0 }}
+                            />
+
+                            {/* Activity Content */}
+                            <div style={{ flex: 1 }}>
+                                {/* Employee Name & Role */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                                    <span style={{ fontWeight: 600, fontSize: '15px', color: '#1e293b' }}>{activity.employee.name}</span>
+                                    <span style={{ fontSize: '12px', color: '#64748b', background: '#f1f5f9', padding: '2px 8px', borderRadius: '4px' }}>{activity.employee.role}</span>
                                 </div>
 
-                                {/* Content */}
-                                <div style={{ flex: 1 }}>
-                                    <div className="flex items-center gap-sm mb-sm">
-                                        <h4 style={{ fontWeight: '600', fontSize: 15 }}>{activity.action}</h4>
-                                        <span style={{
-                                            padding: '2px 8px',
-                                            borderRadius: 'var(--radius-sm)',
-                                            fontSize: 11,
-                                            fontWeight: 600,
-                                            background: userType.bg,
-                                            color: userType.color
-                                        }}>
-                                            {userType.label}
-                                        </span>
+                                {/* Action */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                    <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: activity.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <IconComponent size={14} color={activity.iconColor} />
                                     </div>
-                                    <p style={{ marginBottom: 'var(--spacing-sm)', fontSize: 14 }}>
-                                        <span style={{ color: '#3b82f6', fontWeight: '500' }}>{activity.target}</span>
-                                    </p>
-                                    <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: 'var(--spacing-sm)' }}>
-                                        {activity.details}
-                                    </p>
-                                    <div className="flex items-center gap-md" style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                                        <span className="flex items-center gap-sm">
-                                            <User size={14} />
-                                            {activity.user}
-                                        </span>
-                                        <span>•</span>
-                                        <span>{activity.date}</span>
-                                    </div>
+                                    <span style={{ fontSize: '14px', color: '#1e293b' }}>
+                                        {activity.action}: <span style={{ color: '#2563eb', fontWeight: 500 }}>{activity.target}</span>
+                                    </span>
+                                </div>
+
+                                {activity.details && (
+                                    <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '8px', marginRight: '36px' }}>{activity.details}</p>
+                                )}
+
+                                {/* Location & Time */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '12px', color: '#94a3b8' }}>
+                                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                        <MapPin size={14} /> {activity.location}
+                                    </span>
+                                    <span>{activity.time}</span>
                                 </div>
                             </div>
-                        );
-                    })}
-                </div>
+
+                            {/* Link to Employee Profile */}
+                            <button
+                                onClick={() => navigate('/employees')}
+                                style={{
+                                    padding: '8px 14px',
+                                    background: '#eff6ff',
+                                    border: '1px solid #2563eb',
+                                    borderRadius: '8px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '12px',
+                                    color: '#2563eb',
+                                    fontWeight: 500
+                                }}
+                            >
+                                <User size={14} />
+                                الملف الشخصي
+                                <ExternalLink size={12} />
+                            </button>
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

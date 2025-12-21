@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import SearchIcon from '../../assets/icons/material-symbols-light_search.svg';
 import NightIcon from '../../assets/icons/fluent-mdl2_clear-night.svg';
 import LanguageIcon from '../../assets/icons/famicons_language-outline.svg';
-import MaximizeIcon from '../../assets/icons/gg_maximize-alt.svg';
 import QuestionIcon from '../../assets/icons/mingcute_question-line.svg';
 import SettingsIcon from '../../assets/icons/uil_setting.svg';
 import Avatar from '../../assets/image/avater.png';
@@ -71,10 +70,6 @@ export default function Header({ onMenuClick }) {
                     }}>9</span>
                 </button>
 
-                {/* Maximize */}
-                <button className="header-icon-btn" title="تكبير">
-                    <img src={MaximizeIcon} alt="" style={{ width: 20, height: 20 }} />
-                </button>
 
 
                 {/* Avatar */}

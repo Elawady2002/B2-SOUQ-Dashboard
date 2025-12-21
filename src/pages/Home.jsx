@@ -602,10 +602,10 @@ export default function Home() {
                                             <TableCell><Badge variant="secondary" className="bg-amber-100 text-amber-700 hover:bg-amber-200 text-xs font-normal">تم الحفظ كمسودة</Badge></TableCell>
                                             <TableCell className="text-slate-500">{order.date}</TableCell>
                                             <TableCell>
-                                                <div className="flex gap-1 justify-end">
-                                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-blue-600"><Eye size={14} /></Button>
-                                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-amber-600"><Edit size={14} /></Button>
-                                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-red-600"><Trash2 size={14} /></Button>
+                                                <div className="flex gap-2 justify-end">
+                                                    <button style={{ width: '32px', height: '32px', borderRadius: '8px', border: 'none', background: '#dbeafe', color: '#2563eb', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Eye size={14} /></button>
+                                                    <button style={{ width: '32px', height: '32px', borderRadius: '8px', border: 'none', background: '#fef3c7', color: '#f59e0b', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Edit size={14} /></button>
+                                                    <button style={{ width: '32px', height: '32px', borderRadius: '8px', border: 'none', background: '#fee2e2', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Trash2 size={14} /></button>
                                                 </div>
                                             </TableCell>
                                         </TableRow>

@@ -19,6 +19,7 @@ import Wallet from '../../pages/Wallet';
 import Reviews from '../../pages/Reviews';
 import Messages from '../../pages/Messages';
 import ActivityLog from '../../pages/ActivityLog';
+import AddProduct from '../../pages/AddProduct';
 import ComponentsDemo from '../../pages/ComponentsDemo';
 
 const pageTitles = {
@@ -27,6 +28,7 @@ const pageTitles = {
     '/store-profile': 'ملف المتجر',
     '/employees': 'إدارة الموظفين',
     '/products': 'المنتجات',
+    '/products/add': 'إضافة منتج جديد',
     '/inventory': 'المخزون',
     '/orders': 'الطلبات والشحن',
     '/returns': 'المرتجعات والنزاعات',
@@ -79,6 +81,7 @@ export default function DashboardLayout() {
                         <Route path="/store-profile" element={<StoreProfile />} />
                         <Route path="/employees" element={<Employees />} />
                         <Route path="/products" element={<Products />} />
+                        <Route path="/products/add" element={<AddProduct />} />
                         <Route path="/inventory" element={<Inventory />} />
                         <Route path="/orders" element={<Orders />} />
                         <Route path="/returns" element={<Returns />} />

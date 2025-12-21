@@ -18,7 +18,10 @@ import {
     Truck,
     Clock,
     FileText,
-    Package
+    Package,
+    RotateCcw,
+    Headphones,
+    Building2
 } from 'lucide-react';
 
 // Import social media icons
@@ -114,35 +117,45 @@ export default function StoreProfile() {
                     {/* Banner & Logo Section */}
                     <Card className="border-slate-100 shadow-sm bg-white overflow-hidden">
                         <CardHeader className="pb-4 border-b border-slate-50">
-                            <CardTitle className="text-lg font-bold text-slate-800">شعار وغلاف الموقع</CardTitle>
+                            <CardTitle className="text-lg font-bold text-slate-800">شعار وغلاف المتجر</CardTitle>
+                            <CardDescription className="text-slate-500">صور تمثل هوية متجرك للعملاء</CardDescription>
                         </CardHeader>
                         <CardContent className="p-6">
-                            <div className="flex gap-6 items-start">
-                                {/* Logo Upload */}
-                                <div className="flex flex-col items-center gap-2">
-                                    <div className="w-24 h-24 rounded-full border-2 border-dashed border-blue-200 bg-blue-50 flex items-center justify-center cursor-pointer hover:bg-blue-100 transition-colors group">
-                                        <Camera className="w-8 h-8 text-blue-500 group-hover:scale-110 transition-transform" />
-                                    </div>
-                                    <span className="text-sm font-medium text-blue-600">رفع الشعار</span>
-                                </div>
-
-                                {/* Banner Upload */}
-                                <div className="flex-1">
-                                    <div className="h-40 rounded-xl bg-slate-100 relative overflow-hidden group">
+                            <div className="flex gap-8 items-start">
+                                {/* Banner Upload - Main area */}
+                                <div className="flex-1 order-2">
+                                    <Label className="text-slate-700 font-medium mb-3 block">صورة الغلاف</Label>
+                                    <div className="h-44 rounded-xl bg-slate-100 relative overflow-hidden group border-2 border-dashed border-slate-200 hover:border-blue-300 transition-colors">
                                         <div
                                             className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
                                             style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800)' }}
                                         />
-                                        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                         <Button
                                             size="sm"
                                             variant="secondary"
-                                            className="absolute bottom-3 left-3 bg-white/90 hover:bg-white text-slate-700 shadow-sm backdrop-blur-sm"
+                                            className="absolute bottom-3 left-3 bg-white/95 hover:bg-white text-slate-700 shadow-md backdrop-blur-sm gap-2"
                                         >
+                                            <Camera size={14} />
                                             تغيير الغلاف
                                         </Button>
                                     </div>
-                                    <p className="text-xs text-slate-400 mt-2">الأبعاد الموصى بها: 1400 × 400 بكسل</p>
+                                    <p className="text-xs text-slate-400 mt-2 flex items-center gap-2">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                                        الأبعاد الموصى بها: 1400 × 400 بكسل
+                                    </p>
+                                </div>
+
+                                {/* Logo Upload - Smaller on right */}
+                                <div className="flex flex-col items-center gap-3 order-1">
+                                    <Label className="text-slate-700 font-medium">الشعار</Label>
+                                    <div className="w-28 h-28 rounded-2xl border-2 border-dashed border-blue-200 bg-gradient-to-br from-blue-50 to-slate-50 flex flex-col items-center justify-center cursor-pointer hover:bg-blue-100 hover:border-blue-400 transition-all group shadow-sm">
+                                        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                                            <Camera className="w-6 h-6 text-blue-500" />
+                                        </div>
+                                        <span className="text-xs font-medium text-blue-600">رفع الشعار</span>
+                                    </div>
+                                    <p className="text-[10px] text-slate-400 text-center">200 × 200 بكسل</p>
                                 </div>
                             </div>
                         </CardContent>
@@ -151,77 +164,99 @@ export default function StoreProfile() {
                     {/* Basic Identity & Data */}
                     <Card className="border-slate-100 shadow-sm bg-white">
                         <CardHeader className="pb-4 border-b border-slate-50 flex flex-row items-center justify-between">
-                            <CardTitle className="text-lg font-bold text-slate-800">الهوية والبيانات الأساسية</CardTitle>
+                            <div>
+                                <CardTitle className="text-lg font-bold text-slate-800">الهوية والبيانات الأساسية</CardTitle>
+                                <CardDescription className="text-slate-500">معلومات متجرك التي تظهر للعملاء</CardDescription>
+                            </div>
                             <div className="flex gap-2">
                                 {isVerified && (
-                                    <Badge variant="secondary" className="bg-blue-50 text-blue-700 gap-1 hover:bg-blue-100">
-                                        <BadgeCheck className="w-3.5 h-3.5" />
+                                    <Badge variant="secondary" className="bg-blue-50 text-blue-700 gap-1.5 hover:bg-blue-100 px-3 py-1">
+                                        <BadgeCheck className="w-4 h-4" />
                                         متجر موثق
                                     </Badge>
                                 )}
                                 {isOfficialStore && (
-                                    <Badge variant="secondary" className="bg-amber-50 text-amber-700 gap-1 hover:bg-amber-100">
-                                        <Store className="w-3.5 h-3.5" />
+                                    <Badge variant="secondary" className="bg-amber-50 text-amber-700 gap-1.5 hover:bg-amber-100 px-3 py-1">
+                                        <Store className="w-4 h-4" />
                                         متجر رسمي
                                     </Badge>
                                 )}
                             </div>
                         </CardHeader>
-                        <CardContent className="p-6 flex flex-col gap-6">
+                        <CardContent className="p-6">
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                            {/* Names */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <Label htmlFor="storeName" className="text-slate-700 font-medium">اسم المتجر (اللغة العربية)</Label>
-                                    <Input
-                                        id="storeName"
-                                        value={storeName}
-                                        onChange={(e) => setStoreName(e.target.value)}
-                                        className="bg-white"
-                                    />
+                                {/* Store Names Card */}
+                                <div className="bg-gradient-to-br from-blue-50 to-slate-50 rounded-xl p-5 border border-blue-100/50">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
+                                            <Store className="w-4 h-4 text-white" />
+                                        </div>
+                                        <h4 className="text-sm font-bold text-slate-800">اسم المتجر</h4>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <Label className="text-xs text-slate-500 mb-1.5 block">بالعربية</Label>
+                                            <Input
+                                                value={storeName}
+                                                onChange={(e) => setStoreName(e.target.value)}
+                                                className="bg-white h-10 text-sm border-slate-200"
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label className="text-xs text-slate-500 mb-1.5 block">بالإنجليزية</Label>
+                                            <Input
+                                                value={storeNameEn}
+                                                onChange={(e) => setStoreNameEn(e.target.value)}
+                                                className="bg-white h-10 text-sm text-left border-slate-200"
+                                                dir="ltr"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="storeNameEn" className="text-slate-700 font-medium">اسم المتجر (اللغة الانجليزية)</Label>
-                                    <Input
-                                        id="storeNameEn"
-                                        value={storeNameEn}
-                                        onChange={(e) => setStoreNameEn(e.target.value)}
-                                        className="bg-white text-left"
-                                        dir="ltr"
+
+                                {/* Description Card */}
+                                <div className="bg-gradient-to-br from-emerald-50 to-slate-50 rounded-xl p-5 border border-emerald-100/50">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
+                                            <FileText className="w-4 h-4 text-white" />
+                                        </div>
+                                        <h4 className="text-sm font-bold text-slate-800">وصف المتجر</h4>
+                                    </div>
+                                    <Textarea
+                                        value={storeDescription}
+                                        onChange={(e) => setStoreDescription(e.target.value)}
+                                        rows={4}
+                                        className="bg-white resize-none text-sm border-slate-200"
+                                        placeholder="وصف مختصر وجذاب..."
                                     />
+                                    <p className="text-[10px] text-slate-400 mt-2">يظهر في البحث وصفحة المتجر</p>
                                 </div>
-                            </div>
 
-                            {/* Bio */}
-                            <div className="space-y-2">
-                                <Label htmlFor="storeDescription" className="text-slate-600">وصف المتجر</Label>
-                                <Textarea
-                                    id="storeDescription"
-                                    value={storeDescription}
-                                    onChange={(e) => setStoreDescription(e.target.value)}
-                                    rows={3}
-                                    className="bg-white resize-none"
-                                />
-                            </div>
-
-                            {/* Domain - Merged */}
-                            <div className="space-y-2">
-                                <Label className="text-slate-600">نطاق المتجر</Label>
-                                <div className="flex gap-4 items-center">
-                                    <div className="relative flex-1">
-                                        <Globe className="absolute right-3 top-2.5 h-4 w-4 text-slate-400" />
+                                {/* Domain Card */}
+                                <div className="bg-gradient-to-br from-purple-50 to-slate-50 rounded-xl p-5 border border-purple-100/50">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center">
+                                            <Globe className="w-4 h-4 text-white" />
+                                        </div>
+                                        <h4 className="text-sm font-bold text-slate-800">رابط المتجر</h4>
+                                    </div>
+                                    <div className="space-y-3">
                                         <Input
                                             value={website}
                                             onChange={(e) => setWebsite(e.target.value)}
-                                            className="pr-10 bg-white text-left"
+                                            className="bg-white h-10 text-sm text-left border-slate-200"
                                             dir="ltr"
                                         />
-                                    </div>
-                                    <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-lg border border-slate-200 text-sm dir-ltr text-slate-600 font-medium whitespace-nowrap">
-                                        <span className="text-slate-400">Preview:</span>
-                                        {storeNameEn}.{website}
+                                        <div className="bg-white rounded-lg p-3 border border-slate-200">
+                                            <p className="text-[10px] text-slate-400 mb-1">رابط متجرك:</p>
+                                            <p className="text-sm font-mono text-purple-600 font-medium truncate">
+                                                {storeNameEn.toLowerCase().replace(/\s+/g, '')}.{website}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
+
                             </div>
 
                             <Separator />
@@ -289,55 +324,86 @@ export default function StoreProfile() {
 
                     {/* Store Policies */}
                     <Card className="border-slate-100 shadow-sm bg-white">
-                        <CardHeader className="pb-4 border-b border-slate-50 flex flex-row items-center gap-2">
-                            <ShieldCheck className="w-5 h-5 text-slate-500" />
-                            <CardTitle className="text-lg font-bold text-slate-800">سياسات المتجر</CardTitle>
+                        <CardHeader className="pb-4 border-b border-slate-50">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center">
+                                    <ShieldCheck className="w-5 h-5 text-indigo-600" />
+                                </div>
+                                <div>
+                                    <CardTitle className="text-lg font-bold text-slate-800">سياسات المتجر</CardTitle>
+                                    <CardDescription className="text-slate-500">السياسات التي تحكم تعاملات متجرك</CardDescription>
+                                </div>
+                            </div>
                         </CardHeader>
-                        <CardContent className="p-6 grid grid-cols-1 gap-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <Label className="text-slate-600">سياسة الشحن</Label>
+                        <CardContent className="p-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {/* Shipping Policy */}
+                                <div className="bg-gradient-to-br from-blue-50 to-slate-50 rounded-xl p-4 border border-blue-100/50">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Truck className="w-4 h-4 text-blue-600" />
+                                        <Label className="text-sm font-semibold text-slate-700">الشحن</Label>
+                                    </div>
                                     <Textarea
                                         value={shippingPolicy}
                                         onChange={(e) => setShippingPolicy(e.target.value)}
-                                        placeholder="تفاصيل التوصيل والمدد الزمنية..."
-                                        className="bg-white h-24 resize-none"
+                                        placeholder="تفاصيل التوصيل..."
+                                        className="bg-white h-20 resize-none text-sm border-slate-200"
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label className="text-slate-600">سياسة الإرجاع</Label>
+
+                                {/* Return Policy */}
+                                <div className="bg-gradient-to-br from-rose-50 to-slate-50 rounded-xl p-4 border border-rose-100/50">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <RotateCcw className="w-4 h-4 text-rose-600" />
+                                        <Label className="text-sm font-semibold text-slate-700">الإرجاع</Label>
+                                    </div>
                                     <Textarea
                                         value={returnPolicy}
                                         onChange={(e) => setReturnPolicy(e.target.value)}
-                                        placeholder="شروط ومدة الإرجاع..."
-                                        className="bg-white h-24 resize-none"
+                                        placeholder="شروط الإرجاع..."
+                                        className="bg-white h-20 resize-none text-sm border-slate-200"
                                     />
                                 </div>
-                            </div>
-                            <Separator />
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="space-y-2">
-                                    <Label className="text-slate-600">سياسة الضمان</Label>
+
+                                {/* Warranty Policy */}
+                                <div className="bg-gradient-to-br from-emerald-50 to-slate-50 rounded-xl p-4 border border-emerald-100/50">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                                        <Label className="text-sm font-semibold text-slate-700">الضمان</Label>
+                                    </div>
                                     <Textarea
                                         value={warrantyPolicy}
                                         onChange={(e) => setWarrantyPolicy(e.target.value)}
-                                        className="bg-white resize-none"
+                                        placeholder="سياسة الضمان..."
+                                        className="bg-white h-20 resize-none text-sm border-slate-200"
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label className="text-slate-600">سياسة الاستبدال</Label>
+
+                                {/* Replacement Policy */}
+                                <div className="bg-gradient-to-br from-amber-50 to-slate-50 rounded-xl p-4 border border-amber-100/50">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Package className="w-4 h-4 text-amber-600" />
+                                        <Label className="text-sm font-semibold text-slate-700">الاستبدال</Label>
+                                    </div>
                                     <Textarea
                                         value={replacementPolicy}
                                         onChange={(e) => setReplacementPolicy(e.target.value)}
-                                        className="bg-white resize-none"
+                                        placeholder="سياسة الاستبدال..."
+                                        className="bg-white h-20 resize-none text-sm border-slate-200"
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label className="text-slate-600">سياسة التعبئة</Label>
+
+                                {/* Packaging Policy */}
+                                <div className="bg-gradient-to-br from-purple-50 to-slate-50 rounded-xl p-4 border border-purple-100/50">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Package className="w-4 h-4 text-purple-600" />
+                                        <Label className="text-sm font-semibold text-slate-700">التعبئة</Label>
+                                    </div>
                                     <Textarea
                                         value={packagingPolicy}
                                         onChange={(e) => setPackagingPolicy(e.target.value)}
-                                        className="bg-white resize-none"
+                                        placeholder="سياسة التعبئة..."
+                                        className="bg-white h-20 resize-none text-sm border-slate-200"
                                     />
                                 </div>
                             </div>
@@ -346,124 +412,157 @@ export default function StoreProfile() {
 
                     {/* Operation Settings */}
                     <Card className="border-slate-100 shadow-sm bg-white">
-                        <CardHeader className="pb-4 border-b border-slate-50 flex flex-row items-center gap-2">
-                            <Clock className="w-5 h-5 text-slate-500" />
-                            <CardTitle className="text-lg font-bold text-slate-800">إعدادات التشغيل</CardTitle>
+                        <CardHeader className="pb-4 border-b border-slate-50">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-cyan-100 flex items-center justify-center">
+                                    <Clock className="w-5 h-5 text-cyan-600" />
+                                </div>
+                                <div>
+                                    <CardTitle className="text-lg font-bold text-slate-800">إعدادات التشغيل</CardTitle>
+                                    <CardDescription className="text-slate-500">أوقات العمل والدعم</CardDescription>
+                                </div>
+                            </div>
                         </CardHeader>
                         <CardContent className="p-6">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="space-y-2">
-                                    <Label className="text-slate-600">أوقات العمل</Label>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {/* Working Hours */}
+                                <div className="bg-gradient-to-br from-cyan-50 to-slate-50 rounded-xl p-4 border border-cyan-100/50">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Clock className="w-4 h-4 text-cyan-600" />
+                                        <Label className="text-sm font-semibold text-slate-700">أوقات العمل</Label>
+                                    </div>
                                     <Input
                                         value={workingHours}
                                         onChange={(e) => setWorkingHours(e.target.value)}
-                                        className="bg-white"
+                                        className="bg-white h-10 text-sm border-slate-200"
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label className="text-slate-600">مواعيد استلام الشحنات</Label>
+
+                                {/* Pickup Times */}
+                                <div className="bg-gradient-to-br from-orange-50 to-slate-50 rounded-xl p-4 border border-orange-100/50">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Truck className="w-4 h-4 text-orange-600" />
+                                        <Label className="text-sm font-semibold text-slate-700">استلام الشحنات</Label>
+                                    </div>
                                     <Input
                                         value={pickupTimes}
                                         onChange={(e) => setPickupTimes(e.target.value)}
-                                        className="bg-white"
+                                        className="bg-white h-10 text-sm border-slate-200"
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label className="text-slate-600">ساعات دعم العملاء</Label>
+
+                                {/* Support Hours */}
+                                <div className="bg-gradient-to-br from-green-50 to-slate-50 rounded-xl p-4 border border-green-100/50">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Headphones className="w-4 h-4 text-green-600" />
+                                        <Label className="text-sm font-semibold text-slate-700">دعم العملاء</Label>
+                                    </div>
                                     <Input
                                         value={supportHours}
                                         onChange={(e) => setSupportHours(e.target.value)}
-                                        className="bg-white"
+                                        className="bg-white h-10 text-sm border-slate-200"
                                     />
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Contact Information (Existing) */}
+                    {/* Contact Information */}
                     <Card className="border-slate-100 shadow-sm bg-white">
                         <CardHeader className="pb-4 border-b border-slate-50">
-                            <CardTitle className="text-lg font-bold text-slate-800">معلومات التواصل والموقع</CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-6 flex flex-col gap-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <Label htmlFor="phone1" className="text-slate-600">رقم الهاتف</Label>
-                                    <div className="relative">
-                                        <Phone className="absolute right-3 top-2.5 h-4 w-4 text-slate-400" />
-                                        <Input
-                                            id="phone1"
-                                            value={phone1}
-                                            onChange={(e) => setPhone1(e.target.value)}
-                                            className="pr-10 bg-white text-left"
-                                            dir="ltr"
-                                        />
-                                    </div>
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center">
+                                    <Phone className="w-5 h-5 text-rose-600" />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="phone2" className="text-slate-600">رقم الهاتف (بديل للأعمال)</Label>
-                                    <div className="relative">
-                                        <Phone className="absolute right-3 top-2.5 h-4 w-4 text-slate-400" />
-                                        <Input
-                                            id="phone2"
-                                            value={phone2}
-                                            onChange={(e) => setPhone2(e.target.value)}
-                                            className="pr-10 bg-white text-left"
-                                            dir="ltr"
-                                        />
-                                    </div>
+                                <div>
+                                    <CardTitle className="text-lg font-bold text-slate-800">معلومات التواصل والموقع</CardTitle>
+                                    <CardDescription className="text-slate-500">بيانات الاتصال وعنوان المستودع</CardDescription>
                                 </div>
                             </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="email" className="text-slate-600">البريد الإلكتروني</Label>
-                                <div className="relative">
-                                    <Mail className="absolute right-3 top-2.5 h-4 w-4 text-slate-400" />
+                        </CardHeader>
+                        <CardContent className="p-6">
+                            {/* Contact Cards Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                {/* Phone 1 */}
+                                <div className="bg-gradient-to-br from-blue-50 to-slate-50 rounded-xl p-4 border border-blue-100/50">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Phone className="w-4 h-4 text-blue-600" />
+                                        <Label className="text-sm font-semibold text-slate-700">رقم الهاتف</Label>
+                                    </div>
                                     <Input
-                                        id="email"
+                                        value={phone1}
+                                        onChange={(e) => setPhone1(e.target.value)}
+                                        className="bg-white h-10 text-sm text-left border-slate-200"
+                                        dir="ltr"
+                                    />
+                                </div>
+
+                                {/* Phone 2 */}
+                                <div className="bg-gradient-to-br from-violet-50 to-slate-50 rounded-xl p-4 border border-violet-100/50">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Phone className="w-4 h-4 text-violet-600" />
+                                        <Label className="text-sm font-semibold text-slate-700">هاتف بديل</Label>
+                                    </div>
+                                    <Input
+                                        value={phone2}
+                                        onChange={(e) => setPhone2(e.target.value)}
+                                        className="bg-white h-10 text-sm text-left border-slate-200"
+                                        dir="ltr"
+                                    />
+                                </div>
+
+                                {/* Email */}
+                                <div className="bg-gradient-to-br from-pink-50 to-slate-50 rounded-xl p-4 border border-pink-100/50">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Mail className="w-4 h-4 text-pink-600" />
+                                        <Label className="text-sm font-semibold text-slate-700">البريد الإلكتروني</Label>
+                                    </div>
+                                    <Input
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="pr-10 bg-white text-left"
+                                        className="bg-white h-10 text-sm text-left border-slate-200"
                                         dir="ltr"
                                     />
                                 </div>
                             </div>
 
-                            <Separator />
+                            {/* Warehouse Address Section */}
+                            <div className="bg-slate-50 rounded-xl p-5 border border-slate-100">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <Building2 className="w-5 h-5 text-slate-600" />
+                                    <h4 className="text-sm font-bold text-slate-800">عنوان المستودع الرئيسي</h4>
+                                </div>
 
-                            <div className="space-y-4">
-                                <h4 className="text-sm font-semibold text-slate-700">عنوان المستودع الرئيسي</h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="city" className="text-slate-600">المدينة</Label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <Label className="text-xs text-slate-500 mb-1.5 block">المدينة</Label>
                                         <Input
-                                            id="city"
                                             value={city}
                                             onChange={(e) => setCity(e.target.value)}
-                                            className="bg-white"
+                                            className="bg-white h-10 text-sm border-slate-200"
                                         />
                                     </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="address" className="text-slate-700 font-medium">العنوان التفصيلي</Label>
+                                    <div>
+                                        <Label className="text-xs text-slate-500 mb-1.5 block">العنوان التفصيلي</Label>
                                         <Input
-                                            id="address"
                                             value={address}
                                             onChange={(e) => setAddress(e.target.value)}
-                                            className="bg-white"
+                                            className="bg-white h-10 text-sm border-slate-200"
                                         />
                                     </div>
                                 </div>
 
-                                <div className="h-48 bg-slate-100 rounded-xl relative overflow-hidden flex items-center justify-center border border-slate-200">
+                                {/* Map Preview */}
+                                <div className="h-36 bg-slate-200 rounded-xl relative overflow-hidden flex items-center justify-center">
                                     <div
-                                        className="absolute inset-0 opacity-50 bg-cover bg-center"
+                                        className="absolute inset-0 opacity-60 bg-cover bg-center"
                                         style={{ backgroundImage: 'url(https://maps.googleapis.com/maps/api/staticmap?center=24.7136,46.6753&zoom=14&size=600x300&maptype=roadmap&key=demo)' }}
                                     />
-                                    <div className="w-10 h-10 bg-rose-500 rounded-full flex items-center justify-center shadow-lg shadow-rose-500/30 z-10 animate-bounce">
+                                    <div className="w-10 h-10 bg-rose-500 rounded-full flex items-center justify-center shadow-lg shadow-rose-500/30 z-10">
                                         <MapPin className="text-white w-5 h-5" />
                                     </div>
-                                    <div className="absolute bottom-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-medium text-slate-600 shadow-sm border border-white/50">
-                                        الرياض، المملكة العربية السعودية
+                                    <div className="absolute bottom-2 bg-white/95 backdrop-blur px-3 py-1 rounded-full text-xs font-medium text-slate-600 shadow-sm">
+                                        {city || 'حدد الموقع'}
                                     </div>
                                 </div>
                             </div>
