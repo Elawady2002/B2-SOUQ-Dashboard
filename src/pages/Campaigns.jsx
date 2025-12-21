@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import React from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 import {
     Card,
@@ -58,11 +59,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const platformCampaigns = [
+const getPlatformCampaigns = (t) => [
     {
         id: 1,
-        name: 'تخفيضات نهاية العام',
-        description: 'خصومات على جميع الفئات',
+        name: t('campaigns.endYearSale'),
+        description: t('campaigns.allCategoriesDiscount'),
         discount: '30%',
         startDate: '2024-12-20',
         endDate: '2024-12-31',
@@ -75,8 +76,8 @@ const platformCampaigns = [
     },
     {
         id: 2,
-        name: 'عروض الشتاء',
-        description: 'تخفيضات على الملابس والإكسسوارات',
+        name: t('campaigns.winterOffers'),
+        description: t('campaigns.clothesAccessories'),
         discount: '25%',
         startDate: '2024-12-15',
         endDate: '2024-12-25',
@@ -89,8 +90,8 @@ const platformCampaigns = [
     },
     {
         id: 3,
-        name: 'الجمعة البيضاء',
-        description: 'أكبر تخفيضات السنة',
+        name: t('campaigns.whiteFriday'),
+        description: t('campaigns.biggestSale'),
         discount: '50%',
         startDate: '2024-11-25',
         endDate: '2024-11-30',
@@ -103,12 +104,12 @@ const platformCampaigns = [
     },
 ];
 
-const storeCampaigns = [
+const getStoreCampaigns = (t) => [
     {
         id: 1,
-        name: 'خصم 15% على السماعات',
+        name: t('campaigns.phonesDiscount'),
         type: 'price_discount',
-        typeLabel: 'تخفيض سعر',
+        typeLabel: t('campaigns.priceDiscount'),
         discount: '15%',
         products: 8,
         sales: 45,
@@ -121,9 +122,9 @@ const storeCampaigns = [
     },
     {
         id: 2,
-        name: 'اشتر 2 واحصل على خصم 20%',
+        name: t('campaigns.buy2get20'),
         type: 'multi_piece',
-        typeLabel: 'عرض كمية',
+        typeLabel: t('campaigns.quantityOffer'),
         discount: '20%',
         products: 5,
         sales: 23,
@@ -136,9 +137,9 @@ const storeCampaigns = [
     },
     {
         id: 3,
-        name: 'خصم على مجموعة الهواتف',
+        name: t('campaigns.phonesGroup'),
         type: 'group_discount',
-        typeLabel: 'خصم مجموعة',
+        typeLabel: t('campaigns.groupDiscount'),
         discount: '10%',
         products: 12,
         sales: 67,
@@ -151,9 +152,9 @@ const storeCampaigns = [
     },
     {
         id: 4,
-        name: 'عرض الافتتاح',
+        name: t('campaigns.openingOffer'),
         type: 'price_discount',
-        typeLabel: 'تخفيض سعر',
+        typeLabel: t('campaigns.priceDiscount'),
         discount: '10%',
         products: 20,
         sales: 156,
@@ -166,12 +167,6 @@ const storeCampaigns = [
     },
 ];
 
-const statusConfig = {
-    active: { label: 'نشط', bg: 'bg-emerald-100', text: 'text-emerald-700', dot: 'bg-emerald-500' },
-    upcoming: { label: 'قادم', bg: 'bg-blue-100', text: 'text-blue-700', dot: 'bg-blue-500' },
-    ended: { label: 'منتهي', bg: 'bg-slate-100', text: 'text-slate-600', dot: 'bg-slate-400' },
-};
-
 const typeConfig = {
     price_discount: { color: 'bg-blue-50 text-blue-700 border-blue-200' },
     multi_piece: { color: 'bg-purple-50 text-purple-700 border-purple-200' },
@@ -179,9 +174,20 @@ const typeConfig = {
 };
 
 export default function Campaigns() {
+    const { t, isRTL } = useLanguage();
     const [showModal, setShowModal] = useState(false);
     const [selectedCampaign, setSelectedCampaign] = useState(null);
     const [showReportModal, setShowReportModal] = useState(false);
+
+    const platformCampaigns = getPlatformCampaigns(t);
+    const storeCampaigns = getStoreCampaigns(t);
+
+    // Dynamic status config with translations
+    const statusConfig = {
+        active: { label: t('campaigns.active'), bg: 'bg-emerald-100', text: 'text-emerald-700', dot: 'bg-emerald-500' },
+        upcoming: { label: t('campaigns.upcoming'), bg: 'bg-blue-100', text: 'text-blue-700', dot: 'bg-blue-500' },
+        ended: { label: t('campaigns.ended'), bg: 'bg-slate-100', text: 'text-slate-600', dot: 'bg-slate-400' },
+    };
 
     // Calculate totals
     const activeCampaigns = storeCampaigns.filter(c => c.status === 'active').length;
@@ -194,12 +200,12 @@ export default function Campaigns() {
             {/* Page Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900">الحملات والعروض</h2>
-                    <p className="text-sm text-slate-500 mt-1">إدارة حملات المنصة وعروض متجرك</p>
+                    <h2 className="text-2xl font-bold text-slate-900">{t('campaigns.title')}</h2>
+                    <p className="text-sm text-slate-500 mt-1">{t('campaigns.subtitle')}</p>
                 </div>
                 <Button onClick={() => setShowModal(true)} className="bg-blue-600 hover:bg-blue-700 gap-2">
                     <Plus size={18} />
-                    إنشاء عرض جديد
+                    {t('campaigns.createOffer')}
                 </Button>
             </div>
 
@@ -211,7 +217,7 @@ export default function Campaigns() {
                             <Megaphone size={22} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">حملات نشطة</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('campaigns.activeCampaigns')}</p>
                             <p className="text-xl font-bold text-slate-900">{activeCampaigns}</p>
                         </div>
                     </CardContent>
@@ -222,7 +228,7 @@ export default function Campaigns() {
                             <ShoppingCart size={22} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">المبيعات من العروض</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('campaigns.salesFromOffers')}</p>
                             <p className="text-xl font-bold text-slate-900">{totalSales}</p>
                         </div>
                     </CardContent>
@@ -233,8 +239,8 @@ export default function Campaigns() {
                             <TrendingUp size={22} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">إجمالي العائد</p>
-                            <p className="text-xl font-bold text-slate-900">{totalRevenue.toLocaleString('en-US')} ج.م</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('campaigns.totalRevenue')}</p>
+                            <p className="text-xl font-bold text-slate-900">{totalRevenue.toLocaleString('en-US')} {t('common.egp')}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -244,7 +250,7 @@ export default function Campaigns() {
                             <Eye size={22} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">الزيارات من العروض</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('campaigns.visitsFromOffers')}</p>
                             <p className="text-xl font-bold text-slate-900">{totalVisits.toLocaleString('en-US')}</p>
                         </div>
                     </CardContent>
@@ -260,12 +266,12 @@ export default function Campaigns() {
                                 <Megaphone className="w-5 h-5 text-white" />
                             </div>
                             <div>
-                                <CardTitle className="text-lg font-bold text-slate-800">حملات المنصة</CardTitle>
-                                <CardDescription className="text-slate-500">انضم للحملات الرسمية واستفد من الدعم التسويقي</CardDescription>
+                                <CardTitle className="text-lg font-bold text-slate-800">{t('campaigns.platformCampaigns')}</CardTitle>
+                                <CardDescription className="text-slate-500">{t('campaigns.platformDescription')}</CardDescription>
                             </div>
                         </div>
                         <Badge variant="secondary" className="bg-blue-50 text-blue-700 font-medium">
-                            {platformCampaigns.filter(c => c.status === 'active').length} حملة نشطة
+                            {platformCampaigns.filter(c => c.status === 'active').length} {t('campaigns.activeCampaign')}
                         </Badge>
                     </div>
                 </CardHeader>
@@ -306,14 +312,14 @@ export default function Campaigns() {
                                     <div className="p-4 bg-white">
                                         <div className="grid grid-cols-2 gap-3 mb-4">
                                             <div className="bg-slate-50 rounded-lg p-2.5">
-                                                <p className="text-[10px] text-slate-500">الفترة</p>
+                                                <p className="text-[10px] text-slate-500">{t('campaigns.period')}</p>
                                                 <p className="text-xs font-semibold text-slate-800 font-mono" dir="ltr">
                                                     {campaign.startDate.slice(5)} → {campaign.endDate.slice(5)}
                                                 </p>
                                             </div>
                                             <div className="bg-slate-50 rounded-lg p-2.5">
-                                                <p className="text-[10px] text-slate-500">الحد الأدنى</p>
-                                                <p className="text-xs font-semibold text-slate-800">{campaign.minPrice} ج.م</p>
+                                                <p className="text-[10px] text-slate-500">{t('campaigns.minPrice')}</p>
+                                                <p className="text-xs font-semibold text-slate-800">{campaign.minPrice} {t('home.currency')}</p>
                                             </div>
                                         </div>
 
@@ -321,27 +327,27 @@ export default function Campaigns() {
                                             <div className="flex items-center gap-2">
                                                 <div className={`w-2 h-2 rounded-full ${status.dot}`}></div>
                                                 <span className={`text-xs font-medium ${status.text}`}>{status.label}</span>
-                                                <span className="text-xs text-slate-400">• {campaign.products} منتج</span>
+                                                <span className="text-xs text-slate-400">• {campaign.products} {t('home.products')}</span>
                                             </div>
 
                                             {campaign.status !== 'ended' && (
                                                 <Button
                                                     size="sm"
                                                     className={`h-8 text-xs ${campaign.joined
-                                                            ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                                                            : 'bg-blue-600 hover:bg-blue-700 text-white'
+                                                        ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                                                        : 'bg-blue-600 hover:bg-blue-700 text-white'
                                                         }`}
                                                     disabled={campaign.joined}
                                                 >
                                                     {campaign.joined ? (
                                                         <>
                                                             <CheckCircle size={14} className="ml-1" />
-                                                            منضم
+                                                            {t('campaigns.joined')}
                                                         </>
                                                     ) : (
                                                         <>
                                                             <Plus size={14} className="ml-1" />
-                                                            انضم الآن
+                                                            {t('campaigns.joinNow')}
                                                         </>
                                                     )}
                                                 </Button>
@@ -364,8 +370,8 @@ export default function Campaigns() {
                                 <Tag className="w-5 h-5 text-white" />
                             </div>
                             <div>
-                                <CardTitle className="text-lg font-bold text-slate-800">عروض متجرك</CardTitle>
-                                <CardDescription className="text-slate-500">العروض الخاصة بمتجرك</CardDescription>
+                                <CardTitle className="text-lg font-bold text-slate-800">{t('campaigns.yourOffers')}</CardTitle>
+                                <CardDescription className="text-slate-500">{t('campaigns.yourOffersDescription')}</CardDescription>
                             </div>
                         </div>
                     </div>
@@ -374,13 +380,13 @@ export default function Campaigns() {
                     <Table>
                         <TableHeader className="bg-slate-50/50">
                             <TableRow className="hover:bg-transparent border-slate-100">
-                                <TableHead className="text-right h-11 text-xs font-semibold text-slate-600">اسم العرض</TableHead>
-                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">النوع</TableHead>
-                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">الخصم</TableHead>
-                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">المنتجات</TableHead>
-                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">المبيعات</TableHead>
-                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">العائد</TableHead>
-                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">الحالة</TableHead>
+                                <TableHead className="text-right h-11 text-xs font-semibold text-slate-600">{t('campaigns.offerName')}</TableHead>
+                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">{t('campaigns.offerType')}</TableHead>
+                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">{t('campaigns.discount')}</TableHead>
+                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">{t('campaigns.products')}</TableHead>
+                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">{t('campaigns.sales')}</TableHead>
+                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">{t('campaigns.revenue')}</TableHead>
+                                <TableHead className="text-center h-11 text-xs font-semibold text-slate-600">{t('campaigns.status')}</TableHead>
                                 <TableHead className="text-center h-11 text-xs font-semibold text-slate-600 w-[80px]"></TableHead>
                             </TableRow>
                         </TableHeader>
@@ -394,7 +400,10 @@ export default function Campaigns() {
                                         <TableCell className="font-semibold text-slate-800 text-sm py-4">{campaign.name}</TableCell>
                                         <TableCell className="text-center py-4">
                                             <Badge variant="outline" className={`${type.color} font-medium text-xs border`}>
-                                                {campaign.typeLabel}
+                                                {/* Translate campaign type dynamically */}
+                                                {campaign.type === 'price_discount' ? t('campaigns.priceDiscount') :
+                                                    campaign.type === 'multi_piece' ? t('campaigns.quantityOffer') :
+                                                        t('campaigns.groupDiscount')}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-center py-4">
@@ -405,7 +414,7 @@ export default function Campaigns() {
                                             <span className="font-semibold text-slate-800">{campaign.sales}</span>
                                         </TableCell>
                                         <TableCell className="text-center py-4">
-                                            <span className="font-bold text-slate-900">{campaign.revenue.toLocaleString('en-US')} ج.م</span>
+                                            <span className="font-bold text-slate-900">{campaign.revenue.toLocaleString('en-US')} {t('home.currency')}</span>
                                         </TableCell>
                                         <TableCell className="text-center py-4">
                                             <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${status.bg}`}>
@@ -450,44 +459,44 @@ export default function Campaigns() {
                 <DialogContent className="sm:max-w-[600px] bg-white">
                     <DialogHeader>
                         <DialogTitle className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4">
-                            إنشاء عرض جديد
+                            {t('campaigns.createOfferTitle')}
                         </DialogTitle>
                     </DialogHeader>
 
                     <div className="py-4 space-y-4">
                         <div className="space-y-2">
-                            <Label>اسم العرض</Label>
-                            <Input placeholder="مثال: خصم 20% على الهواتف" className="bg-white border-slate-200" />
+                            <Label>{t('campaigns.offerName')}</Label>
+                            <Input placeholder={t('campaigns.offerName')} className="bg-white border-slate-200" />
                         </div>
 
                         <div className="space-y-2">
-                            <Label>نوع العرض</Label>
+                            <Label>{t('campaigns.offerType')}</Label>
                             <Select>
                                 <SelectTrigger className="bg-white border-slate-200">
-                                    <SelectValue placeholder="اختر نوع العرض" />
+                                    <SelectValue placeholder={t('campaigns.selectOfferType')} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="price_discount">تخفيض السعر</SelectItem>
-                                    <SelectItem value="group_discount">خصم على مجموعة منتجات</SelectItem>
-                                    <SelectItem value="multi_piece">عرض على أكثر من قطعة</SelectItem>
+                                    <SelectItem value="price_discount">{t('campaigns.priceDiscount')}</SelectItem>
+                                    <SelectItem value="group_discount">{t('campaigns.groupDiscount')}</SelectItem>
+                                    <SelectItem value="multi_piece">{t('campaigns.quantityOffer')}</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label>نسبة الخصم (%)</Label>
+                                <Label>{t('campaigns.discountPercentage')} (%)</Label>
                                 <Input type="number" placeholder="15" className="bg-white border-slate-200" />
                             </div>
                             <div className="space-y-2">
-                                <Label>المنتجات</Label>
+                                <Label>{t('campaigns.products')}</Label>
                                 <Select>
                                     <SelectTrigger className="bg-white border-slate-200">
-                                        <SelectValue placeholder="اختر المنتجات" />
+                                        <SelectValue placeholder={t('campaigns.selectProducts')} />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="all">كل المنتجات</SelectItem>
-                                        <SelectItem value="phones">هواتف</SelectItem>
+                                        <SelectItem value="all">{t('campaigns.allProducts')}</SelectItem>
+                                        <SelectItem value="phones">{t('campaigns.phones')}</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -495,21 +504,21 @@ export default function Campaigns() {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label>تاريخ البداية</Label>
+                                <Label>{t('campaigns.startDate')}</Label>
                                 <Input type="date" className="bg-white border-slate-200" />
                             </div>
                             <div className="space-y-2">
-                                <Label>تاريخ النهاية</Label>
+                                <Label>{t('campaigns.endDate')}</Label>
                                 <Input type="date" className="bg-white border-slate-200" />
                             </div>
                         </div>
                     </div>
 
                     <DialogFooter className="gap-2 border-t border-slate-100 pt-4">
-                        <Button variant="outline" onClick={() => setShowModal(false)}>إلغاء</Button>
+                        <Button variant="outline" onClick={() => setShowModal(false)}>{t('common.cancel')}</Button>
                         <Button className="bg-blue-600 hover:bg-blue-700 text-white gap-2">
                             <Plus size={18} />
-                            إنشاء العرض
+                            {t('campaigns.createTheOffer')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -520,7 +529,7 @@ export default function Campaigns() {
                 <DialogContent className="sm:max-w-[700px] bg-white">
                     <DialogHeader>
                         <DialogTitle className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4">
-                            تقرير الحملة: {selectedCampaign?.name}
+                            {t('campaigns.campaignReport')}: {selectedCampaign?.name}
                         </DialogTitle>
                     </DialogHeader>
 
@@ -533,7 +542,7 @@ export default function Campaigns() {
                                         <ShoppingCart size={20} />
                                     </div>
                                     <div>
-                                        <p className="text-xs text-slate-500">المبيعات الناتجة</p>
+                                        <p className="text-xs text-slate-500">{t('campaigns.resultingSales')}</p>
                                         <p className="text-xl font-bold text-emerald-700">{selectedCampaign.sales}</p>
                                     </div>
                                 </div>
@@ -542,7 +551,7 @@ export default function Campaigns() {
                                         <Users size={20} />
                                     </div>
                                     <div>
-                                        <p className="text-xs text-slate-500">الزيارات</p>
+                                        <p className="text-xs text-slate-500">{t('campaigns.visits')}</p>
                                         <p className="text-xl font-bold text-amber-700">{selectedCampaign.visits.toLocaleString('en-US')}</p>
                                     </div>
                                 </div>
@@ -551,8 +560,8 @@ export default function Campaigns() {
                                         <TrendingUp size={20} />
                                     </div>
                                     <div>
-                                        <p className="text-xs text-slate-500">العائد</p>
-                                        <p className="text-xl font-bold text-purple-700">{selectedCampaign.revenue.toLocaleString('en-US')} ج.م</p>
+                                        <p className="text-xs text-slate-500">{t('campaigns.revenue')}</p>
+                                        <p className="text-xl font-bold text-purple-700">{selectedCampaign.revenue.toLocaleString('en-US')} {t('home.currency')}</p>
                                     </div>
                                 </div>
                                 <div className="p-4 bg-blue-50 rounded-xl border border-blue-100 flex items-center gap-4">
@@ -560,30 +569,30 @@ export default function Campaigns() {
                                         <DollarSign size={20} />
                                     </div>
                                     <div>
-                                        <p className="text-xs text-slate-500">تأثير على الربح</p>
-                                        <p className="text-xl font-bold text-blue-700">+{selectedCampaign.profit.toLocaleString('en-US')} ج.م</p>
+                                        <p className="text-xs text-slate-500">{t('campaigns.profitImpact')}</p>
+                                        <p className="text-xl font-bold text-blue-700">+{selectedCampaign.profit.toLocaleString('en-US')} {t('home.currency')}</p>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Details Table */}
                             <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
-                                <h4 className="font-bold text-slate-900 mb-4 text-sm">تفاصيل الحملة</h4>
+                                <h4 className="font-bold text-slate-900 mb-4 text-sm">{t('campaigns.campaignDetails')}</h4>
                                 <div className="grid grid-cols-2 gap-y-4 gap-x-8">
                                     <div className="flex flex-col">
-                                        <span className="text-xs text-slate-500 mb-1">نوع العرض</span>
+                                        <span className="text-xs text-slate-500 mb-1">{t('campaigns.offerType')}</span>
                                         <span className="font-semibold text-slate-900">{selectedCampaign.typeLabel}</span>
                                     </div>
                                     <div className="flex flex-col">
-                                        <span className="text-xs text-slate-500 mb-1">نسبة الخصم</span>
+                                        <span className="text-xs text-slate-500 mb-1">{t('campaigns.discountPercentage')}</span>
                                         <span className="font-bold text-emerald-600">{selectedCampaign.discount}</span>
                                     </div>
                                     <div className="flex flex-col">
-                                        <span className="text-xs text-slate-500 mb-1">عدد المنتجات</span>
-                                        <span className="font-semibold text-slate-900">{selectedCampaign.products} منتج</span>
+                                        <span className="text-xs text-slate-500 mb-1">{t('campaigns.numberOfProducts')}</span>
+                                        <span className="font-semibold text-slate-900">{selectedCampaign.products} {t('home.products')}</span>
                                     </div>
                                     <div className="flex flex-col">
-                                        <span className="text-xs text-slate-500 mb-1">الفترة</span>
+                                        <span className="text-xs text-slate-500 mb-1">{t('campaigns.period')}</span>
                                         <span className="font-medium text-slate-700 text-xs font-mono">{selectedCampaign.startDate} - {selectedCampaign.endDate}</span>
                                     </div>
                                 </div>
@@ -592,7 +601,7 @@ export default function Campaigns() {
                     )}
 
                     <DialogFooter>
-                        <Button variant="secondary" onClick={() => setShowReportModal(false)}>إغلاق</Button>
+                        <Button variant="secondary" onClick={() => setShowReportModal(false)}>{t('common.close')}</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

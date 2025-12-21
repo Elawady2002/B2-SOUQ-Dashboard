@@ -1,6 +1,6 @@
 export default function ComponentsDemo() {
     return (
-        <div style={{ padding: '40px', fontFamily: 'Cairo, sans-serif' }} dir="rtl">
+        <div style={{ padding: '40px', fontFamily: '"Cairo", "IBM Plex Sans", sans-serif' }} dir="rtl">
             <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>
                 اختبار المكونات
             </h1>

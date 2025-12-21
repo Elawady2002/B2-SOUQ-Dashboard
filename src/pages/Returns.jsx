@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import React from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 import {
     RotateCcw,
     Package,
@@ -129,14 +130,15 @@ const originalStatusConfig = {
 };
 
 export default function Returns() {
+    const { t } = useLanguage();
     const [selectedReturn, setSelectedReturn] = useState(null);
 
     return (
         <div className="flex flex-col gap-6">
             {/* Page Header */}
             <div>
-                <h2 className="text-2xl font-bold text-slate-900">المرتجعات والنزاعات</h2>
-                <p className="text-sm text-slate-500 mt-1">إدارة طلبات الإرجاع والنزاعات مع العملاء</p>
+                <h2 className="text-2xl font-bold text-slate-900">{t('returns.title')}</h2>
+                <p className="text-sm text-slate-500 mt-1">{t('returns.subtitle')}</p>
             </div>
 
             {/* Stats Cards */}
@@ -147,7 +149,7 @@ export default function Returns() {
                             <Clock size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">قيد المراجعة</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('returns.pending')}</p>
                             <p className="text-lg font-bold text-slate-900">5</p>
                         </div>
                     </CardContent>
@@ -158,7 +160,7 @@ export default function Returns() {
                             <RotateCcw size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">في الطريق</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('returns.inTransit')}</p>
                             <p className="text-lg font-bold text-slate-900">3</p>
                         </div>
                     </CardContent>
@@ -169,7 +171,7 @@ export default function Returns() {
                             <CheckCircle size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">مكتمل</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('returns.completed')}</p>
                             <p className="text-lg font-bold text-slate-900">28</p>
                         </div>
                     </CardContent>
@@ -180,7 +182,7 @@ export default function Returns() {
                             <AlertTriangle size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">نزاعات مفتوحة</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('returns.openDisputes') || 'Open Disputes'}</p>
                             <p className="text-lg font-bold text-slate-900">2</p>
                         </div>
                     </CardContent>
@@ -203,21 +205,21 @@ export default function Returns() {
                 </CardHeader>
                 <CardContent className="p-0">
                     <Table>
-                        <TableHeader className="bg-slate-50/50">
+                        <TableHeader>
                             <TableRow className="hover:bg-transparent border-slate-100">
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">رقم الطلب</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتج</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">SKU</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الفئة</TableHead>
-                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الكمية</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">السعر/وحدة</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الإجمالي</TableHead>
-                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">سبب الإرجاع</TableHead>
-                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">حالة الإرجاع</TableHead>
-                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">طريقة الشحن</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">العنوان</TableHead>
-                                <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">حالة الطلب</TableHead>
-                                <TableHead className="text-center h-10 w-[50px]"></TableHead>
+                                <TableHead className="text-right font-semibold text-slate-600">رقم الطلب</TableHead>
+                                <TableHead className="text-right font-semibold text-slate-600">المنتج</TableHead>
+                                <TableHead className="text-right font-semibold text-slate-600">SKU</TableHead>
+                                <TableHead className="text-right font-semibold text-slate-600">الفئة</TableHead>
+                                <TableHead className="text-center font-semibold text-slate-600">الكمية</TableHead>
+                                <TableHead className="text-right font-semibold text-slate-600">السعر/وحدة</TableHead>
+                                <TableHead className="text-right font-semibold text-slate-600">الإجمالي</TableHead>
+                                <TableHead className="text-center font-semibold text-slate-600">سبب الإرجاع</TableHead>
+                                <TableHead className="text-center font-semibold text-slate-600">حالة الإرجاع</TableHead>
+                                <TableHead className="text-center font-semibold text-slate-600">طريقة الشحن</TableHead>
+                                <TableHead className="text-right font-semibold text-slate-600">العنوان</TableHead>
+                                <TableHead className="text-center font-semibold text-slate-600">حالة الطلب</TableHead>
+                                <TableHead className="text-center w-[50px]"></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -227,7 +229,7 @@ export default function Returns() {
                                 const shipping = shippingMethods[item.shippingMethod];
                                 const originalStatus = originalStatusConfig[item.originalStatus];
                                 return (
-                                    <TableRow key={item.id} className="border-slate-50 hover:bg-slate-50/50">
+                                    <TableRow key={item.id} className="hover:bg-slate-50/50">
                                         <TableCell>
                                             <div>
                                                 <p className="font-mono font-semibold text-xs text-slate-600">{item.id}</p>

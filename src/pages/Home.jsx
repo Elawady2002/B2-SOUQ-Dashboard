@@ -38,7 +38,8 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
 import { format } from 'date-fns';
-import { ar } from 'date-fns/locale';
+import { ar, enUS } from 'date-fns/locale';
+import { useLanguage } from '../contexts/LanguageContext';
 
 // Import card images
 import CardImage from '../assets/image/card.png';
@@ -62,50 +63,6 @@ ChartJS.register(
     Legend,
     Filler
 );
-
-// Stats data with colors
-const statsCards = [
-    {
-        id: 1,
-        label: 'عدد الطلبات',
-        value: '1,277',
-        change: '+12.5%',
-        positive: true,
-        color: '#3b82f6', // Blue
-        bgColor: 'rgba(59, 130, 246, 0.08)',
-        sparkline: [10, 15, 12, 18, 20, 15, 22, 25, 20, 28]
-    },
-    {
-        id: 2,
-        label: 'متوسط قيمة الطلب',
-        value: 'EGP 450',
-        change: '-3%',
-        positive: false,
-        color: '#ef4444', // Red
-        bgColor: 'rgba(239, 68, 68, 0.08)',
-        sparkline: [20, 18, 15, 12, 14, 10, 8, 12, 10, 8]
-    },
-    {
-        id: 3,
-        label: 'صافي الدخل',
-        value: 'EGP 20,000',
-        change: '+8%',
-        positive: true,
-        color: '#10b981', // Green
-        bgColor: 'rgba(16, 185, 129, 0.08)',
-        sparkline: [5, 10, 8, 15, 12, 18, 20, 22, 25, 28]
-    },
-    {
-        id: 4,
-        label: 'اجمالي المبيعات',
-        value: 'EGP 67,000',
-        change: '+15%',
-        positive: true,
-        color: '#f59e0b', // Orange/Warning
-        bgColor: 'rgba(245, 158, 11, 0.08)',
-        sparkline: [8, 12, 15, 10, 18, 22, 25, 28, 30, 35]
-    },
-];
 
 // Orders table data
 const recentOrders = [
@@ -132,11 +89,63 @@ const bestProducts = [
 ];
 
 export default function Home() {
-    const [chartPeriod, setChartPeriod] = useState('سنوي');
+    const { t, language, isRTL } = useLanguage();
+    const [chartPeriod, setChartPeriod] = useState(language === 'ar' ? 'سنوي' : 'Yearly');
     const [date, setDate] = useState({
         from: new Date(2025, 0, 8),
         to: new Date(2026, 11, 7),
     });
+
+    // Dynamic stats cards with translations
+    const statsCards = [
+        {
+            id: 1,
+            label: t('home.ordersCount'),
+            value: '1,277',
+            change: '+12.5%',
+            positive: true,
+            color: '#3b82f6',
+            bgColor: 'rgba(59, 130, 246, 0.08)',
+            sparkline: [10, 15, 12, 18, 20, 15, 22, 25, 20, 28]
+        },
+        {
+            id: 2,
+            label: t('home.avgOrderValue'),
+            value: `${t('home.currency')} 450`,
+            change: '-3%',
+            positive: false,
+            color: '#ef4444',
+            bgColor: 'rgba(239, 68, 68, 0.08)',
+            sparkline: [20, 18, 15, 12, 14, 10, 8, 12, 10, 8]
+        },
+        {
+            id: 3,
+            label: t('home.netIncome'),
+            value: `${t('home.currency')} 20,000`,
+            change: '+8%',
+            positive: true,
+            color: '#10b981',
+            bgColor: 'rgba(16, 185, 129, 0.08)',
+            sparkline: [5, 10, 8, 15, 12, 18, 20, 22, 25, 28]
+        },
+        {
+            id: 4,
+            label: t('home.totalSales'),
+            value: `${t('home.currency')} 67,000`,
+            change: '+15%',
+            positive: true,
+            color: '#f59e0b',
+            bgColor: 'rgba(245, 158, 11, 0.08)',
+            sparkline: [8, 12, 15, 10, 18, 22, 25, 28, 30, 35]
+        },
+    ];
+
+    // Chart period options with translations
+    const chartPeriodOptions = [
+        { value: 'daily', label: t('home.daily') },
+        { value: 'monthly', label: t('home.monthly') },
+        { value: 'yearly', label: t('home.yearly') },
+    ];
 
     // Sales chart data - matching the reference design exactly
     const salesChartData = {
@@ -243,26 +252,26 @@ export default function Home() {
             {/* Welcome Header - Full Width */}
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h2 className="page-title">مرحباً، جاك ميلر 👋</h2>
-                    <p className="page-subtitle">إدارة العملاء والمبيعات باستخدام رؤى في الوقت الفعلي</p>
+                    <h2 className="page-title">{t('home.welcome')}, Jack Miller 👋</h2>
+                    <p className="page-subtitle">{t('home.subtitle')}</p>
                 </div>
                 <div className="flex items-center gap-4">
                     {/* Date Picker Button */}
                     <Popover>
                         <PopoverTrigger asChild>
-                            <Button variant="outline" className="h-11 justify-start text-right font-medium text-slate-600 bg-white border-slate-200">
+                            <Button variant="outline" className="h-11 justify-start text-start font-medium text-slate-600 bg-white border-slate-200">
                                 <CalendarIcon className="ml-2 h-4 w-4" />
                                 {date?.from ? (
                                     date.to ? (
                                         <>
-                                            {format(date.from, "LLO", { locale: ar })} -{" "}
-                                            {format(date.to, "LLO", { locale: ar })}
+                                            {format(date.from, "LLO", { locale: isRTL ? ar : enUS })} -{" "}
+                                            {format(date.to, "LLO", { locale: isRTL ? ar : enUS })}
                                         </>
                                     ) : (
-                                        format(date.from, "LLO", { locale: ar })
+                                        format(date.from, "LLO", { locale: isRTL ? ar : enUS })
                                     )
                                 ) : (
-                                    <span>اختر التاريخ</span>
+                                    <span>{t('home.selectDate')}</span>
                                 )}
                             </Button>
                         </PopoverTrigger>
@@ -274,7 +283,7 @@ export default function Home() {
                                 selected={date}
                                 onSelect={setDate}
                                 numberOfMonths={2}
-                                locale={ar}
+                                locale={isRTL ? ar : enUS}
                             />
                         </PopoverContent>
                     </Popover>
@@ -287,19 +296,19 @@ export default function Home() {
                     {/* Filter Button */}
                     <Button className="h-11 gap-2 bg-blue-600 hover:bg-blue-700 font-semibold px-4">
                         <Filter className="h-4 w-4 text-white" />
-                        فلاتر
+                        {t('home.filters')}
                     </Button>
                 </div>
             </div>
 
             {/* Main Two-Column Layout - Starts right after header */}
-            <div className="grid grid-cols-[75%_25%] gap-6 mb-8">
+            <div className="grid grid-cols-[75%_25%] gap-3 mb-8">
 
                 {/* Main Content Column (Right in RTL) */}
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-3">
 
                     {/* Stats Cards Row - Inside main content */}
-                    <div className="grid grid-cols-4 gap-4">
+                    <div className="grid grid-cols-4 gap-3">
                         {statsCards.map((card) => {
                             const maxVal = Math.max(...card.sparkline);
                             const points = card.sparkline.map((val, i) =>
@@ -363,37 +372,37 @@ export default function Home() {
                     </div>
 
                     {/* Sales Chart + Recent Orders Row */}
-                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
                         {/* Sales Chart - Right (larger) */}
                         <Card className="lg:col-span-3 border-slate-100 shadow-sm bg-white">
                             <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-slate-100 space-y-0">
-                                <CardTitle className="text-xl font-bold text-slate-900">المبيعات</CardTitle>
+                                <CardTitle className="text-xl font-bold text-slate-900">{t('home.sales')}</CardTitle>
                                 <div className="flex bg-slate-50 p-1 rounded-lg">
-                                    {['يومي', 'شهري', 'سنوي'].map((period) => (
+                                    {chartPeriodOptions.map((option) => (
                                         <button
-                                            key={period}
-                                            onClick={() => setChartPeriod(period)}
-                                            className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${chartPeriod === period ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+                                            key={option.value}
+                                            onClick={() => setChartPeriod(option.value)}
+                                            className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${chartPeriod === option.value ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
                                         >
-                                            {period}
+                                            {option.label}
                                         </button>
                                     ))}
                                 </div>
                             </CardHeader>
-                            <CardContent className="pt-6">
+                            <CardContent className="pt-6 px-4">
                                 {/* Legend */}
                                 <div className="flex justify-center gap-8 mb-6">
                                     <div className="flex items-center gap-2">
                                         <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-                                        <span className="text-sm font-medium text-slate-700">مسترد</span>
+                                        <span className="text-sm font-medium text-slate-700">{t('home.refunded')}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <div className="w-3 h-3 rounded-full bg-amber-400"></div>
-                                        <span className="text-sm font-medium text-slate-700">غير مدفوع</span>
+                                        <span className="text-sm font-medium text-slate-700">{t('home.unpaid')}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                                        <span className="text-sm font-medium text-slate-700">مدفوع</span>
+                                        <span className="text-sm font-medium text-slate-700">{t('home.paid')}</span>
                                     </div>
                                 </div>
 
@@ -404,18 +413,18 @@ export default function Home() {
                         </Card>
 
                         {/* Recent Orders Table - Left (smaller) */}
-                        <Card className="lg:col-span-2 border-slate-100 shadow-sm bg-white flex flex-col">
+                        <Card className="lg:col-span-2 border-slate-100 shadow-sm bg-white flex flex-col h-full">
                             <CardHeader className="flex flex-row items-center justify-between pb-4 space-y-0">
-                                <CardTitle className="text-xl font-bold text-slate-900">الطلبات الأخيرة</CardTitle>
-                                <Button variant="outline" size="sm" className="text-xs h-8 bg-white border-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-50 shadow-sm">عرض الكل</Button>
+                                <CardTitle className="text-xl font-bold text-slate-900">{t('home.recentOrders')}</CardTitle>
+                                <Button variant="outline" size="sm" className="text-xs h-8 bg-white border-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-50 shadow-sm">{t('home.viewAll')}</Button>
                             </CardHeader>
                             <CardContent className="p-0 flex-1">
                                 <Table>
                                     <TableHeader className="bg-slate-50/50">
                                         <TableRow className="hover:bg-transparent border-slate-100">
-                                            <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">معرف الطلب</TableHead>
-                                            <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتج</TableHead>
-                                            <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المبلغ</TableHead>
+                                            <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('home.orderId')}</TableHead>
+                                            <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('home.product')}</TableHead>
+                                            <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('home.amount')}</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -450,9 +459,9 @@ export default function Home() {
                         <CardContent className="p-6">
                             {/* Header: Title (right) + Filters (left) with max spacing */}
                             <div className="flex items-center justify-between mb-8">
-                                <h3 className="text-xl font-bold text-slate-900">محفظة البائع</h3>
+                                <h3 className="text-xl font-bold text-slate-900">{t('home.sellerWallet')}</h3>
                                 <div className="flex bg-slate-50 p-1 rounded-lg">
-                                    {['الكل', 'هذا الشهر', 'الشهر الماضي'].map((filter, idx) => (
+                                    {[t('home.all'), t('home.thisMonth'), t('home.lastMonth')].map((filter, idx) => (
                                         <button
                                             key={filter}
                                             className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${idx === 0 ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
@@ -486,9 +495,9 @@ export default function Home() {
                                                 strokeDasharray="280 352" strokeLinecap="round" />
                                         </svg>
                                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center w-[100px]">
-                                            <div className="text-[11px] text-slate-500 mb-0.5">المبالغ المسحوبة</div>
+                                            <div className="text-[11px] text-slate-500 mb-0.5">{t('home.withdrawnAmount')}</div>
                                             <div className="text-xl font-bold text-slate-900 leading-tight">241.45</div>
-                                            <div className="text-xs font-semibold text-slate-700">جنيه</div>
+                                            <div className="text-xs font-semibold text-slate-700">{t('home.currency')}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -499,32 +508,32 @@ export default function Home() {
                                         <div className="flex items-center gap-3">
                                             <img src={Frame1Icon} alt="" className="w-12 h-12" />
                                             <div>
-                                                <p className="font-medium text-[13px] text-slate-500 mb-1">إجمالي الأرباح</p>
-                                                <p className="text-lg font-bold text-slate-900">2,145.90 جنيه</p>
+                                                <p className="font-medium text-[13px] text-slate-500 mb-1">{t('home.totalProfit')}</p>
+                                                <p className="text-lg font-bold text-slate-900">2,145.90 {t('home.currency')}</p>
                                             </div>
                                         </div>
 
                                         <div className="flex items-center gap-3">
                                             <img src={FrameIcon} alt="" className="w-12 h-12" />
                                             <div>
-                                                <p className="font-medium text-[13px] text-slate-500 mb-1">الرصيد الإعلاني</p>
-                                                <p className="text-lg font-bold text-slate-900">2,145.90 جنيه</p>
+                                                <p className="font-medium text-[13px] text-slate-500 mb-1">{t('home.adBalance')}</p>
+                                                <p className="text-lg font-bold text-slate-900">2,145.90 {t('home.currency')}</p>
                                             </div>
                                         </div>
 
                                         <div className="flex items-center gap-3">
                                             <img src={Frame3Icon} alt="" className="w-12 h-12" />
                                             <div>
-                                                <p className="font-medium text-[13px] text-slate-500 mb-1">الرصيد</p>
-                                                <p className="text-lg font-bold text-slate-900">2,145.90 جنيه</p>
+                                                <p className="font-medium text-[13px] text-slate-500 mb-1">{t('home.balance')}</p>
+                                                <p className="text-lg font-bold text-slate-900">2,145.90 {t('home.currency')}</p>
                                             </div>
                                         </div>
 
                                         <div className="flex items-center gap-3">
                                             <img src={Frame2Icon} alt="" className="w-12 h-12" />
                                             <div>
-                                                <p className="font-medium text-[13px] text-slate-500 mb-1">المحجوز</p>
-                                                <p className="text-lg font-bold text-slate-900">2,145.90 جنيه</p>
+                                                <p className="font-medium text-[13px] text-slate-500 mb-1">{t('home.reserved')}</p>
+                                                <p className="text-lg font-bold text-slate-900">2,145.90 {t('home.currency')}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -546,12 +555,12 @@ export default function Home() {
                     {/* Products Table */}
                     <Card className="border-slate-100 shadow-sm bg-white">
                         <CardHeader className="flex flex-row items-center justify-between pb-6">
-                            <CardTitle className="text-lg font-bold text-slate-900">المنتجات المضافة حديثا</CardTitle>
+                            <CardTitle className="text-lg font-bold text-slate-900">{t('home.recentlyAddedProducts')}</CardTitle>
                             <div className="flex items-center gap-3">
                                 <div className="relative">
                                     <Input
                                         type="text"
-                                        placeholder="بحث..."
+                                        placeholder={t('home.search')}
                                         className="h-9 w-[200px]"
                                     />
                                 </div>
@@ -559,13 +568,13 @@ export default function Home() {
                                     <SelectTrigger className="h-9 w-[130px] text-xs">
                                         <div className="flex items-center gap-2">
                                             <Filter size={14} />
-                                            <SelectValue placeholder="فلترة حسب" />
+                                            <SelectValue placeholder={t('home.filterBy')} />
                                         </div>
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="date">التاريخ</SelectItem>
-                                        <SelectItem value="price">السعر</SelectItem>
-                                        <SelectItem value="status">الحالة</SelectItem>
+                                        <SelectItem value="date">{t('returns.date') || 'Date'}</SelectItem>
+                                        <SelectItem value="price">{t('products.price')}</SelectItem>
+                                        <SelectItem value="status">{t('products.status')}</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -574,14 +583,14 @@ export default function Home() {
                             <Table>
                                 <TableHeader className="bg-slate-50/50">
                                     <TableRow className="hover:bg-transparent border-slate-100">
-                                        <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">معرف المنتج</TableHead>
-                                        <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">اسم المنتج</TableHead>
-                                        <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">فئة</TableHead>
-                                        <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">التخفيض</TableHead>
-                                        <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">سعر</TableHead>
-                                        <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">حالة</TableHead>
-                                        <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">تاريخ الإضافة</TableHead>
-                                        <TableHead className="text-left h-10 text-xs font-semibold text-slate-600">الإجراءات</TableHead>
+                                        <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('home.productId')}</TableHead>
+                                        <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('home.productName')}</TableHead>
+                                        <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('home.category')}</TableHead>
+                                        <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('home.discount')}</TableHead>
+                                        <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('home.price')}</TableHead>
+                                        <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('home.status')}</TableHead>
+                                        <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('home.dateAdded')}</TableHead>
+                                        <TableHead className="text-end h-10 text-xs font-semibold text-slate-600">{t('home.actions')}</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -599,13 +608,13 @@ export default function Home() {
                                             <TableCell>{order.category}</TableCell>
                                             <TableCell><Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200">40%</Badge></TableCell>
                                             <TableCell className="font-semibold">{order.price}</TableCell>
-                                            <TableCell><Badge variant="secondary" className="bg-amber-100 text-amber-700 hover:bg-amber-200 text-xs font-normal">تم الحفظ كمسودة</Badge></TableCell>
+                                            <TableCell><Badge variant="secondary" className="bg-amber-100 text-amber-700 hover:bg-amber-200 text-xs font-normal">{t('home.savedAsDraft')}</Badge></TableCell>
                                             <TableCell className="text-slate-500">{order.date}</TableCell>
                                             <TableCell>
                                                 <div className="flex gap-2 justify-end">
-                                                    <button style={{ width: '32px', height: '32px', borderRadius: '8px', border: 'none', background: '#dbeafe', color: '#2563eb', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Eye size={14} /></button>
-                                                    <button style={{ width: '32px', height: '32px', borderRadius: '8px', border: 'none', background: '#fef3c7', color: '#f59e0b', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Edit size={14} /></button>
-                                                    <button style={{ width: '32px', height: '32px', borderRadius: '8px', border: 'none', background: '#fee2e2', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Trash2 size={14} /></button>
+                                                    <button className="w-8 h-8 rounded-lg border-none bg-blue-100 text-blue-600 cursor-pointer flex items-center justify-center hover:bg-blue-200 transition-colors"><Eye size={14} /></button>
+                                                    <button className="w-8 h-8 rounded-lg border-none bg-amber-100 text-amber-500 cursor-pointer flex items-center justify-center hover:bg-amber-200 transition-colors"><Edit size={14} /></button>
+                                                    <button className="w-8 h-8 rounded-lg border-none bg-red-100 text-red-500 cursor-pointer flex items-center justify-center hover:bg-red-200 transition-colors"><Trash2 size={14} /></button>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -614,16 +623,16 @@ export default function Home() {
                             </Table>
 
                             <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-50">
-                                <span className="text-xs text-slate-400 font-medium">عرض 1-5 من 20 منتج</span>
+                                <span className="text-xs text-slate-400 font-medium">{t('home.showing')} 1-5 {t('home.of')} 20 {t('common.products')}</span>
                                 <div className="flex items-center gap-1">
-                                    <Button variant="outline" size="sm" className="h-8 px-3 text-xs bg-white border-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-50">السابق</Button>
+                                    <Button variant="outline" size="sm" className="h-8 px-3 text-xs bg-white border-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-50">{t('home.previous')}</Button>
                                     <div className="flex items-center gap-1 mx-2">
                                         <Button variant="default" size="sm" className="h-8 w-8 p-0 text-xs bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-200">1</Button>
                                         <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-xs text-slate-500 hover:text-slate-900 hover:bg-slate-50">2</Button>
                                         <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-xs text-slate-500 hover:text-slate-900 hover:bg-slate-50">3</Button>
                                         <span className="text-xs text-slate-400 px-1">...</span>
                                     </div>
-                                    <Button variant="outline" size="sm" className="h-8 px-3 text-xs bg-white border-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-50">التالي</Button>
+                                    <Button variant="outline" size="sm" className="h-8 px-3 text-xs bg-white border-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-50">{t('home.next')}</Button>
                                 </div>
                             </div>
                         </CardContent>
@@ -631,13 +640,13 @@ export default function Home() {
                 </div>
 
                 {/* Left Sidebar Column */}
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-3">
                     {/* Store Rating Card - Compact */}
                     <Card className="border-slate-100 shadow-sm bg-white">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-lg font-bold text-slate-900">متوسط تقييم المتجر</CardTitle>
+                            <CardTitle className="text-lg font-bold text-slate-900">{t('home.storeRating')}</CardTitle>
                             <Button variant="outline" size="sm" className="h-8 text-xs gap-1 bg-white border-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-50 shadow-sm">
-                                عرض الكل
+                                {t('home.viewAll')}
                                 <ChevronDown size={14} className="opacity-70" />
                             </Button>
                         </CardHeader>
@@ -646,11 +655,11 @@ export default function Home() {
                             {/* Stats Banner */}
                             <div className="flex items-center justify-between mb-6 bg-slate-50 rounded-lg p-4">
                                 <div>
-                                    <p className="text-xs font-medium text-slate-500 mb-1">النمو الإجمالي العام الماضي</p>
+                                    <p className="text-xs font-medium text-slate-500 mb-1">{t('home.totalGrowthLastYear')}</p>
                                     <p className="text-xl font-bold text-emerald-500">+15%</p>
                                 </div>
                                 <div className="text-left">
-                                    <p className="text-xs font-medium text-slate-500 mb-1">اجمالي التقييمات</p>
+                                    <p className="text-xs font-medium text-slate-500 mb-1">{t('home.totalReviews')}</p>
                                     <p className="text-xl font-bold text-blue-700">15,432</p>
                                 </div>
                             </div>
@@ -672,7 +681,7 @@ export default function Home() {
                                 </svg>
                                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
                                     <h3 className="text-3xl font-bold text-slate-900 mb-1">92%</h3>
-                                    <p className="text-xs font-medium text-slate-400">رضا العملاء</p>
+                                    <p className="text-xs font-medium text-slate-400">{t('home.customerSatisfaction')}</p>
                                 </div>
                             </div>
                         </CardContent>
@@ -681,7 +690,7 @@ export default function Home() {
                     {/* Products Summary */}
                     <Card className="border-slate-100 shadow-sm bg-white">
                         <CardContent className="p-6">
-                            <h4 className="text-lg font-bold text-slate-900 mb-6 text-right">ملخص المنتجات</h4>
+                            <h4 className="text-lg font-bold text-slate-900 mb-6 text-right">{t('home.productsSummary')}</h4>
 
                             {/* Semi-circle Gauge Chart */}
                             <div className="relative w-full max-w-[260px] h-[140px] mx-auto mb-4">
@@ -692,7 +701,7 @@ export default function Home() {
                                     <path d="M 173.36 58.08 A 80 80 0 0 1 180 90" fill="none" stroke="#ec4899" strokeWidth="12" />
                                 </svg>
                                 <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-center">
-                                    <div className="text-xs text-slate-500 mb-0.5">الاجمالي</div>
+                                    <div className="text-xs text-slate-500 mb-0.5">{t('home.total')}</div>
                                     <div className="text-2xl font-bold text-slate-900">3736</div>
                                 </div>
                             </div>
@@ -703,56 +712,56 @@ export default function Home() {
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                                            <span className="text-sm font-semibold text-slate-800">المنتجات النشطة</span>
+                                            <span className="text-sm font-semibold text-slate-800">{t('home.activeProducts')}</span>
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-xs text-slate-500">المجموع</p>
+                                            <p className="text-xs text-slate-500">{t('home.total')}</p>
                                             <p className="text-base font-bold text-slate-900">1,765</p>
                                         </div>
                                     </div>
-                                    <p className="text-xs text-blue-500 mt-1 text-right">زيادة بنسبة 1.67%</p>
+                                    <p className="text-xs text-blue-500 mt-1 text-right">{t('home.increaseBy')} 1.67%</p>
                                 </div>
 
                                 <div className="border-b border-slate-100 py-3">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 rounded-full bg-cyan-500"></div>
-                                            <span className="text-sm font-semibold text-slate-800">منتجات منخفضه المخزون</span>
+                                            <span className="text-sm font-semibold text-slate-800">{t('home.lowStockProducts')}</span>
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-xs text-slate-500">المجموع</p>
+                                            <p className="text-xs text-slate-500">{t('home.total')}</p>
                                             <p className="text-base font-bold text-slate-900">634</p>
                                         </div>
                                     </div>
-                                    <p className="text-xs text-cyan-500 mt-1 text-right">زيادة بنسبة 0.46%</p>
+                                    <p className="text-xs text-cyan-500 mt-1 text-right">{t('home.increaseBy')} 0.46%</p>
                                 </div>
 
                                 <div className="border-b border-slate-100 py-3">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-                                            <span className="text-sm font-semibold text-slate-800">منتجات تحت المراجعه</span>
+                                            <span className="text-sm font-semibold text-slate-800">{t('home.underReviewProducts')}</span>
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-xs text-slate-500">المجموع</p>
+                                            <p className="text-xs text-slate-500">{t('home.total')}</p>
                                             <p className="text-base font-bold text-slate-900">878</p>
                                         </div>
                                     </div>
-                                    <p className="text-xs text-red-500 mt-1 text-right">تم تخفيضه بواسطة 3.43%</p>
+                                    <p className="text-xs text-red-500 mt-1 text-right">{t('home.decreaseBy')} 3.43%</p>
                                 </div>
 
                                 <div className="py-3">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 rounded-full bg-pink-500"></div>
-                                            <span className="text-sm font-semibold text-slate-800">منتجات مرفوضه</span>
+                                            <span className="text-sm font-semibold text-slate-800">{t('home.rejectedProducts')}</span>
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-xs text-slate-500">المجموع</p>
+                                            <p className="text-xs text-slate-500">{t('home.total')}</p>
                                             <p className="text-base font-bold text-slate-900">470</p>
                                         </div>
                                     </div>
-                                    <p className="text-xs text-pink-500 mt-1 text-right">زيادة بنسبة 0.13%</p>
+                                    <p className="text-xs text-pink-500 mt-1 text-right">{t('home.increaseBy')} 0.13%</p>
                                 </div>
                             </div>
                         </CardContent>
@@ -761,8 +770,8 @@ export default function Home() {
                     {/* Best Selling Products */}
                     <Card className="border-slate-100 shadow-sm bg-white">
                         <CardHeader className="flex flex-row items-center justify-between pb-4">
-                            <CardTitle className="text-lg font-bold text-slate-800">المنتجات الأكثر مبيعا</CardTitle>
-                            <Button variant="outline" size="sm" className="h-8 text-xs bg-white border-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-50 shadow-sm">عرض الكل</Button>
+                            <CardTitle className="text-lg font-bold text-slate-800">{t('home.bestSellingProducts')}</CardTitle>
+                            <Button variant="outline" size="sm" className="h-8 text-xs bg-white border-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-50 shadow-sm">{t('home.viewAll')}</Button>
                         </CardHeader>
                         <CardContent className="flex flex-col gap-2">
                             {[

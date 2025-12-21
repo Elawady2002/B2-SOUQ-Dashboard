@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import React from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 import {
     ShoppingCart,
     Package,
@@ -127,37 +128,39 @@ const orders = [
     },
 ];
 
-const statusConfig = {
-    new: { label: 'جديد', color: 'bg-blue-50 text-blue-700', icon: Package },
-    processing: { label: 'تحت التجهيز', color: 'bg-amber-50 text-amber-700', icon: Clock },
-    shipping: { label: 'في الشحن', color: 'bg-sky-50 text-sky-700', icon: Truck },
-    completed: { label: 'مُسلّم', color: 'bg-emerald-50 text-emerald-700', icon: CheckCircle },
-    cancelled: { label: 'ملغي', color: 'bg-red-50 text-red-700', icon: XCircle },
-};
-
-const paymentStatusConfig = {
-    paid: { label: 'مدفوع', color: 'bg-emerald-50 text-emerald-700' },
-    unpaid: { label: 'غير مدفوع', color: 'bg-amber-50 text-amber-700' },
-    refunded: { label: 'مسترد', color: 'bg-slate-100 text-slate-600' },
-};
-
-const orderTypeConfig = {
-    platform: { label: 'طلب منصة', color: 'bg-blue-50 text-blue-700', icon: PackageCheck },
-    merchant: { label: 'طلب تاجر', color: 'bg-purple-50 text-purple-700', icon: Store },
-};
-
-const statusFilters = [
-    { id: 'all', label: 'الكل' },
-    { id: 'new', label: 'جديد' },
-    { id: 'processing', label: 'تحت التجهيز' },
-    { id: 'shipping', label: 'في الشحن' },
-    { id: 'completed', label: 'مُسلّم' },
-    { id: 'cancelled', label: 'ملغي' },
-];
-
 export default function Orders() {
+    const { t } = useLanguage();
     const [activeFilter, setActiveFilter] = useState('all');
     const [selectedOrder, setSelectedOrder] = useState(null);
+
+    // Dynamic status config with translations
+    const statusConfig = {
+        new: { label: t('orders.new'), color: 'bg-blue-50 text-blue-700', icon: Package },
+        processing: { label: t('orders.processing'), color: 'bg-amber-50 text-amber-700', icon: Clock },
+        shipping: { label: t('orders.shipping'), color: 'bg-sky-50 text-sky-700', icon: Truck },
+        completed: { label: t('orders.completed'), color: 'bg-emerald-50 text-emerald-700', icon: CheckCircle },
+        cancelled: { label: t('orders.cancelled'), color: 'bg-red-50 text-red-700', icon: XCircle },
+    };
+
+    const paymentStatusConfig = {
+        paid: { label: t('orders.paid'), color: 'bg-emerald-50 text-emerald-700' },
+        unpaid: { label: t('orders.unpaid'), color: 'bg-amber-50 text-amber-700' },
+        refunded: { label: t('orders.refunded'), color: 'bg-slate-100 text-slate-600' },
+    };
+
+    const orderTypeConfig = {
+        platform: { label: t('orders.platformOrder'), color: 'bg-blue-50 text-blue-700', icon: PackageCheck },
+        merchant: { label: t('orders.merchantOrder'), color: 'bg-purple-50 text-purple-700', icon: Store },
+    };
+
+    const statusFilters = [
+        { id: 'all', label: t('orders.all') },
+        { id: 'new', label: t('orders.new') },
+        { id: 'processing', label: t('orders.processing') },
+        { id: 'shipping', label: t('orders.shipping') },
+        { id: 'completed', label: t('orders.completed') },
+        { id: 'cancelled', label: t('orders.cancelled') },
+    ];
 
     const filteredOrders = activeFilter === 'all'
         ? orders
@@ -170,17 +173,17 @@ export default function Orders() {
     const deliveredOrders = orders.filter(o => o.status === 'completed').length;
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-3">
             {/* Page Header */}
             <div>
-                <h2 className="text-2xl font-bold text-slate-900">إدارة الطلبات</h2>
-                <p className="text-sm text-slate-500 mt-1">متابعة وإدارة طلبات العملاء والشحنات</p>
+                <h2 className="text-2xl font-bold text-slate-900">{t('orders.title')}</h2>
+                <p className="text-sm text-slate-500 mt-1">{t('orders.subtitle')}</p>
             </div>
 
             {/* Stats Cards - 4 Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <CardContent className="p-5">
+                    <CardContent>
                         <div className="flex items-center justify-between mb-3">
                             <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
                                 <ShoppingCart size={22} />
@@ -188,12 +191,12 @@ export default function Orders() {
                             <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+12%</span>
                         </div>
                         <p className="text-2xl font-bold text-slate-900 mb-1">{totalOrders}</p>
-                        <p className="text-sm text-slate-500">إجمالي الطلبات</p>
+                        <p className="text-sm text-slate-500">{t('orders.totalOrders')}</p>
                     </CardContent>
                 </Card>
 
                 <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <CardContent className="p-5">
+                    <CardContent>
                         <div className="flex items-center justify-between mb-3">
                             <div className="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
                                 <Clock size={22} />
@@ -201,12 +204,12 @@ export default function Orders() {
                             <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">{inProgress}</span>
                         </div>
                         <p className="text-2xl font-bold text-slate-900 mb-1">{inProgress}</p>
-                        <p className="text-sm text-slate-500">قيد التنفيذ</p>
+                        <p className="text-sm text-slate-500">{t('orders.inProgress')}</p>
                     </CardContent>
                 </Card>
 
                 <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <CardContent className="p-5">
+                    <CardContent>
                         <div className="flex items-center justify-between mb-3">
                             <div className="w-11 h-11 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
                                 <Store size={22} />
@@ -214,12 +217,12 @@ export default function Orders() {
                             <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-full">{merchantOrders}</span>
                         </div>
                         <p className="text-2xl font-bold text-slate-900 mb-1">{merchantOrders}</p>
-                        <p className="text-sm text-slate-500">طلبات التاجر</p>
+                        <p className="text-sm text-slate-500">{t('orders.merchantOrders')}</p>
                     </CardContent>
                 </Card>
 
                 <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <CardContent className="p-5">
+                    <CardContent>
                         <div className="flex items-center justify-between mb-3">
                             <div className="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
                                 <CheckCircle size={22} />
@@ -227,7 +230,7 @@ export default function Orders() {
                             <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+8%</span>
                         </div>
                         <p className="text-2xl font-bold text-slate-900 mb-1">{deliveredOrders}</p>
-                        <p className="text-sm text-slate-500">تم التسليم</p>
+                        <p className="text-sm text-slate-500">{t('orders.delivered')}</p>
                     </CardContent>
                 </Card>
             </div>
@@ -239,16 +242,15 @@ export default function Orders() {
                         {/* Status Filters */}
                         <div className="flex flex-wrap gap-2">
                             {statusFilters.map((filter) => (
-                                <button
+                                <Button
                                     key={filter.id}
                                     onClick={() => setActiveFilter(filter.id)}
-                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeFilter === filter.id
-                                        ? 'bg-blue-600 text-white shadow-sm'
-                                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                                        }`}
+                                    variant={activeFilter === filter.id ? "default" : "secondary"}
+                                    size="sm"
+                                    className={activeFilter === filter.id ? 'bg-blue-600 hover:bg-blue-700' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}
                                 >
                                     {filter.label}
-                                </button>
+                                </Button>
                             ))}
                         </div>
 
@@ -256,26 +258,26 @@ export default function Orders() {
                         <div className="relative w-full md:w-72">
                             <Search className="absolute right-3 top-2.5 h-4 w-4 text-slate-400" />
                             <Input
-                                placeholder="بحث برقم الطلب أو اسم العميل..."
+                                placeholder={t('orders.searchPlaceholder')}
                                 className="pr-10 bg-slate-50 border-slate-200"
                             />
                         </div>
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
+                <div className="rounded-md border overflow-hidden">
                     <Table>
-                        <TableHeader className="bg-slate-50/80">
-                            <TableRow className="hover:bg-transparent border-slate-100">
-                                <TableHead className="text-right h-12 text-xs font-semibold text-slate-600">رقم الطلب</TableHead>
-                                <TableHead className="text-right h-12 text-xs font-semibold text-slate-600">التاريخ</TableHead>
-                                <TableHead className="text-right h-12 text-xs font-semibold text-slate-600">العميل</TableHead>
-                                <TableHead className="text-right h-12 text-xs font-semibold text-slate-600">المنتجات</TableHead>
-                                <TableHead className="text-center h-12 text-xs font-semibold text-slate-600">نوع الطلب</TableHead>
-                                <TableHead className="text-center h-12 text-xs font-semibold text-slate-600">الحالة</TableHead>
-                                <TableHead className="text-center h-12 text-xs font-semibold text-slate-600">الدفع</TableHead>
-                                <TableHead className="text-right h-12 text-xs font-semibold text-slate-600">الإجمالي</TableHead>
-                                <TableHead className="text-center h-12 w-[60px]"></TableHead>
+                        <TableHeader className="bg-muted/50 sticky top-0 z-10 backdrop-blur-xs">
+                            <TableRow className="hover:bg-transparent">
+                                <TableHead className="w-[100px] text-right font-medium text-muted-foreground">{t('orders.orderNumber')}</TableHead>
+                                <TableHead className="text-right font-medium text-muted-foreground">{t('returns.date')}</TableHead>
+                                <TableHead className="text-right font-medium text-muted-foreground">{t('orders.customer')}</TableHead>
+                                <TableHead className="text-right font-medium text-muted-foreground">{t('orders.products')}</TableHead>
+                                <TableHead className="text-right font-medium text-muted-foreground">{t('orders.orderType')}</TableHead>
+                                <TableHead className="text-right font-medium text-muted-foreground">{t('products.status')}</TableHead>
+                                <TableHead className="text-right font-medium text-muted-foreground">{t('orders.payment')}</TableHead>
+                                <TableHead className="text-right font-medium text-muted-foreground">{t('orders.total')}</TableHead>
+                                <TableHead className="text-right font-medium text-muted-foreground">{t('orders.actions')}</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -285,46 +287,48 @@ export default function Orders() {
                                 const orderType = orderTypeConfig[order.orderType];
                                 const paymentStatus = paymentStatusConfig[order.paymentStatus];
                                 return (
-                                    <TableRow key={order.id} className="border-slate-50 hover:bg-slate-50/50">
-                                        <TableCell className="font-mono font-semibold text-sm text-blue-600">{order.id}</TableCell>
-                                        <TableCell className="text-sm text-slate-500">{order.date}</TableCell>
+                                    <TableRow key={order.id} className="hover:bg-muted/50 transition-colors">
+                                        <TableCell className="font-mono font-medium text-primary text-sm">{order.id}</TableCell>
+                                        <TableCell className="text-sm text-muted-foreground">{order.date}</TableCell>
                                         <TableCell>
-                                            <p className="font-medium text-slate-900 text-sm">{order.customer}</p>
+                                            <p className="font-medium text-foreground text-sm">{order.customer}</p>
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex flex-col gap-0.5">
                                                 {order.products.slice(0, 2).map((p, i) => (
-                                                    <span key={i} className="text-sm text-slate-600">{p.name} × {p.qty}</span>
+                                                    <span key={i} className="text-sm text-muted-foreground">{p.name} × {p.qty}</span>
                                                 ))}
                                                 {order.products.length > 2 && (
-                                                    <span className="text-xs text-blue-600">+{order.products.length - 2} منتجات أخرى</span>
+                                                    <span className="text-xs text-primary">+{order.products.length - 2} {t('orders.moreProducts')}</span>
                                                 )}
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            <Badge variant="secondary" className={`${orderType.color} font-medium`}>
+                                            <Badge variant="secondary" className={`${orderType.color} border-none font-medium text-xs`}>
                                                 {orderType.label}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            <Badge variant="secondary" className={`${status.color} gap-1 font-medium`}>
+                                            <Badge variant="secondary" className={`${status.color} border-none gap-1 font-medium`}>
                                                 <StatusIcon size={12} />
                                                 {status.label}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            <Badge variant="secondary" className={`${paymentStatus.color} font-medium`}>
+                                            <Badge variant="outline" className={`${paymentStatus.color} border-0 px-2 font-medium`}>
                                                 {paymentStatus.label}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell className="font-bold text-slate-900">{order.total.toLocaleString('en-US')} ج.م</TableCell>
+                                        <TableCell className="font-bold text-foreground">{order.total.toLocaleString('en-US')} {t('home.currency')}</TableCell>
                                         <TableCell>
-                                            <button
+                                            <Button
                                                 onClick={() => setSelectedOrder(order)}
-                                                style={{ width: '36px', height: '36px', borderRadius: '8px', border: 'none', background: '#dbeafe', color: '#2563eb', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-8 w-8 text-muted-foreground hover:text-primary"
                                             >
                                                 <Eye size={16} />
-                                            </button>
+                                            </Button>
                                         </TableCell>
                                     </TableRow>
                                 );
@@ -332,166 +336,168 @@ export default function Orders() {
                         </TableBody>
                     </Table>
                 </div>
-            </Card>
+            </Card >
 
             {/* Side Drawer */}
-            {selectedOrder && (
-                <>
-                    {/* Backdrop */}
-                    <div
-                        className="fixed inset-0 bg-black/30 z-40"
-                        onClick={() => setSelectedOrder(null)}
-                    />
+            {
+                selectedOrder && (
+                    <>
+                        {/* Backdrop */}
+                        <div
+                            className="fixed inset-0 bg-black/30 z-40"
+                            onClick={() => setSelectedOrder(null)}
+                        />
 
-                    {/* Drawer */}
-                    <div className="fixed top-0 left-0 h-full w-[480px] bg-white shadow-2xl z-50 overflow-y-auto animate-in slide-in-from-left duration-300">
-                        {/* Header */}
-                        <div className="sticky top-0 bg-white border-b border-slate-100 p-5 flex items-center justify-between">
-                            <div>
-                                <h3 className="text-lg font-bold text-slate-900">تفاصيل الطلب</h3>
-                                <p className="text-sm text-blue-600 font-mono">{selectedOrder.id}</p>
-                            </div>
-                            <button
-                                onClick={() => setSelectedOrder(null)}
-                                className="w-10 h-10 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* Content */}
-                        <div className="p-5 space-y-6">
-                            {/* Status Cards */}
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="p-4 bg-slate-50 rounded-xl">
-                                    <p className="text-xs text-slate-500 mb-2">حالة الطلب</p>
-                                    <Badge variant="secondary" className={`${statusConfig[selectedOrder.status].color} gap-1 font-semibold`}>
-                                        {React.createElement(statusConfig[selectedOrder.status].icon, { size: 14 })}
-                                        {statusConfig[selectedOrder.status].label}
-                                    </Badge>
-                                </div>
-                                <div className="p-4 bg-slate-50 rounded-xl">
-                                    <p className="text-xs text-slate-500 mb-2">حالة الدفع</p>
-                                    <Badge variant="secondary" className={`${paymentStatusConfig[selectedOrder.paymentStatus].color} font-semibold`}>
-                                        {paymentStatusConfig[selectedOrder.paymentStatus].label}
-                                    </Badge>
-                                </div>
-                            </div>
-
-                            {/* Customer Info */}
-                            <div className="bg-white border border-slate-200 rounded-xl p-4">
-                                <h4 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
-                                    <User size={16} className="text-blue-600" />
-                                    بيانات العميل
-                                </h4>
-                                <div className="space-y-4">
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
-                                            <User size={16} />
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-slate-500">الاسم</p>
-                                            <p className="font-medium text-slate-900">{selectedOrder.customer}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
-                                            <Phone size={16} />
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-slate-500">الهاتف</p>
-                                            <p className="font-medium text-slate-900" dir="ltr">{selectedOrder.phone}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
-                                            <MapPin size={16} />
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-slate-500">العنوان</p>
-                                            <p className="font-medium text-slate-900">{selectedOrder.address}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Shipping Info */}
-                            <div className="bg-white border border-slate-200 rounded-xl p-4">
-                                <h4 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
-                                    <Truck size={16} className="text-blue-600" />
-                                    بيانات الشحن
-                                </h4>
-                                <div className="space-y-4">
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
-                                            <Truck size={16} />
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-slate-500">شركة الشحن</p>
-                                            <p className="font-medium text-slate-900">{selectedOrder.carrier}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
-                                            <FileText size={16} />
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-slate-500">رقم التتبع</p>
-                                            <p className="font-mono font-medium text-slate-900">{selectedOrder.trackingNumber}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Products */}
-                            <div className="bg-white border border-slate-200 rounded-xl p-4">
-                                <h4 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
-                                    <Package size={16} className="text-blue-600" />
-                                    المنتجات
-                                </h4>
-                                <div className="space-y-3">
-                                    {selectedOrder.products.map((product, idx) => (
-                                        <div key={idx} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
-                                            <div>
-                                                <p className="font-medium text-slate-900 text-sm">{product.name}</p>
-                                                <p className="text-xs text-slate-500">الكمية: {product.qty}</p>
-                                            </div>
-                                            <p className="font-semibold text-slate-900">{product.price.toLocaleString()} ج.م</p>
-                                        </div>
-                                    ))}
-                                    <div className="flex items-center justify-between pt-3 border-t border-slate-200">
-                                        <p className="font-semibold text-slate-900">الإجمالي</p>
-                                        <p className="font-bold text-lg text-blue-600">{selectedOrder.total.toLocaleString()} ج.م</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Payment Info */}
-                            <div className="bg-slate-50 rounded-xl p-4 flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-slate-600 shadow-sm">
-                                    <CreditCard size={18} />
-                                </div>
+                        {/* Drawer */}
+                        <div className="fixed top-0 left-0 h-full w-[480px] bg-white shadow-2xl z-50 overflow-y-auto animate-in slide-in-from-left duration-300">
+                            {/* Header */}
+                            <div className="sticky top-0 bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between">
                                 <div>
-                                    <p className="text-xs text-slate-500">طريقة الدفع</p>
-                                    <p className="font-medium text-slate-900">{selectedOrder.paymentMethod}</p>
+                                    <h3 className="text-lg font-bold text-slate-900">{t('orders.orderDetails')}</h3>
+                                    <p className="text-sm text-blue-600 font-mono">{selectedOrder.id}</p>
+                                </div>
+                                <button
+                                    onClick={() => setSelectedOrder(null)}
+                                    className="w-10 h-10 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+
+                            {/* Content */}
+                            <div className="p-6 space-y-4">
+                                {/* Status Cards */}
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="p-4 bg-slate-50 rounded-xl">
+                                        <p className="text-xs text-slate-500 mb-2">{t('orders.orderStatus')}</p>
+                                        <Badge variant="secondary" className={`${statusConfig[selectedOrder.status].color} gap-1 font-semibold`}>
+                                            {React.createElement(statusConfig[selectedOrder.status].icon, { size: 14 })}
+                                            {statusConfig[selectedOrder.status].label}
+                                        </Badge>
+                                    </div>
+                                    <div className="p-4 bg-slate-50 rounded-xl">
+                                        <p className="text-xs text-slate-500 mb-2">{t('orders.paymentStatus')}</p>
+                                        <Badge variant="secondary" className={`${paymentStatusConfig[selectedOrder.paymentStatus].color} font-semibold`}>
+                                            {paymentStatusConfig[selectedOrder.paymentStatus].label}
+                                        </Badge>
+                                    </div>
+                                </div>
+
+                                {/* Customer Info */}
+                                <div className="bg-white border border-slate-200 rounded-xl p-4">
+                                    <h4 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                                        <User size={16} className="text-blue-600" />
+                                        {t('orders.customerData')}
+                                    </h4>
+                                    <div className="space-y-4">
+                                        <div className="flex items-start gap-3">
+                                            <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
+                                                <User size={16} />
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-slate-500">{t('orders.name')}</p>
+                                                <p className="font-medium text-slate-900">{selectedOrder.customer}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
+                                                <Phone size={16} />
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-slate-500">{t('orders.phone')}</p>
+                                                <p className="font-medium text-slate-900" dir="ltr">{selectedOrder.phone}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
+                                                <MapPin size={16} />
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-slate-500">{t('orders.address')}</p>
+                                                <p className="font-medium text-slate-900">{selectedOrder.address}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Shipping Info */}
+                                <div className="bg-white border border-slate-200 rounded-xl p-4">
+                                    <h4 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                                        <Truck size={16} className="text-blue-600" />
+                                        {t('orders.shippingData')}
+                                    </h4>
+                                    <div className="space-y-4">
+                                        <div className="flex items-start gap-3">
+                                            <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
+                                                <Truck size={16} />
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-slate-500">{t('orders.shippingCompany')}</p>
+                                                <p className="font-medium text-slate-900">{selectedOrder.carrier}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
+                                                <FileText size={16} />
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-slate-500">{t('orders.trackingNumber')}</p>
+                                                <p className="font-mono font-medium text-slate-900">{selectedOrder.trackingNumber}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Products */}
+                                <div className="bg-white border border-slate-200 rounded-xl p-4">
+                                    <h4 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                                        <Package size={16} className="text-blue-600" />
+                                        {t('orders.products')}
+                                    </h4>
+                                    <div className="space-y-3">
+                                        {selectedOrder.products.map((product, idx) => (
+                                            <div key={idx} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
+                                                <div>
+                                                    <p className="font-medium text-slate-900 text-sm">{product.name}</p>
+                                                    <p className="text-xs text-slate-500">{t('orders.quantity')}: {product.qty}</p>
+                                                </div>
+                                                <p className="font-semibold text-slate-900">{product.price.toLocaleString()} {t('home.currency')}</p>
+                                            </div>
+                                        ))}
+                                        <div className="flex items-center justify-between pt-3 border-t border-slate-200">
+                                            <p className="font-semibold text-slate-900">{t('orders.total')}</p>
+                                            <p className="font-bold text-lg text-blue-600">{selectedOrder.total.toLocaleString()} {t('home.currency')}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Payment Info */}
+                                <div className="bg-slate-50 rounded-xl p-4 flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-slate-600 shadow-sm">
+                                        <CreditCard size={18} />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-slate-500">{t('orders.paymentMethod')}</p>
+                                        <p className="font-medium text-slate-900">{selectedOrder.paymentMethod}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Footer Actions */}
-                        <div className="sticky bottom-0 bg-white border-t border-slate-100 p-5 space-y-3">
-                            <Button className="w-full bg-blue-600 hover:bg-blue-700 h-11 gap-2">
-                                <Download size={18} />
-                                تحميل الفاتورة
-                            </Button>
-                            <Button variant="outline" className="w-full h-11 gap-2 border-slate-200">
-                                <Headphones size={18} />
-                                التواصل مع الدعم
-                            </Button>
+                            {/* Footer Actions */}
+                            <div className="sticky bottom-0 bg-white border-t border-slate-100 px-6 py-4 space-y-3">
+                                <Button className="w-full bg-blue-600 hover:bg-blue-700 h-11 gap-2">
+                                    <Download size={18} />
+                                    {t('orders.downloadInvoice')}
+                                </Button>
+                                <Button variant="outline" className="w-full h-11 gap-2 border-slate-200">
+                                    <Headphones size={18} />
+                                    {t('orders.contactSupport')}
+                                </Button>
+                            </div>
                         </div>
-                    </div>
-                </>
-            )}
-        </div>
+                    </>
+                )
+            }
+        </div >
     );
 }

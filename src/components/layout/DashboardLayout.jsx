@@ -1,101 +1,18 @@
-import { useState, useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import Sidebar from './Sidebar';
+import { Outlet } from 'react-router-dom';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/layout/AppSidebar';
 import Header from './Header';
 
-// Pages
-import Home from '../../pages/Home';
-import SellerProfile from '../../pages/SellerProfile';
-import StoreProfile from '../../pages/StoreProfile';
-import Employees from '../../pages/Employees';
-import Products from '../../pages/Products';
-import Inventory from '../../pages/Inventory';
-import Orders from '../../pages/Orders';
-import Returns from '../../pages/Returns';
-import Campaigns from '../../pages/Campaigns';
-import Ads from '../../pages/Ads';
-import Reports from '../../pages/Reports';
-import Wallet from '../../pages/Wallet';
-import Reviews from '../../pages/Reviews';
-import Messages from '../../pages/Messages';
-import ActivityLog from '../../pages/ActivityLog';
-import AddProduct from '../../pages/AddProduct';
-import ComponentsDemo from '../../pages/ComponentsDemo';
-
-const pageTitles = {
-    '/': 'الصفحة الرئيسية',
-    '/seller-profile': 'ملف التاجر',
-    '/store-profile': 'ملف المتجر',
-    '/employees': 'إدارة الموظفين',
-    '/products': 'المنتجات',
-    '/products/add': 'إضافة منتج جديد',
-    '/inventory': 'المخزون',
-    '/orders': 'الطلبات والشحن',
-    '/returns': 'المرتجعات والنزاعات',
-    '/campaigns': 'الحملات والعروض',
-    '/ads': 'الإعلانات المدفوعة',
-    '/reports': 'التقارير والتحليلات',
-    '/wallet': 'المحفظة وطلبات السحب',
-    '/reviews': 'التقييمات والأسئلة',
-    '/messages': 'الرسائل والدعم',
-    '/activity-log': 'سجل النشاط',
-    '/components-demo': 'عرض المكونات',
-};
-
 export default function DashboardLayout() {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const location = useLocation();
-
-    // Close sidebar when route changes (mobile)
-    useEffect(() => {
-        setSidebarOpen(false);
-    }, [location.pathname]);
-
-    // Close sidebar when clicking outside (mobile)
-    const handleOverlayClick = () => {
-        setSidebarOpen(false);
-    };
-
     return (
-        <div className="dashboard-layout">
-            {/* Mobile Overlay */}
-            {sidebarOpen && (
-                <div
-                    className="sidebar-overlay"
-                    onClick={handleOverlayClick}
-                />
-            )}
-
-            <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-
-            <main className="main-content">
-                <Header
-                    title={pageTitles[location.pathname] || 'لوحة التحكم'}
-                    onMenuClick={() => setSidebarOpen(!sidebarOpen)}
-                />
-
-                <div className="page-content">
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/seller-profile" element={<SellerProfile />} />
-                        <Route path="/store-profile" element={<StoreProfile />} />
-                        <Route path="/employees" element={<Employees />} />
-                        <Route path="/products" element={<Products />} />
-                        <Route path="/products/add" element={<AddProduct />} />
-                        <Route path="/inventory" element={<Inventory />} />
-                        <Route path="/orders" element={<Orders />} />
-                        <Route path="/returns" element={<Returns />} />
-                        <Route path="/campaigns" element={<Campaigns />} />
-                        <Route path="/ads" element={<Ads />} />
-                        <Route path="/reports" element={<Reports />} />
-                        <Route path="/wallet" element={<Wallet />} />
-                        <Route path="/reviews" element={<Reviews />} />
-                        <Route path="/messages" element={<Messages />} />
-                        <Route path="/activity-log" element={<ActivityLog />} />
-                        <Route path="/components-demo" element={<ComponentsDemo />} />
-                    </Routes>
-                </div>
-            </main>
-        </div>
+        <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset>
+                <Header />
+                <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:px-8 lg:py-6 bg-muted/40">
+                    <Outlet />
+                </main>
+            </SidebarInset>
+        </SidebarProvider>
     );
 }

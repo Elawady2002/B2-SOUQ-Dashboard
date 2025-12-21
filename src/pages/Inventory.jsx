@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 import {
     Warehouse,
     Package,
@@ -131,26 +132,9 @@ const inventoryItems = [
     },
 ];
 
-const kpiStats = [
-    { label: 'إجمالي المنتجات', value: '312', icon: Package, color: 'bg-slate-100 text-slate-600' },
-    { label: 'مخزون التاجر', value: '182', icon: Boxes, color: 'bg-orange-50 text-orange-600', accent: 'orange' },
-    { label: 'مخزون المنصة', value: '130', icon: Warehouse, color: 'bg-blue-50 text-blue-600', accent: 'blue' },
-    { label: 'محجوز', value: '38', icon: PackageCheck, color: 'bg-purple-50 text-purple-600' },
-    { label: 'تالف', value: '8', icon: PackageX, color: 'bg-red-50 text-red-600' },
-    { label: 'نفذ المخزون', value: '3', icon: AlertTriangle, color: 'bg-amber-50 text-amber-600' },
-];
-
-const sellingMethodConfig = {
-    platform: { label: 'شحن المنصة', color: 'bg-blue-100 text-blue-700' },
-    merchant: { label: 'شحن ذاتي', color: 'bg-orange-100 text-orange-700' },
-};
-
-const stockTypeConfig = {
-    platform: { label: 'مخزون المنصة', color: 'bg-blue-50 text-blue-600 border-blue-200' },
-    merchant: { label: 'مخزون التاجر', color: 'bg-orange-50 text-orange-600 border-orange-200' },
-};
 
 export default function Inventory() {
+    const { t } = useLanguage();
     const [showMovements, setShowMovements] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const [showTransferModal, setShowTransferModal] = useState(false);
@@ -191,22 +175,44 @@ export default function Inventory() {
     const currentMerchantStock = selectedItem?.available || 0;
     const newMerchantStock = Math.max(0, currentMerchantStock - (parseInt(transferQty) || 0));
 
+    // Dynamic KPI stats with translations
+    const kpiStats = [
+        { label: t('inventory.totalProducts'), value: '312', icon: Package, color: 'bg-slate-100 text-slate-600' },
+        { label: t('inventory.merchantStock'), value: '182', icon: Boxes, color: 'bg-orange-50 text-orange-600', accent: 'orange' },
+        { label: t('inventory.platformStock'), value: '130', icon: Warehouse, color: 'bg-blue-50 text-blue-600', accent: 'blue' },
+        { label: t('inventory.reserved'), value: '38', icon: PackageCheck, color: 'bg-purple-50 text-purple-600' },
+        { label: t('inventory.damaged'), value: '8', icon: PackageX, color: 'bg-red-50 text-red-600' },
+        { label: t('inventory.outOfStock'), value: '3', icon: AlertTriangle, color: 'bg-amber-50 text-amber-600' },
+    ];
+
+    // Dynamic selling method config
+    const sellingMethodConfig = {
+        platform: { label: t('inventory.platformShipping'), color: 'bg-blue-100 text-blue-700' },
+        merchant: { label: t('inventory.selfShipping'), color: 'bg-orange-100 text-orange-700' },
+    };
+
+    // Dynamic stock type config
+    const stockTypeConfig = {
+        platform: { label: t('inventory.platformStock'), color: 'bg-blue-50 text-blue-600 border-blue-200' },
+        merchant: { label: t('inventory.merchantStock'), color: 'bg-orange-50 text-orange-600 border-orange-200' },
+    };
+
     return (
         <div className="flex flex-col gap-6">
             {/* Page Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900">إدارة المخزون</h2>
-                    <p className="text-sm text-slate-500 mt-1">متابعة وتحويل مخزون منتجاتك</p>
+                    <h2 className="text-2xl font-bold text-slate-900">{t('inventory.title')}</h2>
+                    <p className="text-sm text-slate-500 mt-1">{t('inventory.subtitle')}</p>
                 </div>
                 <div className="flex gap-3">
                     <Button variant="outline" className="gap-2 border-slate-200">
                         <ArrowLeftRight size={18} />
-                        تحويل مخزون
+                        {t('inventory.transferStock')}
                     </Button>
                     <Button className="bg-blue-600 hover:bg-blue-700 gap-2">
                         <Plus size={18} />
-                        إضافة كمية
+                        {t('inventory.addQuantity')}
                     </Button>
                 </div>
             </div>
@@ -239,11 +245,11 @@ export default function Inventory() {
             <Card className="bg-white border-slate-200 shadow-sm">
                 <CardHeader className="pb-4 border-b border-slate-100">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <CardTitle className="text-lg font-bold text-slate-800">جدول المخزون</CardTitle>
+                        <CardTitle className="text-lg font-bold text-slate-800">{t('inventory.inventoryTable')}</CardTitle>
                         <div className="relative w-full md:w-72">
                             <Search className="absolute right-3 top-2.5 h-4 w-4 text-slate-400" />
                             <Input
-                                placeholder="بحث عن منتج أو SKU..."
+                                placeholder={t('inventory.searchProduct')}
                                 className="pr-9 bg-slate-50 border-slate-200 h-10"
                             />
                         </div>
@@ -254,24 +260,24 @@ export default function Inventory() {
                         <Table>
                             <TableHeader>
                                 {/* Grouped Header Row */}
-                                <TableRow className="bg-slate-50 border-slate-100 hover:bg-slate-50">
-                                    <TableHead colSpan={2} className="text-right h-10 text-xs font-bold text-slate-700 border-l border-slate-200">معلومات المنتج</TableHead>
-                                    <TableHead colSpan={2} className="text-center h-10 text-xs font-bold text-slate-700 border-l border-slate-200">نوع المخزون</TableHead>
-                                    <TableHead colSpan={5} className="text-center h-10 text-xs font-bold text-slate-700 border-l border-slate-200 bg-blue-50/50">الكميات</TableHead>
-                                    <TableHead className="text-center h-10 w-[80px]"></TableHead>
+                                <TableRow className="hover:bg-slate-50">
+                                    <TableHead colSpan={2} className="text-right font-bold text-slate-700 border-l border-slate-200">{t('inventory.productInfo')}</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold text-slate-700 border-l border-slate-200">{t('inventory.stockType')}</TableHead>
+                                    <TableHead colSpan={5} className="text-center font-bold text-slate-700 border-l border-slate-200 bg-blue-50/50">{t('inventory.quantities')}</TableHead>
+                                    <TableHead className="text-center w-[80px]"></TableHead>
                                 </TableRow>
                                 {/* Sub-header Row */}
-                                <TableRow className="bg-slate-25 border-slate-100 hover:bg-transparent">
-                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600 w-[280px]">المنتج</TableHead>
-                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600 border-l border-slate-100">SKU</TableHead>
-                                    <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">طريقة البيع</TableHead>
-                                    <TableHead className="text-center h-10 text-xs font-semibold text-slate-600 border-l border-slate-100">نوع المخزون</TableHead>
-                                    <TableHead className="text-center h-10 text-xs font-semibold text-emerald-700 bg-emerald-50/50">متاح</TableHead>
-                                    <TableHead className="text-center h-10 text-xs font-semibold text-purple-700 bg-purple-50/50">محجوز</TableHead>
-                                    <TableHead className="text-center h-10 text-xs font-semibold text-blue-700 bg-blue-50/50">مستلم</TableHead>
-                                    <TableHead className="text-center h-10 text-xs font-semibold text-red-700 bg-red-50/50">تالف</TableHead>
-                                    <TableHead className="text-center h-10 text-xs font-semibold text-slate-700 bg-slate-100/50 border-l border-slate-100">الإجمالي</TableHead>
-                                    <TableHead className="text-center h-10"></TableHead>
+                                <TableRow className="hover:bg-transparent">
+                                    <TableHead className="text-right font-semibold text-slate-600 w-[280px]">{t('inventory.product')}</TableHead>
+                                    <TableHead className="text-right font-semibold text-slate-600 border-l border-slate-100">SKU</TableHead>
+                                    <TableHead className="text-center font-semibold text-slate-600">{t('inventory.sellingMethod')}</TableHead>
+                                    <TableHead className="text-center font-semibold text-slate-600 border-l border-slate-100">{t('inventory.stockType')}</TableHead>
+                                    <TableHead className="text-center font-semibold text-emerald-700 bg-emerald-50/50">{t('inventory.available')}</TableHead>
+                                    <TableHead className="text-center font-semibold text-purple-700 bg-purple-50/50">{t('inventory.reserved')}</TableHead>
+                                    <TableHead className="text-center font-semibold text-blue-700 bg-blue-50/50">{t('inventory.received')}</TableHead>
+                                    <TableHead className="text-center font-semibold text-red-700 bg-red-50/50">{t('inventory.damaged')}</TableHead>
+                                    <TableHead className="text-center font-semibold text-slate-700 bg-slate-100/50 border-l border-slate-100">{t('inventory.total')}</TableHead>
+                                    <TableHead className="text-center"></TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -281,7 +287,7 @@ export default function Inventory() {
                                     const isOutOfStock = item.available === 0;
 
                                     return (
-                                        <TableRow key={item.id} className={`border-slate-50 hover:bg-slate-50/50 ${isOutOfStock ? 'bg-red-50/30' : ''}`}>
+                                        <TableRow key={item.id} className={`hover:bg-slate-50/50 ${isOutOfStock ? 'bg-red-50/30' : ''}`}>
                                             <TableCell>
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-10 h-10 rounded-lg bg-slate-100 overflow-hidden shrink-0 border border-slate-100">
@@ -328,7 +334,7 @@ export default function Inventory() {
                                                         size="icon"
                                                         className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
                                                         onClick={() => handleViewMovements(item)}
-                                                        title="عرض الحركات"
+                                                        title={t('inventory.viewMovements')}
                                                     >
                                                         <Eye size={16} />
                                                     </Button>
@@ -338,7 +344,7 @@ export default function Inventory() {
                                                             size="icon"
                                                             className="h-8 w-8 text-slate-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg"
                                                             onClick={() => handleTransfer(item)}
-                                                            title="تحويل للمنصة"
+                                                            title={t('inventory.transferToPlatform')}
                                                         >
                                                             <ArrowLeftRight size={16} />
                                                         </Button>
@@ -358,16 +364,16 @@ export default function Inventory() {
                                                         <DropdownMenuContent align="end" className="w-48 bg-white">
                                                             <DropdownMenuItem className="gap-3 cursor-pointer" onClick={() => handleViewDetails(item)}>
                                                                 <Eye className="w-4 h-4 text-slate-500" />
-                                                                <span>عرض التفاصيل</span>
+                                                                <span>{t('common.viewDetails')}</span>
                                                             </DropdownMenuItem>
                                                             <DropdownMenuItem className="gap-3 cursor-pointer" onClick={() => handleEditProduct(item)}>
                                                                 <Edit className="w-4 h-4 text-blue-500" />
-                                                                <span>تعديل المنتج</span>
+                                                                <span>{t('common.editProduct')}</span>
                                                             </DropdownMenuItem>
                                                             <DropdownMenuSeparator />
                                                             <DropdownMenuItem className="gap-3 cursor-pointer text-red-600 focus:text-red-600" onClick={() => handleDeleteProduct(item)}>
                                                                 <Trash2 className="w-4 h-4" />
-                                                                <span>حذف المنتج</span>
+                                                                <span>{t('common.deleteProduct')}</span>
                                                             </DropdownMenuItem>
                                                         </DropdownMenuContent>
                                                     </DropdownMenu>

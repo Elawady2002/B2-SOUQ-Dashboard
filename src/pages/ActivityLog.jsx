@@ -1,6 +1,11 @@
-import { useState } from 'react';
 import { Package, ShoppingCart, Edit, Trash2, Plus, User, MapPin, ExternalLink, Filter, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 
 const activities = [
     {
@@ -12,8 +17,8 @@ const activities = [
         time: 'منذ 5 دقائق',
         date: '21 ديسمبر 2024',
         icon: Plus,
-        iconBg: '#d1fae5',
-        iconColor: '#10b981'
+        iconBg: 'bg-emerald-50',
+        iconColor: 'text-emerald-600'
     },
     {
         id: 2,
@@ -25,8 +30,8 @@ const activities = [
         time: 'منذ 15 دقيقة',
         date: '21 ديسمبر 2024',
         icon: Edit,
-        iconBg: '#dbeafe',
-        iconColor: '#2563eb'
+        iconBg: 'bg-blue-50',
+        iconColor: 'text-blue-600'
     },
     {
         id: 3,
@@ -38,8 +43,8 @@ const activities = [
         time: 'منذ 30 دقيقة',
         date: '21 ديسمبر 2024',
         icon: ShoppingCart,
-        iconBg: '#fef3c7',
-        iconColor: '#f59e0b'
+        iconBg: 'bg-amber-50',
+        iconColor: 'text-amber-600'
     },
     {
         id: 4,
@@ -50,8 +55,8 @@ const activities = [
         time: 'منذ ساعة',
         date: '21 ديسمبر 2024',
         icon: Trash2,
-        iconBg: '#fee2e2',
-        iconColor: '#ef4444'
+        iconBg: 'bg-red-50',
+        iconColor: 'text-red-600'
     },
     {
         id: 5,
@@ -62,110 +67,101 @@ const activities = [
         time: 'منذ 2 ساعة',
         date: '21 ديسمبر 2024',
         icon: Package,
-        iconBg: '#e0e7ff',
-        iconColor: '#6366f1'
+        iconBg: 'bg-indigo-50',
+        iconColor: 'text-indigo-600'
     },
 ];
 
 export default function ActivityLog() {
     const navigate = useNavigate();
+    const { t } = useLanguage();
 
     return (
         <div>
             {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h2 className="page-title">سجل النشاط</h2>
-                    <p className="page-subtitle">تتبع جميع الإجراءات التي قام بها فريق العمل</p>
+                    <h2 className="page-title">{t('activityLog.title')}</h2>
+                    <p className="page-subtitle">{t('activityLog.subtitle')}</p>
                 </div>
-                <div style={{ display: 'flex', gap: '12px' }}>
-                    <button style={{ padding: '10px 16px', background: 'white', border: '1px solid #e2e8f0', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', color: '#64748b' }}>
-                        <Filter size={16} /> تصفية
-                    </button>
-                    <button style={{ padding: '10px 16px', background: 'white', border: '1px solid #e2e8f0', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', color: '#64748b' }}>
-                        <Calendar size={16} /> اليوم
-                    </button>
+                <div className="flex gap-3">
+                    <Button variant="outline" size="sm" className="gap-2">
+                        <Filter size={16} />
+                        تصفية
+                    </Button>
+                    <Button variant="outline" size="sm" className="gap-2">
+                        <Calendar size={16} />
+                        اليوم
+                    </Button>
                 </div>
             </div>
 
             {/* Activity List */}
-            <div style={{ background: 'white', borderRadius: '16px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
-                {activities.map((activity, idx) => {
-                    const IconComponent = activity.icon;
-                    return (
-                        <div
-                            key={activity.id}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'flex-start',
-                                gap: '16px',
-                                padding: '20px 24px',
-                                borderBottom: idx < activities.length - 1 ? '1px solid #f1f5f9' : 'none'
-                            }}
-                        >
-                            {/* Employee Avatar */}
-                            <img
-                                src={activity.employee.avatar}
-                                alt=""
-                                style={{ width: '48px', height: '48px', borderRadius: '50%', flexShrink: 0 }}
-                            />
+            <Card className="border-slate-100 shadow-sm">
+                <CardContent className="p-0">
+                    {activities.map((activity, idx) => {
+                        const IconComponent = activity.icon;
+                        return (
+                            <div key={activity.id}>
+                                <div className="flex items-start gap-4 p-6">
+                                    {/* Employee Avatar */}
+                                    <Avatar className="h-12 w-12">
+                                        <AvatarImage src={activity.employee.avatar} alt={activity.employee.name} />
+                                        <AvatarFallback>{activity.employee.name.charAt(0)}</AvatarFallback>
+                                    </Avatar>
 
-                            {/* Activity Content */}
-                            <div style={{ flex: 1 }}>
-                                {/* Employee Name & Role */}
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                                    <span style={{ fontWeight: 600, fontSize: '15px', color: '#1e293b' }}>{activity.employee.name}</span>
-                                    <span style={{ fontSize: '12px', color: '#64748b', background: '#f1f5f9', padding: '2px 8px', borderRadius: '4px' }}>{activity.employee.role}</span>
-                                </div>
+                                    {/* Activity Content */}
+                                    <div className="flex-1 min-w-0">
+                                        {/* Employee Name & Role */}
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <span className="font-semibold text-sm text-slate-900">{activity.employee.name}</span>
+                                            <Badge variant="secondary" className="text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-100">
+                                                {activity.employee.role}
+                                            </Badge>
+                                        </div>
 
-                                {/* Action */}
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                                    <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: activity.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <IconComponent size={14} color={activity.iconColor} />
+                                        {/* Action */}
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <div className={`flex items-center justify-center w-7 h-7 rounded-md ${activity.iconBg}`}>
+                                                <IconComponent size={14} className={activity.iconColor} />
+                                            </div>
+                                            <span className="text-sm text-slate-700">
+                                                {activity.action}: <span className="text-blue-600 font-medium">{activity.target}</span>
+                                            </span>
+                                        </div>
+
+                                        {activity.details && (
+                                            <p className="text-xs text-slate-500 mb-2 mr-9">{activity.details}</p>
+                                        )}
+
+                                        {/* Location & Time */}
+                                        <div className="flex items-center gap-4 text-xs text-slate-400">
+                                            <span className="flex items-center gap-1">
+                                                <MapPin size={12} />
+                                                {activity.location}
+                                            </span>
+                                            <span>{activity.time}</span>
+                                        </div>
                                     </div>
-                                    <span style={{ fontSize: '14px', color: '#1e293b' }}>
-                                        {activity.action}: <span style={{ color: '#2563eb', fontWeight: 500 }}>{activity.target}</span>
-                                    </span>
-                                </div>
 
-                                {activity.details && (
-                                    <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '8px', marginRight: '36px' }}>{activity.details}</p>
-                                )}
-
-                                {/* Location & Time */}
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '12px', color: '#94a3b8' }}>
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                        <MapPin size={14} /> {activity.location}
-                                    </span>
-                                    <span>{activity.time}</span>
+                                    {/* Link to Employee Profile */}
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => navigate('/employees')}
+                                        className="gap-2 text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-700"
+                                    >
+                                        <User size={14} />
+                                        الملف الشخصي
+                                        <ExternalLink size={12} />
+                                    </Button>
                                 </div>
+                                {idx < activities.length - 1 && <Separator className="bg-slate-50" />}
                             </div>
-
-                            {/* Link to Employee Profile */}
-                            <button
-                                onClick={() => navigate('/employees')}
-                                style={{
-                                    padding: '8px 14px',
-                                    background: '#eff6ff',
-                                    border: '1px solid #2563eb',
-                                    borderRadius: '8px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '6px',
-                                    cursor: 'pointer',
-                                    fontSize: '12px',
-                                    color: '#2563eb',
-                                    fontWeight: 500
-                                }}
-                            >
-                                <User size={14} />
-                                الملف الشخصي
-                                <ExternalLink size={12} />
-                            </button>
-                        </div>
-                    );
-                })}
-            </div>
+                        );
+                    })}
+                </CardContent>
+            </Card>
         </div>
     );
 }

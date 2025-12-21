@@ -1,5 +1,13 @@
 import { useState } from 'react';
 import { Send, Clock, Search, MoreHorizontal, Image, Paperclip, Smile, ChevronDown, X, Headphones, Pin } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
 
 const conversations = [
     { id: 0, name: 'الدعم الفني', avatar: '', lastMessage: 'أهلاً بك! نحن سعداء بخدمتك...', time: 'متصل', unread: false, online: true, isPinned: true, isSupport: true },
@@ -24,164 +32,214 @@ const customerMessages = [
 ];
 
 export default function Messages() {
+    const { t } = useLanguage();
     const [selectedConv, setSelectedConv] = useState(conversations[0]);
     const [messageInput, setMessageInput] = useState('');
 
     const messages = selectedConv?.isSupport ? supportMessages : customerMessages;
 
     return (
-        <div style={{ display: 'flex', height: 'calc(100vh - 120px)', background: 'white', borderRadius: '16px', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+        <div className="flex h-[calc(100vh-120px)] bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
 
             {/* Right Sidebar */}
-            <div style={{ width: '340px', borderLeft: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', background: 'white' }}>
+            <div className="w-[340px] border-l border-slate-100 flex flex-col bg-white">
 
                 {/* Title */}
-                <div style={{ padding: '20px', borderBottom: '1px solid #e2e8f0' }}>
-                    <h3 style={{ fontSize: '18px', fontWeight: 600, color: '#1e293b' }}>الرسائل</h3>
+                <div className="p-5 border-b border-slate-100">
+                    <h3 className="text-lg font-bold text-slate-900">{t('messages.title')}</h3>
                 </div>
 
                 {/* Search & Filter */}
-                <div style={{ padding: '16px 20px', borderBottom: '1px solid #e2e8f0' }}>
-                    <div style={{ position: 'relative', marginBottom: '12px' }}>
-                        <Search size={16} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                        <input type="text" placeholder="ابحث عن محادثة..." style={{ width: '100%', padding: '10px 40px 10px 12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', background: '#f8fafc' }} />
+                <div className="p-4 border-b border-slate-100 space-y-3">
+                    <div className="relative">
+                        <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <Input
+                            type="text"
+                            placeholder={t('messages.searchConversation') || 'Search conversation...'}
+                            className="pr-10 bg-slate-50 border-slate-200 text-sm h-10"
+                        />
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <button style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', background: '#2563eb', border: 'none', borderRadius: '8px', color: 'white', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>
-                            <span style={{ background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '6px', fontSize: '12px', fontWeight: 600 }}>5</span>
-                            مفتوحة
+                    <div className="flex items-center gap-2">
+                        <Button size="sm" className="gap-2 bg-blue-600 hover:bg-blue-700 flex-1">
+                            <Badge variant="secondary" className="bg-white/20 text-white hover:bg-white/20 text-xs px-2">5</Badge>
+                            {t('messages.open') || 'Open'}
                             <ChevronDown size={14} />
-                        </button>
-                        <button style={{ padding: '8px 14px', background: 'white', border: '1px solid #e2e8f0', borderRadius: '8px', color: '#64748b', fontSize: '13px', cursor: 'pointer' }}>الأحدث</button>
+                        </Button>
+                        <Button variant="outline" size="sm" className="text-slate-600">
+                            {t('messages.newest') || 'Newest'}
+                        </Button>
                     </div>
                 </div>
 
                 {/* Conversations List */}
-                <div style={{ flex: 1, overflow: 'auto' }}>
+                <ScrollArea className="flex-1">
                     {conversations.map((conv) => (
                         <div
                             key={conv.id}
                             onClick={() => setSelectedConv(conv)}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'flex-start',
-                                gap: '12px',
-                                padding: '16px 20px',
-                                cursor: 'pointer',
-                                background: selectedConv?.id === conv.id ? '#f8fafc' : conv.isPinned ? '#eff6ff' : 'white',
-                                borderBottom: '1px solid #f1f5f9'
-                            }}
+                            className={`flex items-start gap-3 p-4 cursor-pointer border-b border-slate-50 transition-colors ${selectedConv?.id === conv.id
+                                ? 'bg-slate-50'
+                                : conv.isPinned
+                                    ? 'bg-blue-50/50 hover:bg-blue-50'
+                                    : 'hover:bg-slate-50'
+                                }`}
                         >
                             {conv.isSupport ? (
-                                <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                                    <Headphones size={22} color="white" />
+                                <div className="w-11 h-11 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+                                    <Headphones size={22} className="text-white" />
                                 </div>
                             ) : (
-                                <div style={{ position: 'relative', flexShrink: 0 }}>
-                                    <img src={conv.avatar} alt="" style={{ width: '44px', height: '44px', borderRadius: '50%' }} />
-                                    {conv.online && <span style={{ position: 'absolute', bottom: '2px', right: '2px', width: '12px', height: '12px', background: '#10b981', borderRadius: '50%', border: '2px solid white' }}></span>}
+                                <div className="relative flex-shrink-0">
+                                    <Avatar className="h-11 w-11">
+                                        <AvatarImage src={conv.avatar} alt={conv.name} />
+                                        <AvatarFallback>{conv.name.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                    {conv.online && <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white" />}
                                 </div>
                             )}
-                            <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        {conv.isPinned && <Pin size={12} color="#2563eb" />}
-                                        <span style={{ fontWeight: conv.unread || conv.isPinned ? 600 : 500, fontSize: '14px', color: '#1e293b' }}>{conv.name}</span>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-center mb-1">
+                                    <div className="flex items-center gap-1.5">
+                                        {conv.isPinned && <Pin size={12} className="text-blue-600" />}
+                                        <span className={`text-sm ${conv.unread || conv.isPinned ? 'font-semibold' : 'font-medium'} text-slate-900`}>
+                                            {conv.name}
+                                        </span>
                                     </div>
-                                    <span style={{ fontSize: '11px', color: conv.isSupport ? '#10b981' : '#94a3b8' }}>{conv.time}</span>
+                                    <span className={`text-xs ${conv.isSupport ? 'text-emerald-500' : 'text-slate-400'}`}>
+                                        {conv.time}
+                                    </span>
                                 </div>
-                                <p style={{ fontSize: '12px', color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '6px' }}>{conv.lastMessage}</p>
-                                {conv.product && <span style={{ fontSize: '11px', color: '#2563eb', background: '#eff6ff', padding: '3px 10px', borderRadius: '6px' }}>{conv.product}</span>}
-                                {conv.isSupport && <span style={{ fontSize: '11px', color: 'white', background: '#2563eb', padding: '3px 10px', borderRadius: '6px' }}>دعم فني</span>}
+                                <p className="text-xs text-slate-600 overflow-hidden text-ellipsis whitespace-nowrap mb-1.5">
+                                    {conv.lastMessage}
+                                </p>
+                                {conv.product && (
+                                    <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700 hover:bg-blue-50">
+                                        {conv.product}
+                                    </Badge>
+                                )}
+                                {conv.isSupport && (
+                                    <Badge className="text-xs bg-blue-600 hover:bg-blue-700">
+                                        {t('messages.technicalSupport')}
+                                    </Badge>
+                                )}
                             </div>
-                            {conv.unread && <span style={{ width: '10px', height: '10px', background: '#ef4444', borderRadius: '50%', flexShrink: 0, marginTop: '6px' }}></span>}
+                            {conv.unread && <span className="w-2.5 h-2.5 bg-red-500 rounded-full flex-shrink-0 mt-1.5" />}
                         </div>
                     ))}
-                </div>
+                </ScrollArea>
             </div>
 
             {/* Chat Area */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#f8fafc' }}>
+            <div className="flex-1 flex flex-col bg-slate-50">
 
                 {/* Header */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', background: 'white', borderBottom: '1px solid #e2e8f0' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div className="flex items-center justify-between p-4 bg-white border-b border-slate-100">
+                    <div className="flex items-center gap-3">
                         {selectedConv?.isSupport ? (
-                            <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <Headphones size={22} color="white" />
+                            <div className="w-11 h-11 rounded-full bg-blue-600 flex items-center justify-center">
+                                <Headphones size={22} className="text-white" />
                             </div>
                         ) : (
-                            <img src={selectedConv?.avatar} alt="" style={{ width: '44px', height: '44px', borderRadius: '50%' }} />
+                            <Avatar className="h-11 w-11">
+                                <AvatarImage src={selectedConv?.avatar} alt={selectedConv?.name} />
+                                <AvatarFallback>{selectedConv?.name?.charAt(0)}</AvatarFallback>
+                            </Avatar>
                         )}
                         <div>
-                            <p style={{ fontWeight: 600, fontSize: '15px', color: '#1e293b' }}>{selectedConv?.name}</p>
-                            {selectedConv?.product && <p style={{ fontSize: '12px', color: '#64748b' }}>استفسار عن: <span style={{ color: '#2563eb' }}>{selectedConv.product}</span></p>}
-                            {selectedConv?.isSupport && <p style={{ fontSize: '12px', color: '#10b981' }}>● متصل الآن</p>}
+                            <p className="font-semibold text-sm text-slate-900">{selectedConv?.name}</p>
+                            {selectedConv?.product && (
+                                <p className="text-xs text-slate-600">
+                                    استفسار عن: <span className="text-blue-600">{selectedConv.product}</span>
+                                </p>
+                            )}
+                            {selectedConv?.isSupport && <p className="text-xs text-emerald-500">● متصل الآن</p>}
                         </div>
                     </div>
                     {!selectedConv?.isSupport && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <button style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid #e2e8f0', background: 'white', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '13px', color: '#64748b' }}>
-                                <Clock size={16} /> تأجيل
-                            </button>
-                            <button style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: '#10b981', color: 'white', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}>
+                        <div className="flex items-center gap-2">
+                            <Button variant="outline" size="sm" className="gap-2">
+                                <Clock size={16} />
+                                تأجيل
+                            </Button>
+                            <Button size="sm" className="gap-2 bg-emerald-500 hover:bg-emerald-600">
                                 ✓ تم الحل
-                            </button>
-                            <button style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: '#ef4444', color: 'white', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}>
-                                <X size={16} /> إغلاق
-                            </button>
+                            </Button>
+                            <Button size="sm" variant="destructive" className="gap-2">
+                                <X size={16} />
+                                إغلاق
+                            </Button>
                         </div>
                     )}
                 </div>
 
                 {/* Messages */}
-                <div style={{ flex: 1, overflow: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    {messages.map((msg) => {
-                        const isAgent = msg.sender === 'agent' || msg.sender === 'support';
-                        return (
-                            <div key={msg.id} style={{ display: 'flex', justifyContent: isAgent ? 'flex-start' : 'flex-end' }}>
-                                <div style={{ maxWidth: '60%' }}>
-                                    {msg.type === 'product' ? (
-                                        <div style={{ background: 'white', padding: '16px', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
-                                            <img src={msg.image} alt="" style={{ width: '140px', height: '140px', borderRadius: '12px', objectFit: 'cover', marginBottom: '12px' }} />
-                                            <p style={{ fontSize: '14px', fontWeight: 600, color: '#2563eb', marginBottom: '4px' }}>{msg.text}</p>
-                                            <p style={{ fontSize: '14px', color: '#10b981', fontWeight: 600 }}>{msg.price}</p>
-                                        </div>
-                                    ) : (
-                                        <div style={{
-                                            background: isAgent ? '#2563eb' : 'white',
-                                            color: isAgent ? 'white' : '#1e293b',
-                                            padding: '14px 18px',
-                                            borderRadius: isAgent ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                                            border: !isAgent ? '1px solid #e2e8f0' : 'none'
-                                        }}>
-                                            <p style={{ fontSize: '14px', lineHeight: 1.7, color: isAgent ? 'white' : '#1e293b' }}>{msg.text}</p>
-                                            {msg.time && <p style={{ fontSize: '11px', marginTop: '8px', textAlign: 'left', color: isAgent ? 'rgba(255,255,255,0.7)' : '#94a3b8' }}>{msg.time}</p>}
-                                        </div>
-                                    )}
+                <ScrollArea className="flex-1 p-6">
+                    <div className="flex flex-col gap-4">
+                        {messages.map((msg) => {
+                            const isAgent = msg.sender === 'agent' || msg.sender === 'support';
+                            return (
+                                <div key={msg.id} className={`flex ${isAgent ? 'justify-start' : 'justify-end'}`}>
+                                    <div className="max-w-[60%]">
+                                        {msg.type === 'product' ? (
+                                            <Card className="border-slate-200">
+                                                <CardContent className="p-4">
+                                                    <img
+                                                        src={msg.image}
+                                                        alt=""
+                                                        className="w-[140px] h-[140px] rounded-xl object-cover mb-3"
+                                                    />
+                                                    <p className="text-sm font-semibold text-blue-600 mb-1">{msg.text}</p>
+                                                    <p className="text-sm text-emerald-600 font-semibold">{msg.price}</p>
+                                                </CardContent>
+                                            </Card>
+                                        ) : (
+                                            <div className={`
+                                                px-4 py-3.5 rounded-2xl
+                                                ${isAgent
+                                                    ? 'bg-blue-600 text-white rounded-br-sm'
+                                                    : 'bg-white text-slate-900 border border-slate-200 rounded-bl-sm'
+                                                }
+                                            `}>
+                                                <p className="text-sm leading-relaxed">{msg.text}</p>
+                                                {msg.time && (
+                                                    <p className={`text-xs mt-2 text-left ${isAgent ? 'text-white/70' : 'text-slate-400'
+                                                        }`}>
+                                                        {msg.time}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        );
-                    })}
-                </div>
+                            );
+                        })}
+                    </div>
+                </ScrollArea>
 
                 {/* Input */}
-                <div style={{ padding: '20px 24px', background: 'white', borderTop: '1px solid #e2e8f0' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <button style={{ padding: '12px 24px', borderRadius: '10px', border: 'none', background: '#2563eb', color: 'white', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: 500 }}>
-                            إرسال <Send size={18} />
-                        </button>
-                        <input
+                <div className="p-5 bg-white border-t border-slate-100">
+                    <div className="flex items-center gap-3">
+                        <Button className="gap-2 bg-blue-600 hover:bg-blue-700">
+                            إرسال
+                            <Send size={18} />
+                        </Button>
+                        <Input
                             type="text"
                             placeholder="اكتب رسالتك هنا..."
                             value={messageInput}
                             onChange={(e) => setMessageInput(e.target.value)}
-                            style={{ flex: 1, padding: '14px 18px', border: '1px solid #e2e8f0', borderRadius: '10px', fontSize: '14px', background: '#f8fafc', textAlign: 'right' }}
+                            className="flex-1 bg-slate-50 border-slate-200 text-right"
                         />
-                        <div style={{ display: 'flex', gap: '4px' }}>
-                            <button style={{ width: '44px', height: '44px', borderRadius: '10px', border: '1px solid #e2e8f0', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Smile size={20} color="#64748b" /></button>
-                            <button style={{ width: '44px', height: '44px', borderRadius: '10px', border: '1px solid #e2e8f0', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Paperclip size={20} color="#64748b" /></button>
-                            <button style={{ width: '44px', height: '44px', borderRadius: '10px', border: '1px solid #e2e8f0', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Image size={20} color="#64748b" /></button>
+                        <div className="flex gap-1">
+                            <Button variant="outline" size="icon" className="h-11 w-11">
+                                <Smile size={20} className="text-slate-600" />
+                            </Button>
+                            <Button variant="outline" size="icon" className="h-11 w-11">
+                                <Paperclip size={20} className="text-slate-600" />
+                            </Button>
+                            <Button variant="outline" size="icon" className="h-11 w-11">
+                                <Image size={20} className="text-slate-600" />
+                            </Button>
                         </div>
                     </div>
                 </div>

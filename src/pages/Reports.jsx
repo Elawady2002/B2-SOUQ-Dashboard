@@ -12,6 +12,7 @@ import {
     Percent,
     Download
 } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -55,61 +56,7 @@ ChartJS.register(
     Legend
 );
 
-const reportCards = [
-    {
-        label: 'إجمالي المبيعات',
-        value: '425,800',
-        unit: 'ج.م',
-        change: '+15.2%',
-        positive: true,
-        icon: ShoppingCart,
-        sparkline: [30, 35, 32, 40, 38, 45, 42, 48, 50, 55]
-    },
-    {
-        label: 'صافي الأرباح',
-        value: '89,300',
-        unit: 'ج.م',
-        change: '+8.5%',
-        positive: true,
-        icon: DollarSign,
-        sparkline: [15, 18, 16, 20, 22, 19, 24, 26, 25, 28]
-    },
-    {
-        label: 'إجمالي الخصومات',
-        value: '12,450',
-        unit: 'ج.م',
-        change: '-5.2%',
-        positive: true,
-        icon: Percent,
-        sparkline: [8, 10, 12, 11, 9, 8, 7, 6, 7, 5]
-    },
-    {
-        label: 'تكلفة الشحن',
-        value: '18,200',
-        unit: 'ج.م',
-        change: '+3.1%',
-        positive: false,
-        icon: Truck,
-        sparkline: [10, 12, 11, 13, 15, 14, 16, 17, 18, 19]
-    },
-    {
-        label: 'المرتجعات',
-        value: '8,650',
-        unit: 'ج.م',
-        change: '-12.4%',
-        positive: true,
-        icon: RotateCcw,
-        sparkline: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6]
-    },
-    {
-        label: 'نسبة الإلغاء',
-        value: '4.2%',
-        change: '-1.8%',
-        positive: true,
-        icon: Clock,
-        sparkline: [8, 7, 6, 7, 6, 5, 5, 4, 4, 3]
-    },
-];
+
 
 const topCities = [
     { city: 'القاهرة', orders: 892, revenue: '178,400 ج.م', percentage: 42 },
@@ -128,6 +75,8 @@ const topProducts = [
 ];
 
 export default function Reports() {
+    const { t, isRTL } = useLanguage();
+
     const salesByShippingData = {
         labels: ['شحن المنصة الكامل', 'بيع مباشر + شحن المنصة', 'شحن ذاتي'],
         datasets: [
@@ -162,12 +111,12 @@ export default function Reports() {
             {/* Page Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900">التقارير والتحليلات</h2>
-                    <p className="text-sm text-slate-500 mt-1">نظرة شاملة على أداء متجرك</p>
+                    <h2 className="text-2xl font-bold text-slate-900">{t('reports.title')}</h2>
+                    <p className="text-sm text-slate-500 mt-1">{t('reports.subtitle')}</p>
                 </div>
                 <Button className="bg-blue-600 hover:bg-blue-700 gap-2">
                     <Download size={18} />
-                    تصدير التقرير
+                    {t('reports.downloadReport')}
                 </Button>
             </div>
 
@@ -179,8 +128,8 @@ export default function Reports() {
                             <ShoppingCart size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">إجمالي المبيعات</p>
-                            <p className="text-lg font-bold text-slate-900">425,800 ج.م</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('reports.totalSales')}</p>
+                            <p className="text-lg font-bold text-slate-900">425,800 {t('home.currency')}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -190,8 +139,8 @@ export default function Reports() {
                             <DollarSign size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">صافي الأرباح</p>
-                            <p className="text-lg font-bold text-slate-900">89,300 ج.م</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('reports.netProfit') || 'Net Profit'}</p>
+                            <p className="text-lg font-bold text-slate-900">89,300 {t('home.currency')}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -201,8 +150,8 @@ export default function Reports() {
                             <Percent size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">الخصومات</p>
-                            <p className="text-lg font-bold text-slate-900">12,450 ج.م</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('reports.discounts') || 'Discounts'}</p>
+                            <p className="text-lg font-bold text-slate-900">12,450 {t('home.currency')}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -212,8 +161,8 @@ export default function Reports() {
                             <Truck size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">تكلفة الشحن</p>
-                            <p className="text-lg font-bold text-slate-900">18,200 ج.م</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('reports.shippingCost') || 'Shipping Cost'}</p>
+                            <p className="text-lg font-bold text-slate-900">18,200 {t('home.currency')}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -223,8 +172,8 @@ export default function Reports() {
                             <RotateCcw size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">المرتجعات</p>
-                            <p className="text-lg font-bold text-slate-900">8,650 ج.م</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('reports.returnRate') || 'Returns'}</p>
+                            <p className="text-lg font-bold text-slate-900">8,650 {t('home.currency')}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -235,7 +184,7 @@ export default function Reports() {
                 {/* Sales by Shipping Type */}
                 <Card className="bg-white border-slate-200 shadow-sm">
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-lg font-bold text-slate-800">المبيعات حسب نوع الشحن</CardTitle>
+                        <CardTitle className="text-lg font-bold text-slate-800">{t('reports.salesByShipping') || 'Sales by Shipping Type'}</CardTitle>
                     </CardHeader>
                     <CardContent className="h-[220px] p-4">
                         <Doughnut
@@ -246,12 +195,21 @@ export default function Reports() {
                                 plugins: {
                                     legend: {
                                         position: 'bottom',
-                                        rtl: true,
                                         labels: {
                                             color: '#64748b',
                                             padding: 15,
-                                            font: { family: 'Cairo', size: 11 }
+                                            font: { family: 'Cairo' }
                                         }
+                                    },
+                                    tooltip: {
+                                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                        titleColor: '#0f172a',
+                                        bodyColor: '#334155',
+                                        borderColor: '#e2e8f0',
+                                        borderWidth: 1,
+                                        padding: 12,
+                                        titleFont: { family: 'Cairo', size: 13, weight: 'bold' },
+                                        bodyFont: { family: 'Cairo', size: 12 },
                                     }
                                 },
                                 cutout: '65%'
@@ -263,7 +221,7 @@ export default function Reports() {
                 {/* Monthly Sales & Profits */}
                 <Card className="bg-white border-slate-200 shadow-sm lg:col-span-2">
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-lg font-bold text-slate-800">المبيعات والأرباح الشهرية</CardTitle>
+                        <CardTitle className="text-lg font-bold text-slate-800">{t('reports.monthlySalesProfit') || 'Monthly Sales & Profits'}</CardTitle>
                     </CardHeader>
                     <CardContent className="h-[220px] p-4">
                         <Bar
@@ -271,17 +229,30 @@ export default function Reports() {
                             options={{
                                 responsive: true,
                                 maintainAspectRatio: false,
+                                interaction: {
+                                    mode: 'index',
+                                    intersect: false,
+                                },
                                 plugins: {
                                     legend: {
                                         position: 'top',
-                                        rtl: true,
                                         align: 'end',
                                         labels: {
                                             color: '#64748b',
-                                            font: { family: 'Cairo', size: 12 },
+                                            font: { family: 'Cairo' },
                                             usePointStyle: true,
                                             boxWidth: 8
                                         }
+                                    },
+                                    tooltip: {
+                                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                        titleColor: '#0f172a',
+                                        bodyColor: '#334155',
+                                        borderColor: '#e2e8f0',
+                                        borderWidth: 1,
+                                        padding: 12,
+                                        titleFont: { family: 'Cairo', size: 13, weight: 'bold' },
+                                        bodyFont: { family: 'Cairo', size: 12 },
                                     }
                                 },
                                 scales: {
@@ -290,6 +261,7 @@ export default function Reports() {
                                         ticks: { color: '#64748b', font: { family: 'Cairo' } }
                                     },
                                     y: {
+                                        position: 'right',
                                         grid: { color: '#f1f5f9' },
                                         ticks: { color: '#64748b', font: { family: 'Cairo' } },
                                         border: { display: false }
@@ -308,17 +280,17 @@ export default function Reports() {
                     <CardHeader className="pb-4 border-b border-slate-50">
                         <div className="flex items-center gap-2">
                             <MapPin size={20} className="text-blue-600" />
-                            <CardTitle className="text-lg font-bold text-slate-800">المدن الأكثر طلباً</CardTitle>
+                            <CardTitle className="text-lg font-bold text-slate-800">{t('reports.topCities')}</CardTitle>
                         </div>
                     </CardHeader>
                     <CardContent className="p-0">
                         <Table>
                             <TableHeader className="bg-slate-50/50">
                                 <TableRow className="hover:bg-transparent border-slate-100">
-                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المدينة</TableHead>
-                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الطلبات</TableHead>
-                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الإيرادات</TableHead>
-                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">النسبة</TableHead>
+                                    <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('reports.city') || 'City'}</TableHead>
+                                    <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('ads.orders')}</TableHead>
+                                    <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('ads.revenue')}</TableHead>
+                                    <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('reports.percentage') || 'Percentage'}</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -347,17 +319,17 @@ export default function Reports() {
                     <CardHeader className="pb-4 border-b border-slate-50">
                         <div className="flex items-center gap-2">
                             <Package size={20} className="text-blue-600" />
-                            <CardTitle className="text-lg font-bold text-slate-800">أفضل المنتجات أداءً</CardTitle>
+                            <CardTitle className="text-lg font-bold text-slate-800">{t('reports.topProducts')}</CardTitle>
                         </div>
                     </CardHeader>
                     <CardContent className="p-0">
                         <Table>
                             <TableHeader className="bg-slate-50/50">
                                 <TableRow className="hover:bg-transparent border-slate-100">
-                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتج</TableHead>
-                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المبيعات</TableHead>
-                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الإيرادات</TableHead>
-                                    <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الأداء</TableHead>
+                                    <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('returns.product')}</TableHead>
+                                    <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('home.sales')}</TableHead>
+                                    <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('ads.revenue')}</TableHead>
+                                    <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">{t('reports.performance') || 'Performance'}</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -371,7 +343,7 @@ export default function Reports() {
                                                 product.performance === 'good' ? 'bg-blue-50 text-blue-700' :
                                                     'bg-slate-100 text-slate-600'
                                                 }`}>
-                                                {product.performance === 'excellent' ? 'ممتاز' : product.performance === 'good' ? 'جيد' : 'متوسط'}
+                                                {product.performance === 'excellent' ? (t('reports.excellent') || 'Excellent') : product.performance === 'good' ? (t('reports.good') || 'Good') : (t('reports.average') || 'Average')}
                                             </Badge>
                                         </TableCell>
                                     </TableRow>
@@ -385,31 +357,31 @@ export default function Reports() {
             {/* Simple Operational Stats */}
             <Card className="bg-white border-slate-200 shadow-sm">
                 <CardHeader className="pb-4">
-                    <CardTitle className="text-lg font-bold text-slate-800">الإحصائيات التشغيلية</CardTitle>
+                    <CardTitle className="text-lg font-bold text-slate-800">{t('reports.operationalStats') || 'Operational Statistics'}</CardTitle>
                 </CardHeader>
                 <CardContent className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
-                        <p className="text-sm font-medium text-slate-500 mb-2">سرعة التجهيز</p>
-                        <p className="text-3xl font-bold text-slate-900 mb-1">2.5 ساعة</p>
-                        <p className="text-xs text-slate-400">متوسط وقت التجهيز</p>
+                        <p className="text-sm font-medium text-slate-500 mb-2">{t('reports.processingSpeed') || 'Processing Speed'}</p>
+                        <p className="text-3xl font-bold text-slate-900 mb-1">2.5 {t('reports.hours') || 'hours'}</p>
+                        <p className="text-xs text-slate-400">{t('reports.avgProcessingTime') || 'Average processing time'}</p>
                     </div>
 
                     <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
-                        <p className="text-sm font-medium text-slate-500 mb-2">نسبة التسليم الناجح</p>
+                        <p className="text-sm font-medium text-slate-500 mb-2">{t('reports.deliveryRate')}</p>
                         <p className="text-3xl font-bold text-slate-900 mb-1">94.5%</p>
-                        <p className="text-xs text-slate-400">من إجمالي الشحنات</p>
+                        <p className="text-xs text-slate-400">{t('reports.ofTotalShipments') || 'Of total shipments'}</p>
                     </div>
 
                     <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
-                        <p className="text-sm font-medium text-slate-500 mb-2">التكلفة التشغيلية</p>
-                        <p className="text-3xl font-bold text-slate-900 mb-1">18,200 ج.م</p>
-                        <p className="text-xs text-slate-400">هذا الشهر</p>
+                        <p className="text-sm font-medium text-slate-500 mb-2">{t('reports.operationalCost') || 'Operational Cost'}</p>
+                        <p className="text-3xl font-bold text-slate-900 mb-1">18,200 {t('home.currency')}</p>
+                        <p className="text-xs text-slate-400">{t('reports.thisMonth') || 'This month'}</p>
                     </div>
 
                     <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
-                        <p className="text-sm font-medium text-slate-500 mb-2">معدل رضا العملاء</p>
+                        <p className="text-sm font-medium text-slate-500 mb-2">{t('reports.customerSatisfaction') || 'Customer Satisfaction'}</p>
                         <p className="text-3xl font-bold text-slate-900 mb-1">4.8/5</p>
-                        <p className="text-xs text-slate-400">من 2,450 تقييم</p>
+                        <p className="text-xs text-slate-400">{t('reports.fromReviews') || 'From 2,450 reviews'}</p>
                     </div>
                 </CardContent>
             </Card>

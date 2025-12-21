@@ -1,10 +1,9 @@
-import { Star, ThumbsUp, ThumbsDown, MessageSquare } from 'lucide-react';
-
-const stats = [
-    { label: 'متوسط التقييم', value: '4.8', icon: Star, iconBg: '#fef3c7', iconColor: '#f59e0b' },
-    { label: 'تقييمات إيجابية', value: '2,245', icon: ThumbsUp, iconBg: '#d1fae5', iconColor: '#10b981' },
-    { label: 'تقييمات سلبية', value: '45', icon: ThumbsDown, iconBg: '#fee2e2', iconColor: '#ef4444' },
-];
+import { Star, ThumbsUp, ThumbsDown, MessageSquare, Quote } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 
 const reviews = [
     {
@@ -59,7 +58,7 @@ const reviews = [
 
 const renderStars = (rating) => {
     return (
-        <div style={{ display: 'flex', gap: '2px' }}>
+        <div className="flex gap-0.5">
             {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                     key={star}
@@ -73,91 +72,80 @@ const renderStars = (rating) => {
 };
 
 export default function Reviews() {
+    const { t } = useLanguage();
+
+    const stats = [
+        { label: t('reviews.avgRating'), value: '4.8', icon: Star, iconBg: 'bg-amber-50', iconColor: 'text-amber-600' },
+        { label: t('reviews.positiveReviews'), value: '2,245', icon: ThumbsUp, iconBg: 'bg-emerald-50', iconColor: 'text-emerald-600' },
+        { label: t('reviews.negativeReviews'), value: '45', icon: ThumbsDown, iconBg: 'bg-red-50', iconColor: 'text-red-600' },
+    ];
+
     return (
         <div>
             {/* Header */}
-            <div style={{ marginBottom: '24px' }}>
-                <h2 className="page-title">التقييمات</h2>
-                <p className="page-subtitle">إدارة تقييمات العملاء والرد عليها</p>
+            <div className="mb-6">
+                <h2 className="page-title">{t('reviews.title')}</h2>
+                <p className="page-subtitle">{t('reviews.subtitle')}</p>
             </div>
 
             {/* Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '32px' }}>
+            <div className="grid grid-cols-3 gap-4 mb-8">
                 {stats.map((stat, idx) => {
                     const IconComponent = stat.icon;
                     return (
-                        <div key={idx} style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-                            <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: stat.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
-                                <IconComponent size={22} color={stat.iconColor} />
-                            </div>
-                            <p style={{ fontSize: '28px', fontWeight: 700, color: '#1e293b', marginBottom: '4px' }}>{stat.value}</p>
-                            <p style={{ fontSize: '13px', color: '#64748b' }}>{stat.label}</p>
-                        </div>
+                        <Card key={idx} className="border-slate-100 shadow-sm">
+                            <CardContent className="p-5 flex flex-col items-center text-center">
+                                <div className={`w-11 h-11 rounded-full ${stat.iconBg} flex items-center justify-center mb-3`}>
+                                    <IconComponent size={22} className={stat.iconColor} />
+                                </div>
+                                <p className="text-3xl font-bold text-slate-900 mb-1">{stat.value}</p>
+                                <p className="text-xs text-slate-600">{stat.label}</p>
+                            </CardContent>
+                        </Card>
                     );
                 })}
             </div>
 
             {/* Reviews Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+            <div className="grid grid-cols-3 gap-5">
                 {reviews.map((review) => (
-                    <div
+                    <Card
                         key={review.id}
-                        style={{
-                            background: 'white',
-                            borderRadius: '16px',
-                            padding: '24px',
-                            border: '1px solid #e2e8f0',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            position: 'relative',
-                            transition: 'box-shadow 0.2s, transform 0.2s',
-                            cursor: 'pointer'
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.08)';
-                            e.currentTarget.style.transform = 'translateY(-2px)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.boxShadow = 'none';
-                            e.currentTarget.style.transform = 'translateY(0)';
-                        }}
+                        className="border-slate-100 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 cursor-pointer relative"
                     >
-                        {/* Quote Icon */}
-                        <div style={{ position: 'absolute', top: '20px', left: '20px', opacity: 0.15 }}>
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="#2563eb">
-                                <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z" />
-                            </svg>
-                        </div>
-
-                        {/* Stars */}
-                        <div style={{ marginBottom: '16px' }}>
-                            {renderStars(review.rating)}
-                        </div>
-
-                        {/* Review Text */}
-                        <p style={{
-                            fontSize: '14px',
-                            color: '#1e293b',
-                            lineHeight: 1.7,
-                            flex: 1,
-                            marginBottom: '20px'
-                        }}>
-                            {review.text}
-                        </p>
-
-                        {/* Customer Info */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '16px', borderTop: '1px solid #f1f5f9' }}>
-                            <img
-                                src={review.customer.avatar}
-                                alt=""
-                                style={{ width: '40px', height: '40px', borderRadius: '50%' }}
-                            />
-                            <div>
-                                <p style={{ fontWeight: 600, fontSize: '14px', color: '#1e293b' }}>{review.customer.name}</p>
-                                <p style={{ fontSize: '12px', color: '#2563eb' }}>{review.product}</p>
+                        <CardContent className="p-6 flex flex-col">
+                            {/* Quote Icon */}
+                            <div className="absolute top-5 left-5 opacity-10">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="#2563eb">
+                                    <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z" />
+                                </svg>
                             </div>
-                        </div>
-                    </div>
+
+                            {/* Stars */}
+                            <div className="mb-4">
+                                {renderStars(review.rating)}
+                            </div>
+
+                            {/* Review Text */}
+                            <p className="text-sm text-slate-700 leading-relaxed flex-1 mb-5">
+                                {review.text}
+                            </p>
+
+                            {/* Customer Info */}
+                            <div className="pt-4 border-t border-slate-50">
+                                <div className="flex items-center gap-3">
+                                    <Avatar className="h-10 w-10">
+                                        <AvatarImage src={review.customer.avatar} alt={review.customer.name} />
+                                        <AvatarFallback>{review.customer.name.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <p className="font-semibold text-sm text-slate-900">{review.customer.name}</p>
+                                        <p className="text-xs text-blue-600">{review.product}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 ))}
             </div>
         </div>

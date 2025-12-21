@@ -1,91 +1,78 @@
-import { Menu } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import SearchIcon from '../../assets/icons/material-symbols-light_search.svg';
-import NightIcon from '../../assets/icons/fluent-mdl2_clear-night.svg';
-import LanguageIcon from '../../assets/icons/famicons_language-outline.svg';
-import QuestionIcon from '../../assets/icons/mingcute_question-line.svg';
-import SettingsIcon from '../../assets/icons/uil_setting.svg';
+import { Badge } from 'lucide-react';
+import {
+    Search,
+    Moon,
+    Globe,
+    ShoppingCart,
+    Settings,
+    Bell,
+    User,
+    Menu
+} from 'lucide-react';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import Avatar from '../../assets/image/avater.png';
 
-export default function Header({ onMenuClick }) {
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-        localStorage.removeItem('isAuthenticated');
-        localStorage.removeItem('sellerData');
-        navigate('/login');
-    };
+export default function Header() {
     return (
-        <header className="header">
-            {/* Right Side - Search + Menu */}
-            <div className="header-right">
-                {/* Mobile Menu Button */}
-                <button
-                    className="header-menu-btn"
-                    onClick={onMenuClick}
-                    aria-label="فتح القائمة"
-                >
-                    <Menu size={22} />
-                </button>
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4 sticky top-0 z-10">
+            <div className="flex items-center gap-2">
+                <SidebarTrigger className="-ml-1" />
+                <Separator orientation="vertical" className="mr-2 h-4" />
+            </div>
 
-                <div className="header-search">
-                    <img src={SearchIcon} alt="" className="header-search-icon" />
-                    <input type="text" placeholder="ابحث عن شيء..." />
+            <div className="flex flex-1 items-center gap-4 md:gap-6">
+                {/* Search */}
+                <div className="relative flex-1 max-w-md hidden md:flex">
+                    <Search className="absolute right-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                        type="search"
+                        placeholder="ابحث عن شيء..."
+                        className="w-full rounded-full bg-background pr-8 pl-4 md:w-[300px] lg:w-[400px]"
+                    />
                 </div>
             </div>
 
-            {/* Left Side - Icons & Profile */}
-            <div className="header-left">
+            <div className="flex items-center gap-2 md:gap-4">
+                {/* Mobile Search Trigger (Optional - can add if needed) */}
+
                 {/* Language */}
-                <button className="header-icon-btn" title="اللغة">
-                    <img src={LanguageIcon} alt="" style={{ width: 20, height: 20 }} />
-                </button>
+                <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <Globe className="h-5 w-5" />
+                    <span className="sr-only">اللغة</span>
+                </Button>
 
                 {/* Night Mode */}
-                <button className="header-icon-btn" title="الوضع الليلي">
-                    <img src={NightIcon} alt="" style={{ width: 20, height: 20 }} />
-                </button>
+                <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <Moon className="h-5 w-5" />
+                    <span className="sr-only">الوضع الليلي</span>
+                </Button>
 
-                {/* Shopping Cart with badge */}
-                <button className="header-icon-btn" title="السلة" style={{ position: 'relative' }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                    <span className="header-badge" style={{
-                        position: 'absolute',
-                        top: 0,
-                        right: 0,
-                        background: '#ef4444',
-                        color: 'white',
-                        fontSize: 10,
-                        fontWeight: 600,
-                        width: 16,
-                        height: 16,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}>9</span>
-                </button>
+                {/* Shopping Cart */}
+                <Button variant="ghost" size="icon" className="h-9 w-9 relative">
+                    <ShoppingCart className="h-5 w-5" />
+                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-[10px] font-bold text-white flex items-center justify-center">
+                        9
+                    </span>
+                    <span className="sr-only">السلة</span>
+                </Button>
 
-
-
-                {/* Avatar */}
-                <div className="header-profile">
+                {/* Profile */}
+                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full overflow-hidden">
                     <img
                         src={Avatar}
                         alt="Profile"
-                        className="header-profile-avatar"
-                        style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover' }}
+                        className="h-full w-full object-cover"
                     />
-                </div>
+                </Button>
 
                 {/* Settings */}
-                <button className="header-icon-btn" title="الإعدادات">
-                    <img src={SettingsIcon} alt="" style={{ width: 20, height: 20 }} />
-                </button>
+                <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <Settings className="h-5 w-5" />
+                    <span className="sr-only">الإعدادات</span>
+                </Button>
             </div>
         </header>
     );

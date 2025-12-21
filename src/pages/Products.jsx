@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 import {
     Package,
     Plus,
@@ -118,7 +119,25 @@ const filters = [
 
 export default function Products() {
     const navigate = useNavigate();
+    const { t } = useLanguage();
     const [activeFilter, setActiveFilter] = useState('all');
+
+    // Dynamic configs with translations
+    const statusConfig = {
+        active: { label: t('products.active'), color: 'bg-emerald-50 text-emerald-700', icon: CheckCircle },
+        pending_review: { label: t('products.pendingReview'), color: 'bg-amber-50 text-amber-700', icon: Clock },
+        rejected: { label: t('products.rejected'), color: 'bg-rose-50 text-rose-700', icon: XCircle },
+        low_stock: { label: t('products.outOfStock'), color: 'bg-orange-50 text-orange-700', icon: AlertTriangle },
+        out_of_stock: { label: t('products.outOfStock'), color: 'bg-slate-100 text-slate-600', icon: AlertTriangle },
+    };
+
+    const filters = [
+        { id: 'all', label: t('products.allProducts'), count: 5 },
+        { id: 'active', label: t('products.active'), count: 1 },
+        { id: 'pending_review', label: t('products.pendingReview'), count: 1 },
+        { id: 'rejected', label: t('products.rejected'), count: 1 },
+        { id: 'out_of_stock', label: t('products.outOfStock'), count: 2 },
+    ];
 
     const filteredProducts = activeFilter === 'all'
         ? products
@@ -129,12 +148,12 @@ export default function Products() {
             {/* Page Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900">المنتجات</h2>
-                    <p className="text-sm text-slate-500 mt-1">إدارة منتجات متجرك ومتابعة المخزون</p>
+                    <h2 className="text-2xl font-bold text-slate-900">{t('products.title')}</h2>
+                    <p className="text-sm text-slate-500 mt-1">{t('products.subtitle')}</p>
                 </div>
                 <Button onClick={() => navigate('/products/add')} className="bg-blue-600 hover:bg-blue-700 gap-2 h-11">
                     <Plus size={18} />
-                    إضافة منتج
+                    {t('products.addProduct')}
                 </Button>
             </div>
 
@@ -148,14 +167,14 @@ export default function Products() {
                                 key={filter.id}
                                 onClick={() => setActiveFilter(filter.id)}
                                 className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeFilter === filter.id
-                                        ? 'border-blue-600 text-blue-600'
-                                        : 'border-transparent text-slate-500 hover:text-slate-700'
+                                    ? 'border-blue-600 text-blue-600'
+                                    : 'border-transparent text-slate-500 hover:text-slate-700'
                                     }`}
                             >
                                 {filter.label}
                                 <span className={`mr-2 text-xs px-1.5 py-0.5 rounded-full ${activeFilter === filter.id
-                                        ? 'bg-blue-100 text-blue-600'
-                                        : 'bg-slate-100 text-slate-500'
+                                    ? 'bg-blue-100 text-blue-600'
+                                    : 'bg-slate-100 text-slate-500'
                                     }`}>
                                     {filter.count}
                                 </span>
@@ -169,7 +188,7 @@ export default function Products() {
                     <div className="relative w-full md:w-80">
                         <Search className="absolute right-3 top-2.5 h-4 w-4 text-slate-400" />
                         <Input
-                            placeholder="بحث عن منتج باسمه أو SKU..."
+                            placeholder={t('products.searchPlaceholder')}
                             className="pr-10 bg-slate-50 border-slate-200"
                         />
                     </div>
@@ -178,15 +197,15 @@ export default function Products() {
                 {/* Table */}
                 <div className="overflow-x-auto">
                     <Table>
-                        <TableHeader className="bg-slate-50/80">
+                        <TableHeader>
                             <TableRow className="hover:bg-transparent border-slate-100">
-                                <TableHead className="text-right h-12 text-xs font-semibold text-slate-600 w-[300px]">المنتج</TableHead>
-                                <TableHead className="text-right h-12 text-xs font-semibold text-slate-600">الفئة</TableHead>
-                                <TableHead className="text-right h-12 text-xs font-semibold text-slate-600">السعر</TableHead>
-                                <TableHead className="text-center h-12 text-xs font-semibold text-slate-600">الكمية</TableHead>
-                                <TableHead className="text-center h-12 text-xs font-semibold text-slate-600">نوع المخزون</TableHead>
-                                <TableHead className="text-center h-12 text-xs font-semibold text-slate-600">الحالة</TableHead>
-                                <TableHead className="text-center h-12 w-[60px]"></TableHead>
+                                <TableHead className="text-right font-semibold text-slate-600 w-[300px]">{t('products.productName')}</TableHead>
+                                <TableHead className="text-right font-semibold text-slate-600">{t('products.category')}</TableHead>
+                                <TableHead className="text-right font-semibold text-slate-600">{t('products.price')}</TableHead>
+                                <TableHead className="text-center font-semibold text-slate-600">{t('products.quantity')}</TableHead>
+                                <TableHead className="text-center font-semibold text-slate-600">{t('inventory.stockType')}</TableHead>
+                                <TableHead className="text-center font-semibold text-slate-600">{t('products.status')}</TableHead>
+                                <TableHead className="text-center w-[60px]"></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -195,7 +214,7 @@ export default function Products() {
                                 const StatusIcon = status.icon;
                                 const inventoryType = inventoryTypeConfig[product.inventoryType];
                                 return (
-                                    <TableRow key={product.id} className="border-slate-50 hover:bg-slate-50/50">
+                                    <TableRow key={product.id} className="hover:bg-slate-50/50">
                                         <TableCell>
                                             <div className="flex items-center gap-3">
                                                 <div className="w-12 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0 border border-slate-100">
@@ -234,23 +253,23 @@ export default function Products() {
                                         <TableCell>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
-                                                    <button style={{ width: '36px', height: '36px', borderRadius: '8px', border: 'none', background: '#f1f5f9', color: '#64748b', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                    <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-600 hover:bg-slate-100">
                                                         <MoreHorizontal size={16} />
-                                                    </button>
+                                                    </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className="w-[160px] bg-white">
                                                     <DropdownMenuItem className="gap-2 flex-row-reverse cursor-pointer">
                                                         <Eye size={14} />
-                                                        عرض التفاصيل
+                                                        {t('common.viewDetails')}
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem className="gap-2 flex-row-reverse cursor-pointer">
                                                         <Edit size={14} />
-                                                        تعديل المنتج
+                                                        {t('common.editProduct')}
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem className="gap-2 flex-row-reverse text-red-600 focus:text-red-600 cursor-pointer">
                                                         <Trash2 size={14} />
-                                                        حذف المنتج
+                                                        {t('common.deleteProduct')}
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>

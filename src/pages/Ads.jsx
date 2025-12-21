@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import React from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 import {
     Card,
@@ -103,49 +104,7 @@ const ads = [
     },
 ];
 
-const statsCards = [
-    {
-        id: 1,
-        label: 'إجمالي المشاهدات',
-        value: '20,400',
-        change: '+12.5%',
-        positive: true,
-        color: '#3b82f6',
-        bgColor: '#eff6ff',
-        sparkline: [8, 12, 10, 15, 18, 14, 20, 22, 18, 25]
-    },
-    {
-        id: 2,
-        label: 'النقرات',
-        value: '1,490',
-        change: '+8.2%',
-        positive: true,
-        color: '#8b5cf6',
-        bgColor: '#faf5ff',
-        sparkline: [5, 8, 12, 10, 14, 16, 12, 18, 15, 20]
-    },
-    {
-        id: 3,
-        label: 'الطلبات',
-        value: '85',
-        change: '+15.3%',
-        positive: true,
-        color: '#10b981',
-        bgColor: '#f0fdf4',
-        sparkline: [3, 5, 4, 8, 10, 7, 12, 14, 11, 16]
-    },
-    {
-        id: 4,
-        label: 'العائد',
-        value: '96,700',
-        unit: 'ج.م',
-        change: '+18.7%',
-        positive: true,
-        color: '#f59e0b',
-        bgColor: '#fffbeb',
-        sparkline: [10, 15, 12, 18, 22, 20, 25, 28, 24, 30]
-    },
-];
+
 
 const paymentHistory = [
     { id: 1, amount: 5000, date: '2024-12-10', type: 'دفع إعلان', product: 'Galaxy S24', status: 'success' },
@@ -154,6 +113,7 @@ const paymentHistory = [
 ];
 
 export default function Ads() {
+    const { t } = useLanguage();
     const [showModal, setShowModal] = useState(false);
     const [currentStep, setCurrentStep] = useState(1);
     const [showBudgetDepletedState, setShowBudgetDepletedState] = useState(false);
@@ -164,15 +124,16 @@ export default function Ads() {
             {/* Page Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900">الإعلانات المدفوعة</h2>
-                    <p className="text-sm text-slate-500 mt-1">إدارة حملاتك الإعلانية وتتبع الأداء</p>
+                    <h2 className="text-2xl font-bold text-slate-900">{t('ads.title')}</h2>
+                    <p className="text-sm text-slate-500 mt-1">{t('ads.subtitle')}</p>
                 </div>
                 <Button onClick={() => setShowModal(true)} className="bg-blue-600 hover:bg-blue-700 gap-2">
                     <Plus size={18} />
-                    إنشاء إعلان جديد
+                    {t('ads.createAd')}
                 </Button>
             </div>
 
+            {/* Stats Cards */}
             {/* Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Card className="bg-white border-slate-200 shadow-sm">
@@ -181,7 +142,7 @@ export default function Ads() {
                             <Eye size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">إجمالي المشاهدات</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('ads.totalViews')}</p>
                             <p className="text-lg font-bold text-slate-900">20,400</p>
                         </div>
                     </CardContent>
@@ -192,7 +153,7 @@ export default function Ads() {
                             <Target size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">النقرات</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('ads.clicks')}</p>
                             <p className="text-lg font-bold text-slate-900">1,490</p>
                         </div>
                     </CardContent>
@@ -203,7 +164,7 @@ export default function Ads() {
                             <ShoppingCart size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">الطلبات</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('ads.orders')}</p>
                             <p className="text-lg font-bold text-slate-900">85</p>
                         </div>
                     </CardContent>
@@ -214,8 +175,8 @@ export default function Ads() {
                             <DollarSign size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-500 font-medium">العائد</p>
-                            <p className="text-lg font-bold text-slate-900">96,700 ج.م</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('ads.revenue')}</p>
+                            <p className="text-lg font-bold text-slate-900">96,700 {t('home.currency')}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -277,13 +238,13 @@ export default function Ads() {
                     <Table>
                         <TableHeader className="bg-slate-50/50">
                             <TableRow className="hover:bg-transparent border-slate-100">
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المنتج</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الصفحة</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الميزانية</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المشاهدات</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">النقرات</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الطلبات</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">العائد</TableHead>
+                                <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">المنتج</TableHead>
+                                <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">الصفحة</TableHead>
+                                <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">الميزانية</TableHead>
+                                <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">المشاهدات</TableHead>
+                                <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">النقرات</TableHead>
+                                <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">الطلبات</TableHead>
+                                <TableHead className="text-start h-10 text-xs font-semibold text-slate-600">العائد</TableHead>
                                 <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الحالة</TableHead>
                                 <TableHead className="text-center h-10 text-xs font-semibold text-slate-600">الإجراءات</TableHead>
                             </TableRow>

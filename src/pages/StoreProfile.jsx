@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 import {
     Store,
     Camera,
@@ -21,7 +22,8 @@ import {
     Package,
     RotateCcw,
     Headphones,
-    Building2
+    Building2,
+    Edit2
 } from 'lucide-react';
 
 // Import social media icons
@@ -51,8 +53,17 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetFooter,
+} from "@/components/ui/sheet";
 
 export default function StoreProfile() {
+    const { t } = useLanguage();
     const [isStoreOpen, setIsStoreOpen] = useState(true);
 
     // Basic Identity
@@ -91,20 +102,86 @@ export default function StoreProfile() {
     const [city, setCity] = useState('أسوان');
     const [address, setAddress] = useState('56 شارع عبد السلام عارف بأسوان');
 
+    // Policy Sheet State
+    const [isPolicySheetOpen, setIsPolicySheetOpen] = useState(false);
+    const [currentPolicy, setCurrentPolicy] = useState(null);
+    const [tempPolicyContent, setTempPolicyContent] = useState('');
+
+    const policies = [
+        {
+            id: 'shipping',
+            label: t('storeProfile.shipping'),
+            icon: Truck,
+            color: 'blue',
+            value: shippingPolicy,
+            setValue: setShippingPolicy,
+            placeholder: t('storeProfile.shippingPlaceholder')
+        },
+        {
+            id: 'return',
+            label: t('storeProfile.return'),
+            icon: RotateCcw,
+            color: 'rose',
+            value: returnPolicy,
+            setValue: setReturnPolicy,
+            placeholder: t('storeProfile.returnPlaceholder')
+        },
+        {
+            id: 'warranty',
+            label: t('storeProfile.warranty'),
+            icon: ShieldCheck,
+            color: 'emerald',
+            value: warrantyPolicy,
+            setValue: setWarrantyPolicy,
+            placeholder: t('storeProfile.warrantyPlaceholder')
+        },
+        {
+            id: 'replacement',
+            label: t('storeProfile.replacement'),
+            icon: Package,
+            color: 'amber',
+            value: replacementPolicy,
+            setValue: setReplacementPolicy,
+            placeholder: t('storeProfile.replacementPlaceholder')
+        },
+        {
+            id: 'packaging',
+            label: t('storeProfile.packaging'),
+            icon: Package,
+            color: 'purple',
+            value: packagingPolicy,
+            setValue: setPackagingPolicy,
+            placeholder: t('storeProfile.packagingPlaceholder')
+        }
+    ];
+
+    const handleOpenPolicy = (policy) => {
+        setCurrentPolicy(policy);
+        setTempPolicyContent(policy.value);
+        setIsPolicySheetOpen(true);
+    };
+
+    const handleSavePolicy = () => {
+        if (currentPolicy) {
+            currentPolicy.setValue(tempPolicyContent);
+            setIsPolicySheetOpen(false);
+        }
+    };
+
     return (
         <div className="flex flex-col gap-8">
             {/* Page Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900">إعدادات ملف المتجر</h2>
-                    <p className="text-sm text-slate-500 mt-1">إدارة بيانات المتجر، السياسات، وإعدادات التشغيل</p>
+                    <h2 className="text-2xl font-bold text-slate-900">{t('storeProfile.title')}</h2>
+                    <p className="text-sm text-slate-500 mt-1">{t('storeProfile.subtitle')}</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <Button variant="outline" className="bg-white border-slate-200 text-slate-700 hover:bg-slate-50">
-                        معاينة الصفحة
+                        {t('storeProfile.previewPage')}
                     </Button>
                     <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-200">
-                        حفظ التغييرات
+                        {t('common.saveChanges')}
                     </Button>
                 </div>
             </div>
@@ -117,14 +194,14 @@ export default function StoreProfile() {
                     {/* Banner & Logo Section */}
                     <Card className="border-slate-100 shadow-sm bg-white overflow-hidden">
                         <CardHeader className="pb-4 border-b border-slate-50">
-                            <CardTitle className="text-lg font-bold text-slate-800">شعار وغلاف المتجر</CardTitle>
-                            <CardDescription className="text-slate-500">صور تمثل هوية متجرك للعملاء</CardDescription>
+                            <CardTitle className="text-lg font-bold text-slate-800">{t('storeProfile.logoCover')}</CardTitle>
+                            <CardDescription className="text-slate-500">{t('storeProfile.logoCoverDesc')}</CardDescription>
                         </CardHeader>
                         <CardContent className="p-6">
                             <div className="flex gap-8 items-start">
                                 {/* Banner Upload - Main area */}
                                 <div className="flex-1 order-2">
-                                    <Label className="text-slate-700 font-medium mb-3 block">صورة الغلاف</Label>
+                                    <Label className="text-slate-700 font-medium mb-3 block">{t('storeProfile.coverImage')}</Label>
                                     <div className="h-44 rounded-xl bg-slate-100 relative overflow-hidden group border-2 border-dashed border-slate-200 hover:border-blue-300 transition-colors">
                                         <div
                                             className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
@@ -137,25 +214,25 @@ export default function StoreProfile() {
                                             className="absolute bottom-3 left-3 bg-white/95 hover:bg-white text-slate-700 shadow-md backdrop-blur-sm gap-2"
                                         >
                                             <Camera size={14} />
-                                            تغيير الغلاف
+                                            {t('storeProfile.changeCover')}
                                         </Button>
                                     </div>
                                     <p className="text-xs text-slate-400 mt-2 flex items-center gap-2">
                                         <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-                                        الأبعاد الموصى بها: 1400 × 400 بكسل
+                                        {t('storeProfile.recommendedSize')} 1400 × 400 {t('storeProfile.pixels')}
                                     </p>
                                 </div>
 
                                 {/* Logo Upload - Smaller on right */}
                                 <div className="flex flex-col items-center gap-3 order-1">
-                                    <Label className="text-slate-700 font-medium">الشعار</Label>
+                                    <Label className="text-slate-700 font-medium">{t('storeProfile.logo')}</Label>
                                     <div className="w-28 h-28 rounded-2xl border-2 border-dashed border-blue-200 bg-gradient-to-br from-blue-50 to-slate-50 flex flex-col items-center justify-center cursor-pointer hover:bg-blue-100 hover:border-blue-400 transition-all group shadow-sm">
                                         <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                                             <Camera className="w-6 h-6 text-blue-500" />
                                         </div>
-                                        <span className="text-xs font-medium text-blue-600">رفع الشعار</span>
+                                        <span className="text-xs font-medium text-blue-600">{t('storeProfile.uploadLogo')}</span>
                                     </div>
-                                    <p className="text-[10px] text-slate-400 text-center">200 × 200 بكسل</p>
+                                    <p className="text-[10px] text-slate-400 text-center">200 × 200 {t('storeProfile.pixels')}</p>
                                 </div>
                             </div>
                         </CardContent>
@@ -165,20 +242,20 @@ export default function StoreProfile() {
                     <Card className="border-slate-100 shadow-sm bg-white">
                         <CardHeader className="pb-4 border-b border-slate-50 flex flex-row items-center justify-between">
                             <div>
-                                <CardTitle className="text-lg font-bold text-slate-800">الهوية والبيانات الأساسية</CardTitle>
-                                <CardDescription className="text-slate-500">معلومات متجرك التي تظهر للعملاء</CardDescription>
+                                <CardTitle className="text-lg font-bold text-slate-800">{t('storeProfile.identityBasicData')}</CardTitle>
+                                <CardDescription className="text-slate-500">{t('storeProfile.identityDesc')}</CardDescription>
                             </div>
                             <div className="flex gap-2">
                                 {isVerified && (
                                     <Badge variant="secondary" className="bg-blue-50 text-blue-700 gap-1.5 hover:bg-blue-100 px-3 py-1">
                                         <BadgeCheck className="w-4 h-4" />
-                                        متجر موثق
+                                        {t('storeProfile.verifiedStore')}
                                     </Badge>
                                 )}
                                 {isOfficialStore && (
                                     <Badge variant="secondary" className="bg-amber-50 text-amber-700 gap-1.5 hover:bg-amber-100 px-3 py-1">
                                         <Store className="w-4 h-4" />
-                                        متجر رسمي
+                                        {t('storeProfile.officialStore')}
                                     </Badge>
                                 )}
                             </div>
@@ -187,28 +264,28 @@ export default function StoreProfile() {
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                                 {/* Store Names Card */}
-                                <div className="bg-gradient-to-br from-blue-50 to-slate-50 rounded-xl p-5 border border-blue-100/50">
-                                    <div className="flex items-center gap-2 mb-4">
+                                <div className="bg-gradient-to-br from-blue-50 to-slate-50 rounded-xl p-6 border border-blue-100/50">
+                                    <div className="flex items-center gap-2 mb-6">
                                         <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
                                             <Store className="w-4 h-4 text-white" />
                                         </div>
-                                        <h4 className="text-sm font-bold text-slate-800">اسم المتجر</h4>
+                                        <h4 className="text-sm font-bold text-slate-800">{t('storeProfile.storeName')}</h4>
                                     </div>
-                                    <div className="space-y-3">
-                                        <div>
-                                            <Label className="text-xs text-slate-500 mb-1.5 block">بالعربية</Label>
+                                    <div className="space-y-4">
+                                        <div className="space-y-2">
+                                            <Label className="text-xs text-slate-500">{t('storeProfile.inArabic')}</Label>
                                             <Input
                                                 value={storeName}
                                                 onChange={(e) => setStoreName(e.target.value)}
-                                                className="bg-white h-10 text-sm border-slate-200"
+                                                className="bg-white h-10 text-sm border-slate-200 focus-visible:ring-blue-500"
                                             />
                                         </div>
-                                        <div>
-                                            <Label className="text-xs text-slate-500 mb-1.5 block">بالإنجليزية</Label>
+                                        <div className="space-y-2">
+                                            <Label className="text-xs text-slate-500">{t('storeProfile.inEnglish')}</Label>
                                             <Input
                                                 value={storeNameEn}
                                                 onChange={(e) => setStoreNameEn(e.target.value)}
-                                                className="bg-white h-10 text-sm text-left border-slate-200"
+                                                className="bg-white h-10 text-sm text-left border-slate-200 focus-visible:ring-blue-500"
                                                 dir="ltr"
                                             />
                                         </div>
@@ -216,40 +293,44 @@ export default function StoreProfile() {
                                 </div>
 
                                 {/* Description Card */}
-                                <div className="bg-gradient-to-br from-emerald-50 to-slate-50 rounded-xl p-5 border border-emerald-100/50">
-                                    <div className="flex items-center gap-2 mb-4">
+                                <div className="bg-gradient-to-br from-emerald-50 to-slate-50 rounded-xl p-6 border border-emerald-100/50">
+                                    <div className="flex items-center gap-2 mb-6">
                                         <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
                                             <FileText className="w-4 h-4 text-white" />
                                         </div>
-                                        <h4 className="text-sm font-bold text-slate-800">وصف المتجر</h4>
+                                        <h4 className="text-sm font-bold text-slate-800">{t('storeProfile.storeDescription')}</h4>
                                     </div>
-                                    <Textarea
-                                        value={storeDescription}
-                                        onChange={(e) => setStoreDescription(e.target.value)}
-                                        rows={4}
-                                        className="bg-white resize-none text-sm border-slate-200"
-                                        placeholder="وصف مختصر وجذاب..."
-                                    />
-                                    <p className="text-[10px] text-slate-400 mt-2">يظهر في البحث وصفحة المتجر</p>
+                                    <div className="space-y-2">
+                                        <Textarea
+                                            value={storeDescription}
+                                            onChange={(e) => setStoreDescription(e.target.value)}
+                                            rows={8}
+                                            className="bg-white resize-none text-sm border-slate-200 focus-visible:ring-emerald-500 min-h-[160px]"
+                                            placeholder={t('storeProfile.descriptionPlaceholder')}
+                                        />
+                                        <p className="text-[10px] text-slate-400">{t('storeProfile.descriptionNote')}</p>
+                                    </div>
                                 </div>
 
                                 {/* Domain Card */}
-                                <div className="bg-gradient-to-br from-purple-50 to-slate-50 rounded-xl p-5 border border-purple-100/50">
-                                    <div className="flex items-center gap-2 mb-4">
+                                <div className="bg-gradient-to-br from-purple-50 to-slate-50 rounded-xl p-6 border border-purple-100/50">
+                                    <div className="flex items-center gap-2 mb-6">
                                         <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center">
                                             <Globe className="w-4 h-4 text-white" />
                                         </div>
-                                        <h4 className="text-sm font-bold text-slate-800">رابط المتجر</h4>
+                                        <h4 className="text-sm font-bold text-slate-800">{t('storeProfile.storeLink')}</h4>
                                     </div>
-                                    <div className="space-y-3">
-                                        <Input
-                                            value={website}
-                                            onChange={(e) => setWebsite(e.target.value)}
-                                            className="bg-white h-10 text-sm text-left border-slate-200"
-                                            dir="ltr"
-                                        />
+                                    <div className="space-y-4">
+                                        <div className="space-y-2">
+                                            <Input
+                                                value={website}
+                                                onChange={(e) => setWebsite(e.target.value)}
+                                                className="bg-white h-10 text-sm text-left border-slate-200 focus-visible:ring-purple-500"
+                                                dir="ltr"
+                                            />
+                                        </div>
                                         <div className="bg-white rounded-lg p-3 border border-slate-200">
-                                            <p className="text-[10px] text-slate-400 mb-1">رابط متجرك:</p>
+                                            <p className="text-[10px] text-slate-400 mb-1">{t('storeProfile.yourStoreLink')}</p>
                                             <p className="text-sm font-mono text-purple-600 font-medium truncate">
                                                 {storeNameEn.toLowerCase().replace(/\s+/g, '')}.{website}
                                             </p>
@@ -259,42 +340,42 @@ export default function StoreProfile() {
 
                             </div>
 
-                            <Separator />
+                            <Separator className="my-8" />
 
                             {/* Categories & Brand */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <Label className="text-slate-600">الفئة الرئيسية</Label>
+                                    <Label className="text-slate-600">{t('storeProfile.mainCategory')}</Label>
                                     <Select value={mainCategory} onValueChange={setMainCategory}>
-                                        <SelectTrigger className="bg-white">
-                                            <SelectValue placeholder="اختر الفئة" />
+                                        <SelectTrigger className="bg-white h-10 border-slate-200">
+                                            <SelectValue placeholder={t('storeProfile.selectCategory')} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="fashion">أزياء وموضة</SelectItem>
-                                            <SelectItem value="electronics">إلكترونيات</SelectItem>
-                                            <SelectItem value="home">منزل وديكور</SelectItem>
+                                            <SelectItem value="fashion">{t('storeProfile.fashionCategory')}</SelectItem>
+                                            <SelectItem value="electronics">{t('storeProfile.electronicsCategory')}</SelectItem>
+                                            <SelectItem value="home">{t('storeProfile.homeCategory')}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-slate-600">العلامة التجارية (للمتاجر الرسمية)</Label>
+                                    <Label className="text-slate-600">{t('storeProfile.brandName')}</Label>
                                     <Input
                                         value={brandName}
                                         onChange={(e) => setBrandName(e.target.value)}
-                                        placeholder="مثال: شاومي، سامسونج"
-                                        className="bg-white"
+                                        placeholder={t('storeProfile.brandPlaceholder')}
+                                        className="bg-white h-10 border-slate-200"
                                     />
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <Label className="text-slate-600">الفئات الفرعية</Label>
+                            <div className="space-y-2 mt-6">
+                                <Label className="text-slate-600">{t('storeProfile.subCategories')}</Label>
                                 <Input
                                     value={subCategories}
                                     onChange={(e) => setSubCategories(e.target.value)}
-                                    className="bg-white"
+                                    className="bg-white h-10 border-slate-200"
                                 />
-                                <p className="text-xs text-slate-400">افصل بين الفئات بفاصلة</p>
+                                <p className="text-xs text-slate-400">{t('storeProfile.separateByComma')}</p>
                             </div>
 
                             {/* Read-only Stats */}
@@ -304,7 +385,7 @@ export default function StoreProfile() {
                                         <Star className="w-4 h-4 fill-amber-600" />
                                     </div>
                                     <div>
-                                        <p className="text-xs text-slate-500">متوسط التقييمات</p>
+                                        <p className="text-xs text-slate-500">{t('storeProfile.avgRating')}</p>
                                         <p className="text-sm font-bold text-slate-700">4.8 / 5.0</p>
                                     </div>
                                 </div>
@@ -313,7 +394,7 @@ export default function StoreProfile() {
                                         <CalendarIcon className="w-4 h-4" />
                                     </div>
                                     <div>
-                                        <p className="text-xs text-slate-500">تاريخ التسجيل</p>
+                                        <p className="text-xs text-slate-500">{t('sellerProfile.registrationDate')}</p>
                                         <p className="text-sm font-bold text-slate-700">12 يناير 2023</p>
                                     </div>
                                 </div>
@@ -330,82 +411,66 @@ export default function StoreProfile() {
                                     <ShieldCheck className="w-5 h-5 text-indigo-600" />
                                 </div>
                                 <div>
-                                    <CardTitle className="text-lg font-bold text-slate-800">سياسات المتجر</CardTitle>
-                                    <CardDescription className="text-slate-500">السياسات التي تحكم تعاملات متجرك</CardDescription>
+                                    <CardTitle className="text-lg font-bold text-slate-800">{t('storeProfile.policies')}</CardTitle>
+                                    <CardDescription className="text-slate-500">{t('storeProfile.policiesDesc')}</CardDescription>
                                 </div>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {/* Shipping Policy */}
-                                <div className="bg-gradient-to-br from-blue-50 to-slate-50 rounded-xl p-4 border border-blue-100/50">
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <Truck className="w-4 h-4 text-blue-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">الشحن</Label>
-                                    </div>
-                                    <Textarea
-                                        value={shippingPolicy}
-                                        onChange={(e) => setShippingPolicy(e.target.value)}
-                                        placeholder="تفاصيل التوصيل..."
-                                        className="bg-white h-20 resize-none text-sm border-slate-200"
-                                    />
-                                </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {policies.map((policy) => {
+                                    const Icon = policy.icon;
+                                    const hasContent = policy.value && policy.value.length > 0;
 
-                                {/* Return Policy */}
-                                <div className="bg-gradient-to-br from-rose-50 to-slate-50 rounded-xl p-4 border border-rose-100/50">
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <RotateCcw className="w-4 h-4 text-rose-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">الإرجاع</Label>
-                                    </div>
-                                    <Textarea
-                                        value={returnPolicy}
-                                        onChange={(e) => setReturnPolicy(e.target.value)}
-                                        placeholder="شروط الإرجاع..."
-                                        className="bg-white h-20 resize-none text-sm border-slate-200"
-                                    />
-                                </div>
+                                    // Dynamic color classes based on the policy color
+                                    const bgClass = {
+                                        blue: 'from-blue-50 to-slate-50 border-blue-100/50 hover:border-blue-200',
+                                        rose: 'from-rose-50 to-slate-50 border-rose-100/50 hover:border-rose-200',
+                                        emerald: 'from-emerald-50 to-slate-50 border-emerald-100/50 hover:border-emerald-200',
+                                        amber: 'from-amber-50 to-slate-50 border-amber-100/50 hover:border-amber-200',
+                                        purple: 'from-purple-50 to-slate-50 border-purple-100/50 hover:border-purple-200',
+                                    }[policy.color] || 'from-slate-50 to-white';
 
-                                {/* Warranty Policy */}
-                                <div className="bg-gradient-to-br from-emerald-50 to-slate-50 rounded-xl p-4 border border-emerald-100/50">
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">الضمان</Label>
-                                    </div>
-                                    <Textarea
-                                        value={warrantyPolicy}
-                                        onChange={(e) => setWarrantyPolicy(e.target.value)}
-                                        placeholder="سياسة الضمان..."
-                                        className="bg-white h-20 resize-none text-sm border-slate-200"
-                                    />
-                                </div>
+                                    const textClass = {
+                                        blue: 'text-blue-600',
+                                        rose: 'text-rose-600',
+                                        emerald: 'text-emerald-600',
+                                        amber: 'text-amber-600',
+                                        purple: 'text-purple-600',
+                                    }[policy.color] || 'text-slate-600';
 
-                                {/* Replacement Policy */}
-                                <div className="bg-gradient-to-br from-amber-50 to-slate-50 rounded-xl p-4 border border-amber-100/50">
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <Package className="w-4 h-4 text-amber-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">الاستبدال</Label>
-                                    </div>
-                                    <Textarea
-                                        value={replacementPolicy}
-                                        onChange={(e) => setReplacementPolicy(e.target.value)}
-                                        placeholder="سياسة الاستبدال..."
-                                        className="bg-white h-20 resize-none text-sm border-slate-200"
-                                    />
-                                </div>
+                                    return (
+                                        <div
+                                            key={policy.id}
+                                            onClick={() => handleOpenPolicy(policy)}
+                                            className={`bg-gradient-to-br ${bgClass} rounded-xl p-5 border transition-all cursor-pointer group hover:shadow-md relative overflow-hidden`}
+                                        >
+                                            <div className="flex items-center justify-between mb-3">
+                                                <div className="flex items-center gap-2">
+                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center bg-white/60 backdrop-blur-sm shadow-sm`}>
+                                                        <Icon className={`w-4 h-4 ${textClass}`} />
+                                                    </div>
+                                                    <Label className="text-base font-bold text-slate-800 cursor-pointer">{policy.label}</Label>
+                                                </div>
+                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-white text-slate-400 hover:${textClass} shadow-sm`}>
+                                                    <Edit2 size={14} />
+                                                </div>
+                                            </div>
 
-                                {/* Packaging Policy */}
-                                <div className="bg-gradient-to-br from-purple-50 to-slate-50 rounded-xl p-4 border border-purple-100/50">
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <Package className="w-4 h-4 text-purple-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">التعبئة</Label>
-                                    </div>
-                                    <Textarea
-                                        value={packagingPolicy}
-                                        onChange={(e) => setPackagingPolicy(e.target.value)}
-                                        placeholder="سياسة التعبئة..."
-                                        className="bg-white h-20 resize-none text-sm border-slate-200"
-                                    />
-                                </div>
+                                            <div className="min-h-[80px]">
+                                                {hasContent ? (
+                                                    <p className="line-clamp-3 text-sm text-slate-600 leading-relaxed">
+                                                        {policy.value}
+                                                    </p>
+                                                ) : (
+                                                    <div className="flex flex-col items-center justify-center h-20 border-2 border-dashed border-slate-200 rounded-lg bg-white/40">
+                                                        <p className="text-xs text-slate-400 font-medium">{t('common.clickToEdit') || 'اضغط لإضافة سياسة'}</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </CardContent>
                     </Card>
@@ -418,8 +483,8 @@ export default function StoreProfile() {
                                     <Clock className="w-5 h-5 text-cyan-600" />
                                 </div>
                                 <div>
-                                    <CardTitle className="text-lg font-bold text-slate-800">إعدادات التشغيل</CardTitle>
-                                    <CardDescription className="text-slate-500">أوقات العمل والدعم</CardDescription>
+                                    <CardTitle className="text-lg font-bold text-slate-800">{t('storeProfile.operationSettings')}</CardTitle>
+                                    <CardDescription className="text-slate-500">{t('storeProfile.operationDesc')}</CardDescription>
                                 </div>
                             </div>
                         </CardHeader>
@@ -429,7 +494,7 @@ export default function StoreProfile() {
                                 <div className="bg-gradient-to-br from-cyan-50 to-slate-50 rounded-xl p-4 border border-cyan-100/50">
                                     <div className="flex items-center gap-2 mb-3">
                                         <Clock className="w-4 h-4 text-cyan-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">أوقات العمل</Label>
+                                        <Label className="text-sm font-semibold text-slate-700">{t('storeProfile.workingHours')}</Label>
                                     </div>
                                     <Input
                                         value={workingHours}
@@ -442,7 +507,7 @@ export default function StoreProfile() {
                                 <div className="bg-gradient-to-br from-orange-50 to-slate-50 rounded-xl p-4 border border-orange-100/50">
                                     <div className="flex items-center gap-2 mb-3">
                                         <Truck className="w-4 h-4 text-orange-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">استلام الشحنات</Label>
+                                        <Label className="text-sm font-semibold text-slate-700">{t('storeProfile.pickupTimes')}</Label>
                                     </div>
                                     <Input
                                         value={pickupTimes}
@@ -455,7 +520,7 @@ export default function StoreProfile() {
                                 <div className="bg-gradient-to-br from-green-50 to-slate-50 rounded-xl p-4 border border-green-100/50">
                                     <div className="flex items-center gap-2 mb-3">
                                         <Headphones className="w-4 h-4 text-green-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">دعم العملاء</Label>
+                                        <Label className="text-sm font-semibold text-slate-700">{t('storeProfile.customerSupport')}</Label>
                                     </div>
                                     <Input
                                         value={supportHours}
@@ -475,8 +540,8 @@ export default function StoreProfile() {
                                     <Phone className="w-5 h-5 text-rose-600" />
                                 </div>
                                 <div>
-                                    <CardTitle className="text-lg font-bold text-slate-800">معلومات التواصل والموقع</CardTitle>
-                                    <CardDescription className="text-slate-500">بيانات الاتصال وعنوان المستودع</CardDescription>
+                                    <CardTitle className="text-lg font-bold text-slate-800">{t('storeProfile.contactLocation')}</CardTitle>
+                                    <CardDescription className="text-slate-500">{t('storeProfile.contactLocationDesc')}</CardDescription>
                                 </div>
                             </div>
                         </CardHeader>
@@ -487,7 +552,7 @@ export default function StoreProfile() {
                                 <div className="bg-gradient-to-br from-blue-50 to-slate-50 rounded-xl p-4 border border-blue-100/50">
                                     <div className="flex items-center gap-2 mb-3">
                                         <Phone className="w-4 h-4 text-blue-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">رقم الهاتف</Label>
+                                        <Label className="text-sm font-semibold text-slate-700">{t('storeProfile.phoneNumber')}</Label>
                                     </div>
                                     <Input
                                         value={phone1}
@@ -712,6 +777,66 @@ export default function StoreProfile() {
 
                 </div>
             </div>
-        </div>
+
+            {/* Policy Edit Sheet */}
+            <Sheet open={isPolicySheetOpen} onOpenChange={setIsPolicySheetOpen}>
+                <SheetContent side="left" className="sm:max-w-xl p-0 gap-0 flex flex-col h-full">
+                    <SheetHeader className="px-6 pb-6 pt-14 border-b border-slate-100 flex-none relative">
+                        <SheetTitle className="flex items-center gap-2.5 text-xl font-bold text-slate-900">
+                            {currentPolicy && React.createElement(currentPolicy.icon, {
+                                className: `w-5 h-5 ${currentPolicy.color === 'blue' ? 'text-blue-600' :
+                                    currentPolicy.color === 'rose' ? 'text-rose-600' :
+                                        currentPolicy.color === 'emerald' ? 'text-emerald-600' :
+                                            currentPolicy.color === 'amber' ? 'text-amber-600' :
+                                                'text-purple-600'
+                                    }`
+                            })}
+                            {currentPolicy?.label}
+                        </SheetTitle>
+                        <SheetDescription className="text-slate-500">
+                            {t('storeProfile.policyEditDesc')}
+                        </SheetDescription>
+                    </SheetHeader>
+
+                    <div className="flex-1 overflow-y-auto p-6">
+                        <div className="flex flex-col h-full gap-4">
+                            <div className="space-y-3 flex-1 flex flex-col">
+                                <Label htmlFor="policy-content" className="text-sm font-medium text-slate-700">
+                                    {t('common.details', 'التفاصيل')}
+                                </Label>
+                                <Textarea
+                                    id="policy-content"
+                                    value={tempPolicyContent}
+                                    onChange={(e) => setTempPolicyContent(e.target.value)}
+                                    placeholder={currentPolicy?.placeholder}
+                                    className="flex-1 min-h-[450px] resize-none text-base leading-relaxed p-5 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl shadow-sm"
+                                />
+                                <p className="text-xs text-slate-400 px-1">
+                                    {t('storeProfile.markdownSupported', 'يمكنك استخدام تنسيق Markdown البسيط')}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <SheetFooter className="p-6 border-t border-slate-100 bg-slate-50/50 flex-none">
+                        <div className="flex items-center gap-3 w-full">
+                            <Button
+                                variant="outline"
+                                className="flex-1 border-slate-200 hover:bg-white hover:text-slate-700 h-11"
+                                onClick={() => setIsPolicySheetOpen(false)}
+                            >
+                                {t('common.cancel')}
+                            </Button>
+                            <Button
+                                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20 h-11"
+                                onClick={handleSavePolicy}
+                            >
+                                {t('common.save')}
+                            </Button>
+                        </div>
+                    </SheetFooter>
+                </SheetContent>
+            </Sheet>
+        </div >
     );
 }

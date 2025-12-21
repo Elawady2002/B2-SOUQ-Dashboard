@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 import {
     Download,
     Edit2, Phone, Mail, MapPin, Calendar as CalendarIcon,
@@ -6,7 +7,9 @@ import {
     Instagram, MessageCircle,
     ShoppingBag,
     Wallet,
-    CreditCard
+    CreditCard,
+    ArrowUp,
+    ArrowDown
 } from 'lucide-react';
 import VisaCard from '../assets/image/card profile.png';
 import WalletIcon from '../assets/icons/Frame-3.svg';
@@ -34,6 +37,7 @@ import {
 } from "@/components/ui/table";
 
 export default function SellerProfile() {
+    const { t } = useLanguage();
     // Mock data
     const walletData = {
         balance: 156000,
@@ -97,9 +101,9 @@ export default function SellerProfile() {
 
     const getStatusBadge = (status) => {
         const styles = {
-            completed: { class: "bg-emerald-100 text-emerald-700 hover:bg-emerald-200", text: 'مكتمل' },
-            pending: { class: "bg-amber-100 text-amber-700 hover:bg-amber-200", text: 'قيد الانتظار' },
-            cancelled: { class: "bg-rose-100 text-rose-700 hover:bg-rose-200", text: 'ملغي' }
+            completed: { class: "bg-emerald-100 text-emerald-700 hover:bg-emerald-200", text: t('sellerProfile.completed') || 'Completed' },
+            pending: { class: "bg-amber-100 text-amber-700 hover:bg-amber-200", text: t('sellerProfile.pendingStatus') || 'Pending' },
+            cancelled: { class: "bg-rose-100 text-rose-700 hover:bg-rose-200", text: t('sellerProfile.cancelled') || 'Cancelled' }
         };
         const style = styles[status] || styles.pending;
         return (
@@ -113,7 +117,7 @@ export default function SellerProfile() {
         <div className="flex flex-col gap-6">
             {/* Page Header */}
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold text-slate-900">المحفظة المالية</h1>
+                <h1 className="text-2xl font-bold text-slate-900">{t('sellerProfile.financialWallet')}</h1>
             </div>
 
             {/* Top Section - Wallet Card & Stats */}
@@ -135,9 +139,9 @@ export default function SellerProfile() {
                         <CardContent className="p-6 flex items-center gap-4">
                             <img src={WalletIcon} alt="Wallet" className="w-12 h-12" />
                             <div className="flex-1">
-                                <p className="text-sm font-medium text-slate-500 mb-1">الرصيد القابل للسحب</p>
+                                <p className="text-sm font-medium text-slate-500 mb-1">{t('sellerProfile.withdrawableBalance')}</p>
                                 <div className="text-2xl font-bold text-slate-900">
-                                    156,000 <span className="text-xs font-medium text-slate-400">جنيه</span>
+                                    156,000 <span className="text-xs font-medium text-slate-400">{t('home.currency')}</span>
                                 </div>
                             </div>
                         </CardContent>
@@ -148,9 +152,9 @@ export default function SellerProfile() {
                         <CardContent className="p-6 flex items-center gap-4">
                             <img src={SalesIcon} alt="Sales" className="w-12 h-12" />
                             <div className="flex-1">
-                                <p className="text-sm font-medium text-slate-500 mb-1">الأرباح المعلقة</p>
+                                <p className="text-sm font-medium text-slate-500 mb-1">{t('sellerProfile.pendingProfits')}</p>
                                 <div className="text-2xl font-bold text-slate-900">
-                                    156,000 <span className="text-xs font-medium text-slate-400">جنيه</span>
+                                    156,000 <span className="text-xs font-medium text-slate-400">{t('home.currency')}</span>
                                 </div>
                             </div>
                         </CardContent>
@@ -161,9 +165,9 @@ export default function SellerProfile() {
                         <CardContent className="p-6 flex items-center gap-4">
                             <img src={RevenueIcon} alt="Revenue" className="w-12 h-12" />
                             <div className="flex-1">
-                                <p className="text-sm font-medium text-slate-500 mb-1">إجمالي المبيعات</p>
+                                <p className="text-sm font-medium text-slate-500 mb-1">{t('home.totalSales')}</p>
                                 <div className="text-2xl font-bold text-slate-900">
-                                    156,000 <span className="text-xs font-medium text-slate-400">جنيه</span>
+                                    156,000 <span className="text-xs font-medium text-slate-400">{t('home.currency')}</span>
                                 </div>
                             </div>
                         </CardContent>
@@ -174,9 +178,9 @@ export default function SellerProfile() {
                         <CardContent className="p-6 flex items-center gap-4">
                             <img src={TransactionIcon} alt="Transactions" className="w-12 h-12" />
                             <div className="flex-1">
-                                <p className="text-sm font-medium text-slate-500 mb-1">عدد المعاملات</p>
+                                <p className="text-sm font-medium text-slate-500 mb-1">{t('sellerProfile.transactionCount')}</p>
                                 <div className="text-2xl font-bold text-slate-900">
-                                    156 <span className="text-xs font-medium text-slate-400">معاملة</span>
+                                    156 <span className="text-xs font-medium text-slate-400">{t('sellerProfile.transaction')}</span>
                                 </div>
                             </div>
                         </CardContent>
@@ -185,32 +189,199 @@ export default function SellerProfile() {
             </div>
 
             {/* Transactions Table */}
-            <Card className="border-slate-100 shadow-sm bg-white">
+            <Card className="border-slate-100 shadow-sm bg-white overflow-hidden">
                 <CardHeader className="pb-4 border-b border-slate-50">
-                    <CardTitle className="text-lg font-bold text-slate-800">أحدث المعاملات</CardTitle>
+                    <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg font-bold text-foreground">{t('wallet.transactions')}</CardTitle>
+                        <Button variant="outline" size="sm" className="gap-2 h-9">
+                            <Download size={16} />
+                            {t('wallet.downloadStatement') || 'تنزيل كشف الحساب'}
+                        </Button>
+                    </div>
                 </CardHeader>
-                <CardContent className="p-0">
+                <div className="p-0">
                     <Table>
-                        <TableHeader className="bg-slate-50/50">
+                        <TableHeader className="bg-muted/50 sticky top-0 z-10 backdrop-blur-xs">
                             <TableRow className="hover:bg-transparent border-slate-100">
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">رقم المعاملة</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">التاريخ</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">المبلغ</TableHead>
-                                <TableHead className="text-right h-10 text-xs font-semibold text-slate-600">الحالة</TableHead>
+                                <TableHead className="text-right font-medium text-muted-foreground">{t('wallet.transactionType') || 'نوع المعاملة'}</TableHead>
+                                <TableHead className="text-right font-medium text-muted-foreground">{t('wallet.amount')}</TableHead>
+                                <TableHead className="text-right font-medium text-muted-foreground">{t('returns.date')}</TableHead>
+                                <TableHead className="text-right font-medium text-muted-foreground">{t('wallet.bank')}</TableHead>
+                                <TableHead className="text-right font-medium text-muted-foreground">{t('wallet.account')}</TableHead>
+                                <TableHead className="text-right font-medium text-muted-foreground">{t('products.status')}</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {transactions.map((tx, index) => (
-                                <TableRow key={index} className="hover:bg-slate-50">
-                                    <TableCell className="font-mono text-sm font-semibold text-slate-700">{tx.id}</TableCell>
-                                    <TableCell className="text-slate-600">{tx.date}</TableCell>
-                                    <TableCell className="font-bold text-slate-800">{tx.amount.toLocaleString('en-US')} ج.م</TableCell>
-                                    <TableCell>{getStatusBadge(tx.status)}</TableCell>
-                                </TableRow>
-                            ))}
+                            {/* Deposit Transaction */}
+                            <TableRow className="hover:bg-muted/50 transition-colors">
+                                <TableCell>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                                            <ArrowDown size={16} className="text-emerald-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-medium text-foreground">{t('wallet.deposit')}</p>
+                                            <p className="text-xs text-muted-foreground">ORD-2024-78432</p>
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell className="font-bold text-emerald-600">+ 45,000 {t('home.currency')}</TableCell>
+                                <TableCell className="text-sm text-muted-foreground">2024-12-18</TableCell>
+                                <TableCell className="text-sm text-muted-foreground">wallet.bankName</TableCell>
+                                <TableCell className="font-mono text-sm text-muted-foreground">•••• 4521</TableCell>
+                                <TableCell>
+                                    <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-normal">
+                                        {t('wallet.transferred') || 'تم التحويل'}
+                                    </Badge>
+                                </TableCell>
+                            </TableRow>
+
+                            {/* Withdrawal Transaction */}
+                            <TableRow className="hover:bg-muted/50 transition-colors">
+                                <TableCell>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center">
+                                            <ArrowUp size={16} className="text-rose-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-medium text-foreground">{t('wallet.withdrawal')}</p>
+                                            <p className="text-xs text-muted-foreground">{t('wallet.transactionDesc_withdrawal')}</p>
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell className="font-bold text-rose-600">- 25,000 {t('home.currency')}</TableCell>
+                                <TableCell className="text-sm text-muted-foreground">2024-12-17</TableCell>
+                                <TableCell className="text-sm text-muted-foreground">wallet.bankName</TableCell>
+                                <TableCell className="font-mono text-sm text-muted-foreground">•••• 4521</TableCell>
+                                <TableCell>
+                                    <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-normal">
+                                        {t('wallet.transferred') || 'تم التحويل'}
+                                    </Badge>
+                                </TableCell>
+                            </TableRow>
+
+                            {/* Commission Transaction */}
+                            <TableRow className="hover:bg-muted/50 transition-colors">
+                                <TableCell>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
+                                            <CreditCard size={16} className="text-amber-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-medium text-foreground">{t('wallet.commission')}</p>
+                                            <p className="text-xs text-muted-foreground">{t('wallet.transactionDesc_commission')} - 3%</p>
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell className="font-bold text-rose-600">- 1,350 {t('home.currency')}</TableCell>
+                                <TableCell className="text-sm text-muted-foreground">2024-12-17</TableCell>
+                                <TableCell className="text-sm text-muted-foreground">wallet.bankName</TableCell>
+                                <TableCell className="font-mono text-sm text-muted-foreground">•••• 4521</TableCell>
+                                <TableCell>
+                                    <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-normal">
+                                        {t('wallet.transferred') || 'تم التحويل'}
+                                    </Badge>
+                                </TableCell>
+                            </TableRow>
+
+                            {/* Another Deposit */}
+                            <TableRow className="hover:bg-muted/50 transition-colors">
+                                <TableCell>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                                            <ArrowDown size={16} className="text-emerald-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-medium text-foreground">{t('wallet.deposit')}</p>
+                                            <p className="text-xs text-muted-foreground">ORD-2024-78431</p>
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell className="font-bold text-emerald-600">+ 17,450 {t('home.currency')}</TableCell>
+                                <TableCell className="text-sm text-slate-600">2024-12-16</TableCell>
+                                <TableCell className="text-sm text-slate-600">wallet.bankName</TableCell>
+                                <TableCell className="font-mono text-sm text-slate-600">•••• 4521</TableCell>
+                                <TableCell>
+                                    <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-normal">
+                                        {t('wallet.transferred') || 'تم التحويل'}
+                                    </Badge>
+                                </TableCell>
+                            </TableRow>
+
+                            {/* Pending Withdrawal */}
+                            <TableRow className="hover:bg-slate-50/50">
+                                <TableCell>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center">
+                                            <ArrowUp size={16} className="text-rose-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-medium text-slate-900">{t('wallet.withdrawal')}</p>
+                                            <p className="text-xs text-slate-500">{t('wallet.transactionDesc_withdrawal')}</p>
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell className="font-bold text-rose-600">- 15,000 {t('home.currency')}</TableCell>
+                                <TableCell className="text-sm text-slate-600">2024-12-15</TableCell>
+                                <TableCell className="text-sm text-slate-600">wallet.bankName</TableCell>
+                                <TableCell className="font-mono text-sm text-slate-600">•••• 4521</TableCell>
+                                <TableCell>
+                                    <Badge variant="secondary" className="bg-amber-50 text-amber-700 hover:bg-amber-100 font-normal">
+                                        {t('wallet.processing') || 'قيد المعالجة'}
+                                    </Badge>
+                                </TableCell>
+                            </TableRow>
+
+                            {/* Refund */}
+                            <TableRow className="hover:bg-slate-50/50">
+                                <TableCell>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                                            <ArrowDown size={16} className="text-blue-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-medium text-slate-900">{t('wallet.refund')}</p>
+                                            <p className="text-xs text-slate-500">{t('wallet.transactionDesc_refund')}</p>
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell className="font-bold text-emerald-600">+ 8,500 {t('home.currency')}</TableCell>
+                                <TableCell className="text-sm text-slate-600">2024-12-14</TableCell>
+                                <TableCell className="text-sm text-slate-600">wallet.bankName</TableCell>
+                                <TableCell className="font-mono text-sm text-slate-600">•••• 4521</TableCell>
+                                <TableCell>
+                                    <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-normal">
+                                        {t('wallet.transferred') || 'تم التحويل'}
+                                    </Badge>
+                                </TableCell>
+                            </TableRow>
+
+                            {/* Ad Payment */}
+                            <TableRow className="hover:bg-slate-50/50">
+                                <TableCell>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center">
+                                            <CreditCard size={16} className="text-purple-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-medium text-slate-900">{t('wallet.adPayment')}</p>
+                                            <p className="text-xs text-slate-500">{t('wallet.transactionDesc_adPayment')} - Galaxy S24</p>
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell className="font-bold text-rose-600">- 5,000 {t('home.currency')}</TableCell>
+                                <TableCell className="text-sm text-slate-600">2024-12-10</TableCell>
+                                <TableCell className="text-sm text-slate-600">wallet.bankName</TableCell>
+                                <TableCell className="font-mono text-sm text-slate-600">•••• 4521</TableCell>
+                                <TableCell>
+                                    <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-normal">
+                                        {t('wallet.transferred') || 'تم التحويل'}
+                                    </Badge>
+                                </TableCell>
+                            </TableRow>
                         </TableBody>
                     </Table>
-                </CardContent>
+                </div>
             </Card>
 
             {/* Bottom Grid - 3 Columns */}
@@ -218,30 +389,30 @@ export default function SellerProfile() {
                 {/* Personal Information */}
                 <Card className="border-slate-100 shadow-sm bg-white h-full">
                     <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-slate-50">
-                        <CardTitle className="text-lg font-bold text-slate-800">بطاقة الهوية والتحقق (KYC)</CardTitle>
+                        <CardTitle className="text-lg font-bold text-slate-800">{t('sellerProfile.kycVerification')}</CardTitle>
                         <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-blue-600">
                             <Edit2 size={16} />
                         </Button>
                     </CardHeader>
                     <CardContent className="p-6 flex flex-col gap-5">
                         <div className="flex flex-col gap-1">
-                            <span className="text-xs text-slate-400">الاسم الكامل</span>
+                            <span className="text-xs text-slate-400">{t('sellerProfile.fullName')}</span>
                             <span className="text-sm font-semibold text-slate-800">{personalInfo.name}</span>
                         </div>
                         <div className="flex flex-col gap-1">
-                            <span className="text-xs text-slate-400">البريد الإلكتروني</span>
+                            <span className="text-xs text-slate-400">{t('employees.email')}</span>
                             <span className="text-sm font-medium text-slate-800">{personalInfo.email}</span>
                         </div>
                         <div className="flex flex-col gap-1">
-                            <span className="text-xs text-slate-400">رقم الجوال</span>
+                            <span className="text-xs text-slate-400">{t('sellerProfile.mobileNumber')}</span>
                             <span className="text-sm font-medium text-slate-800 dir-ltr text-right">{personalInfo.phone}</span>
                         </div>
                         <div className="flex flex-col gap-1">
-                            <span className="text-xs text-slate-400">رقم الهوية الوطنية</span>
+                            <span className="text-xs text-slate-400">{t('sellerProfile.nationalId')}</span>
                             <span className="text-sm font-medium text-slate-800">{personalInfo.nationalId}</span>
                         </div>
                         <div className="flex flex-col gap-1">
-                            <span className="text-xs text-slate-400">تاريخ التسجيل</span>
+                            <span className="text-xs text-slate-400">{t('sellerProfile.registrationDate')}</span>
                             <span className="text-sm font-medium text-slate-800">{personalInfo.registrationDate}</span>
                         </div>
                     </CardContent>
@@ -250,7 +421,7 @@ export default function SellerProfile() {
                 {/* Business Information */}
                 <Card className="border-slate-100 shadow-sm bg-white h-full">
                     <CardHeader className="pb-4 border-b border-slate-50">
-                        <CardTitle className="text-lg font-bold text-slate-800">الأبعاد التجارية والقانونية</CardTitle>
+                        <CardTitle className="text-lg font-bold text-slate-800">{t('sellerProfile.commercialLegal')}</CardTitle>
                     </CardHeader>
                     <CardContent className="p-6 flex flex-col gap-4">
                         {businessDocs.map((doc, index) => (
@@ -260,7 +431,7 @@ export default function SellerProfile() {
                                     <div className="text-sm font-semibold text-slate-800 mb-0.5">{doc.number}</div>
                                     {doc.expiry && (
                                         <div className="text-[10px] text-slate-400">
-                                            تنتهي بتاريخ {doc.expiry}
+                                            {t('sellerProfile.expiresOn')} {doc.expiry}
                                         </div>
                                     )}
                                 </div>
@@ -275,14 +446,14 @@ export default function SellerProfile() {
                 {/* Contact Information */}
                 <Card className="border-slate-100 shadow-sm bg-white h-full">
                     <CardHeader className="pb-4 border-b border-slate-50">
-                        <CardTitle className="text-lg font-bold text-slate-800">العناوين والتواصل</CardTitle>
+                        <CardTitle className="text-lg font-bold text-slate-800">{t('sellerProfile.addressesContact')}</CardTitle>
                     </CardHeader>
                     <CardContent className="p-6 flex flex-col gap-6">
                         {/* Phone Numbers */}
                         <div>
                             <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
                                 <Phone size={14} className="text-slate-400" />
-                                أرقام التواصل
+                                {t('sellerProfile.contactNumbers')}
                             </h4>
                             <div className="flex flex-col gap-3">
                                 {contactInfo.phones.map((phone, index) => (
@@ -305,7 +476,7 @@ export default function SellerProfile() {
                         <div>
                             <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
                                 <Mail size={14} className="text-slate-400" />
-                                البريد الإلكتروني
+                                {t('employees.email')}
                             </h4>
                             {contactInfo.emails.map((email, index) => (
                                 <div key={index} className="flex items-center justify-between py-2">
@@ -326,7 +497,7 @@ export default function SellerProfile() {
                         <div>
                             <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
                                 <MessageCircle size={14} className="text-slate-400" />
-                                وسائل التواصل
+                                {t('sellerProfile.socialMedia')}
                             </h4>
                             {contactInfo.social.map((social, index) => (
                                 <div key={index} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
@@ -336,7 +507,7 @@ export default function SellerProfile() {
                                     </div>
                                     {social.active && (
                                         <Badge variant="secondary" className="bg-emerald-50 text-emerald-600 hover:bg-emerald-100 font-normal text-[10px]">
-                                            نشط
+                                            {t('employees.active')}
                                         </Badge>
                                     )}
                                 </div>
