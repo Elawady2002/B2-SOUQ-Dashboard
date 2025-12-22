@@ -72,7 +72,7 @@ export default function Login() {
             </div>
 
             {/* Right Side - Login Form */}
-            <div className="flex-1 bg-white flex items-center justify-center p-8 lg:p-12">
+            <div className="flex-1 bg-gradient-to-br from-[#5B5FED] via-[#6366F1] to-[#7C3AED] flex items-center justify-center p-8 lg:p-12">
                 <div className="w-full max-w-md">
                     {/* Logo positioned on left */}
                     <div className="mb-8 flex justify-end">
@@ -81,8 +81,8 @@ export default function Login() {
 
                     {/* Header */}
                     <div className="mb-8 text-left">
-                        <h1 className="text-3xl font-bold text-slate-900 mb-2">ابدأ الآن</h1>
-                        <p className="text-sm text-slate-500">أدخل بياناتك للوصول إلى حسابك</p>
+                        <h1 className="text-3xl font-bold text-white mb-2">ابدأ الآن</h1>
+                        <p className="text-sm text-white/80">أدخل بياناتك للوصول إلى حسابك</p>
                     </div>
 
                     {/* Google Login Button - Full Width */}
@@ -90,7 +90,7 @@ export default function Login() {
                         <button
                             type="button"
                             onClick={() => handleSocialLogin('google')}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium"
+                            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-white/20 rounded-lg hover:bg-white/90 transition-colors text-sm font-medium text-slate-900"
                         >
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
                                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -104,16 +104,16 @@ export default function Login() {
 
                     {/* OR Divider */}
                     <div className="relative flex items-center mb-6">
-                        <div className="flex-1 border-t border-slate-200"></div>
-                        <span className="px-4 text-sm text-slate-400">أو</span>
-                        <div className="flex-1 border-t border-slate-200"></div>
+                        <div className="flex-1 border-t border-white/30"></div>
+                        <span className="px-4 text-sm text-white/70">أو</span>
+                        <div className="flex-1 border-t border-white/30"></div>
                     </div>
 
                     {/* Login Form */}
                     <form onSubmit={handleLogin} className="space-y-4">
                         {/* Name Field */}
                         <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1.5">
+                            <label htmlFor="name" className="block text-sm font-medium text-white mb-1.5">
                                 الاسم
                             </label>
                             <Input
@@ -128,7 +128,7 @@ export default function Login() {
 
                         {/* Email Field */}
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
+                            <label htmlFor="email" className="block text-sm font-medium text-white mb-1.5">
                                 البريد الإلكتروني
                             </label>
                             <Input
@@ -137,7 +137,7 @@ export default function Login() {
                                 value={formData.email}
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 placeholder="example@company.com"
-                                className="h-11"
+                                className="h-11 bg-white/10 border-white/20 text-white placeholder:text-white/50"
                                 dir="ltr"
                                 required
                             />
@@ -146,12 +146,12 @@ export default function Login() {
                         {/* Password Field */}
                         <div>
                             <div className="flex items-center justify-between mb-1.5">
-                                <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+                                <label htmlFor="password" className="block text-sm font-medium text-white">
                                     كلمة المرور
                                 </label>
                                 <button
                                     type="button"
-                                    className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                                    className="text-sm text-white/90 hover:text-white font-medium"
                                     onClick={() => console.log('Forgot password')}
                                 >
                                     نسيت كلمة المرور؟
@@ -164,13 +164,13 @@ export default function Login() {
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                     placeholder="8 أحرف على الأقل"
-                                    className="h-11 pl-10"
+                                    className="h-11 pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/50"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                                    className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors"
                                     tabIndex={-1}
                                 >
                                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -184,30 +184,30 @@ export default function Login() {
                                 id="terms"
                                 checked={formData.agreeToTerms}
                                 onCheckedChange={(checked) => setFormData({ ...formData, agreeToTerms: checked })}
-                                className="mt-0.5"
+                                className="mt-0.5 border-white/30 data-[state=checked]:bg-white data-[state=checked]:text-[#5B5FED]"
                             />
-                            <label htmlFor="terms" className="text-sm text-slate-600 cursor-pointer leading-tight">
+                            <label htmlFor="terms" className="text-sm text-white/90 cursor-pointer leading-tight">
                                 أوافق على{' '}
-                                <a href="/terms" className="text-blue-600 hover:underline">الشروط والخصوصية</a>
+                                <a href="/terms" className="text-white hover:underline font-medium">الشروط والخصوصية</a>
                             </label>
                         </div>
 
                         {/* Login Button */}
                         <Button
                             type="submit"
-                            className="w-full h-11 bg-[#5B5FED] hover:bg-[#4F46E5] text-white font-medium"
+                            className="w-full h-11 bg-white hover:bg-white/90 text-[#5B5FED] font-medium"
                         >
                             تسجيل الدخول
                         </Button>
 
                         {/* Sign Up Link */}
                         <div className="text-center pt-2">
-                            <p className="text-sm text-slate-600">
+                            <p className="text-sm text-white/90">
                                 لديك حساب؟{' '}
                                 <button
                                     type="button"
                                     onClick={() => navigate('/register')}
-                                    className="text-blue-600 hover:underline font-medium"
+                                    className="text-white hover:underline font-medium"
                                 >
                                     سجل الآن
                                 </button>
@@ -217,7 +217,7 @@ export default function Login() {
 
                     {/* Footer */}
                     <div className="mt-12 text-center">
-                        <p className="text-xs text-slate-400">جميع الحقوق محفوظة 2022</p>
+                        <p className="text-xs text-white/60">جميع الحقوق محفوظة 2022</p>
                     </div>
                 </div>
             </div>
