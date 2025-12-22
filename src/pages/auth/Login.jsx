@@ -80,7 +80,7 @@ export default function Login() {
                     </div>
 
                     {/* Header */}
-                    <div className="mb-8 text-left">
+                    <div className="mb-8 text-right">
                         <h1 className="text-3xl font-bold text-slate-900 mb-2">ابدأ الآن</h1>
                         <p className="text-sm text-slate-500">أدخل بياناتك للوصول إلى حسابك</p>
                     </div>
