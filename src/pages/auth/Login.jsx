@@ -122,7 +122,7 @@ export default function Login() {
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 placeholder="عبدالله أحمد"
-                                className="h-11"
+                                className="h-11 bg-white/10 border-white/20 text-white placeholder:text-white/50"
                             />
                         </div>
 
