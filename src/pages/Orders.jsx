@@ -349,7 +349,7 @@ export default function Orders() {
 
             {/* Order Details Sheet */}
             <Sheet open={!!selectedOrder} onOpenChange={(open) => !open && setSelectedOrder(null)}>
-                <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 border-r border-slate-200">
+                <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 border-r border-slate-200 overflow-hidden">
                     <SheetHeader className="px-3 pt-12 pb-6 border-b border-slate-100 bg-slate-50/30">
                         <SheetTitle className="text-xl font-bold text-slate-900 text-start">
                             {t('orders.orderDetails')}
@@ -365,7 +365,7 @@ export default function Orders() {
 
                     {selectedOrder && (
                         <>
-                            <ScrollArea className="flex-1">
+                            <div className="flex-1 overflow-y-auto">
                                 <div className="p-6 space-y-6" dir="rtl">
                                     {/* Status Cards */}
                                     <div className="grid grid-cols-2 gap-3">
@@ -483,7 +483,7 @@ export default function Orders() {
                                         </div>
                                     </div>
                                 </div>
-                            </ScrollArea>
+                            </div>
 
                             {/* Footer Actions */}
                             <div className="p-4 border-t border-slate-100 bg-slate-50/50 space-y-3">

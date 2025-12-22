@@ -317,10 +317,10 @@ export default function Home() {
                             const areaPoints = `0,50 ${points} 100,50`;
 
                             return (
-                                <Card key={card.id} className="overflow-hidden border-slate-100 shadow-sm bg-white hover:shadow-md transition-all duration-200">
-                                    <div className="p-5">
+                                <Card key={card.id} className="overflow-hidden border-slate-100 shadow-sm bg-white hover:shadow-md transition-all duration-200 aspect-[1.6/1] relative">
+                                    <div className="pt-0 px-4 pb-6 h-full flex flex-col justify-between relative z-10">
                                         {/* Row 1: Icon (left) + Label (right) */}
-                                        <div className="flex justify-between items-start mb-4">
+                                        <div className="flex justify-between items-start">
                                             <div className="flex items-center justify-center w-10 h-10 rounded-lg" style={{ background: `${card.color}15`, color: card.color }}>
                                                 {card.id === 1 && <ShoppingBag size={20} strokeWidth={1.5} />}
                                                 {card.id === 2 && <Receipt size={20} strokeWidth={1.5} />}
@@ -331,7 +331,7 @@ export default function Home() {
                                         </div>
 
                                         {/* Row 2: Value + Unit (left) + Change (right) */}
-                                        <div className="flex justify-between items-end mb-4">
+                                        <div className="flex justify-between items-end pb-2">
                                             <div className="flex items-baseline gap-1">
                                                 <span className="text-2xl font-bold text-slate-900">{card.value}</span>
                                                 {card.unit && <span className="text-sm font-medium text-slate-500">{card.unit}</span>}
@@ -341,30 +341,30 @@ export default function Home() {
                                                 {card.positive ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
                                             </div>
                                         </div>
+                                    </div>
 
-                                        {/* Row 3: Area Chart */}
-                                        <div className="h-12 w-full -mb-2 opacity-75">
-                                            <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none" className="overflow-visible">
-                                                <defs>
-                                                    <linearGradient id={`gradient-${card.id}`} x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="0%" stopColor={card.color} stopOpacity="0.25" />
-                                                        <stop offset="100%" stopColor={card.color} stopOpacity="0.02" />
-                                                    </linearGradient>
-                                                </defs>
-                                                <polygon
-                                                    points={areaPoints}
-                                                    fill={`url(#gradient-${card.id})`}
-                                                />
-                                                <polyline
-                                                    points={points}
-                                                    fill="none"
-                                                    stroke={card.color}
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                        </div>
+                                    {/* Row 3: Area Chart - Absolute at Bottom */}
+                                    <div className="absolute bottom-0 left-0 right-0 h-16 opacity-75 z-0 pointer-events-none">
+                                        <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none" className="overflow-visible">
+                                            <defs>
+                                                <linearGradient id={`gradient-${card.id}`} x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor={card.color} stopOpacity="0.25" />
+                                                    <stop offset="100%" stopColor={card.color} stopOpacity="0.02" />
+                                                </linearGradient>
+                                            </defs>
+                                            <polygon
+                                                points={areaPoints}
+                                                fill={`url(#gradient-${card.id})`}
+                                            />
+                                            <polyline
+                                                points={points}
+                                                fill="none"
+                                                stroke={card.color}
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        </svg>
                                     </div>
                                 </Card>
                             );

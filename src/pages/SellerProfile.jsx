@@ -9,7 +9,11 @@ import {
     Wallet,
     CreditCard,
     ArrowUp,
-    ArrowDown
+    ArrowDown,
+    Plus,
+    Upload,
+    Building2,
+    Check
 } from 'lucide-react';
 import VisaCard from '../assets/image/card profile.png';
 import WalletIcon from '../assets/icons/Frame-3.svg';
@@ -28,6 +32,23 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetDescription,
+} from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import {
     Table,
     TableBody,
     TableCell,
@@ -38,6 +59,16 @@ import {
 
 export default function SellerProfile() {
     const { t } = useLanguage();
+    const [showAddBankSheet, setShowAddBankSheet] = useState(false);
+    const [newBankAccount, setNewBankAccount] = useState({
+        holderName: '',
+        bankName: '',
+        accountNumber: '',
+        iban: '',
+        swiftCode: '',
+        phoneNumber: '',
+        billingAddress: ''
+    });
     // Mock data
     const walletData = {
         balance: 156000,
@@ -384,6 +415,156 @@ export default function SellerProfile() {
                 </div>
             </Card>
 
+            {/* Bank Accounts Section */}
+            <Card className="border-slate-100 shadow-sm bg-white overflow-hidden">
+                <CardHeader className="pb-4 border-b border-slate-50">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <CardTitle className="text-lg font-bold text-slate-900">الحسابات البنكية المرتبطة</CardTitle>
+                            <CardDescription className="text-sm text-slate-500 mt-1">إدارة حسابات السحب البنكية</CardDescription>
+                        </div>
+                        <Button
+                            className="bg-blue-600 hover:bg-blue-700 gap-2"
+                            onClick={() => setShowAddBankSheet(true)}
+                        >
+                            <Plus size={18} />
+                            إضافة حساب جديد
+                        </Button>
+                    </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                    <div className="grid grid-cols-3 gap-6">
+                        {/* Bank Card 1 - Blue Professional */}
+                        <div className="relative w-full max-w-[280px] aspect-[1.586/1] rounded-2xl overflow-hidden bg-gradient-to-br from-[#0066FF] to-[#0052CC] p-5 cursor-pointer hover:scale-105 transition-transform shadow-xl">
+                            {/* Diagonal Lines Pattern Background */}
+                            <div className="absolute inset-0 opacity-[0.08]">
+                                <svg className="w-full h-full" viewBox="0 0 400 250" preserveAspectRatio="none">
+                                    <defs>
+                                        <pattern id="diagonalLines1" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
+                                            <line x1="0" y1="0" x2="0" y2="20" stroke="white" strokeWidth="15" />
+                                        </pattern>
+                                    </defs>
+                                    <rect width="100%" height="100%" fill="url(#diagonalLines1)" />
+                                </svg>
+                            </div>
+
+                            <div className="relative h-full flex flex-col justify-between text-white">
+                                {/* Top Section - Logo & Contactless */}
+                                <div className="flex items-start justify-between">
+                                    <div className="text-white font-black text-xl tracking-tight">
+                                        B2<span className="font-light">SOUQ</span>
+                                    </div>
+                                    <div className="flex flex-col gap-0.5">
+                                        <div className="flex gap-0.5">
+                                            <div className="w-3 h-3 rounded-full border-2 border-white/80"></div>
+                                            <div className="w-3 h-3 rounded-full border-2 border-white/80 -ml-1.5"></div>
+                                        </div>
+                                        <div className="flex gap-0.5 -mt-1.5">
+                                            <div className="w-3 h-3 rounded-full border-2 border-white/80"></div>
+                                            <div className="w-3 h-3 rounded-full border-2 border-white/80 -ml-1.5"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Middle Section - Bank Name Badge */}
+                                <div className="flex items-center justify-between">
+                                    <Badge className="bg-emerald-400/90 hover:bg-emerald-500 text-white border-0 text-[9px] px-2 py-0.5 font-medium">
+                                        <CheckCircle size={9} className="ml-0.5" />
+                                        موثق
+                                    </Badge>
+                                    <div className="text-white/90 text-[10px] font-medium">البنك الأهلي السعودي</div>
+                                </div>
+
+                                {/* Bottom Section - Card Details */}
+                                <div>
+                                    <div className="text-white/90 text-[10px] font-light mb-1 uppercase tracking-wide">عبدالله احمد العوضي</div>
+                                    <div className="flex items-end justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="text-white font-mono text-base tracking-wider">•••• 4521</div>
+                                            <div className="text-white/70 text-[10px] font-light">08/27</div>
+                                        </div>
+                                        <div className="bg-white px-2 py-1 rounded text-[#0066FF] font-black text-xs">
+                                            VISA
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Bank Card 2 - Purple Professional */}
+                        <div className="relative w-full max-w-[280px] aspect-[1.586/1] rounded-2xl overflow-hidden bg-gradient-to-br from-[#8B5CF6] to-[#6D28D9] p-5 cursor-pointer hover:scale-105 transition-transform shadow-xl">
+                            {/* Diagonal Lines Pattern Background */}
+                            <div className="absolute inset-0 opacity-[0.08]">
+                                <svg className="w-full h-full" viewBox="0 0 400 250" preserveAspectRatio="none">
+                                    <defs>
+                                        <pattern id="diagonalLines2" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
+                                            <line x1="0" y1="0" x2="0" y2="20" stroke="white" strokeWidth="15" />
+                                        </pattern>
+                                    </defs>
+                                    <rect width="100%" height="100%" fill="url(#diagonalLines2)" />
+                                </svg>
+                            </div>
+
+                            <div className="relative h-full flex flex-col justify-between text-white">
+                                {/* Top Section - Logo & Contactless */}
+                                <div className="flex items-start justify-between">
+                                    <div className="text-white font-black text-xl tracking-tight">
+                                        B2<span className="font-light">SOUQ</span>
+                                    </div>
+                                    <div className="flex flex-col gap-0.5">
+                                        <div className="flex gap-0.5">
+                                            <div className="w-3 h-3 rounded-full border-2 border-white/80"></div>
+                                            <div className="w-3 h-3 rounded-full border-2 border-white/80 -ml-1.5"></div>
+                                        </div>
+                                        <div className="flex gap-0.5 -mt-1.5">
+                                            <div className="w-3 h-3 rounded-full border-2 border-white/80"></div>
+                                            <div className="w-3 h-3 rounded-full border-2 border-white/80 -ml-1.5"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Middle Section - Bank Name Badge */}
+                                <div className="flex items-center justify-between">
+                                    <Badge className="bg-emerald-400/90 hover:bg-emerald-500 text-white border-0 text-[9px] px-2 py-0.5 font-medium">
+                                        <CheckCircle size={9} className="ml-0.5" />
+                                        موثق
+                                    </Badge>
+                                    <div className="text-white/90 text-[10px] font-medium">مصرف الراجحي</div>
+                                </div>
+
+                                {/* Bottom Section - Card Details */}
+                                <div>
+                                    <div className="text-white/90 text-[10px] font-light mb-1 uppercase tracking-wide">عبدالله احمد العوضي</div>
+                                    <div className="flex items-end justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="text-white font-mono text-base tracking-wider">•••• 7832</div>
+                                            <div className="text-white/70 text-[10px] font-light">05/26</div>
+                                        </div>
+                                        <div className="bg-white px-2 py-1 rounded text-[#8B5CF6] font-black text-xs">
+                                            VISA
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Add New Card */}
+                        <button
+                            onClick={() => setShowAddBankSheet(true)}
+                            className="w-full aspect-[1.6/1] rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 hover:border-blue-400 transition-all flex flex-col items-center justify-center gap-3 group"
+                        >
+                            <div className="w-14 h-14 rounded-full bg-slate-200 group-hover:bg-blue-100 flex items-center justify-center transition-colors">
+                                <Plus size={28} className="text-slate-500 group-hover:text-blue-600 transition-colors" />
+                            </div>
+                            <div>
+                                <div className="font-semibold text-slate-700 group-hover:text-blue-600 transition-colors text-sm">إضافة حساب بنكي</div>
+                                <div className="text-xs text-slate-400 mt-0.5">لعمليات السحب</div>
+                            </div>
+                        </button>
+                    </div>
+                </CardContent>
+            </Card>
+
             {/* Bottom Grid - 3 Columns */}
             <div className="grid grid-cols-3 gap-6">
                 {/* Personal Information */}
@@ -516,6 +697,151 @@ export default function SellerProfile() {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Add Bank Account Sheet */}
+            <Sheet open={showAddBankSheet} onOpenChange={setShowAddBankSheet}>
+                <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col overflow-hidden">
+                    <SheetHeader className="px-6 pt-8 pb-4 border-b bg-gradient-to-br from-blue-50 to-white">
+                        <SheetTitle className="text-xl font-bold text-slate-900">إضافة حساب بنكي</SheetTitle>
+                        <SheetDescription className="text-sm">أضف حساباً بنكياً جديداً لعمليات السحب</SheetDescription>
+                    </SheetHeader>
+
+                    <div className="flex-1 overflow-y-auto px-6 py-6">
+                        <div className="space-y-4">
+                            {/* Account Holder Name */}
+                            <div>
+                                <Label className="text-sm font-medium text-slate-700">اسم صاحب الحساب *</Label>
+                                <Input
+                                    value={newBankAccount.holderName}
+                                    onChange={(e) => setNewBankAccount({ ...newBankAccount, holderName: e.target.value })}
+                                    placeholder="الاسم الكامل كما يظهر في البنك"
+                                    className="mt-1.5 h-11"
+                                />
+                            </div>
+
+                            {/* Bank Name */}
+                            <div>
+                                <Label className="text-sm font-medium text-slate-700">اسم البنك *</Label>
+                                <Select
+                                    value={newBankAccount.bankName}
+                                    onValueChange={(value) => setNewBankAccount({ ...newBankAccount, bankName: value })}
+                                >
+                                    <SelectTrigger className="mt-1.5 h-11">
+                                        <SelectValue placeholder="اختر البنك" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="alahli">البنك الأهلي السعودي</SelectItem>
+                                        <SelectItem value="alrajhi">مصرف الراجحي</SelectItem>
+                                        <SelectItem value="riyad">بنك الرياض</SelectItem>
+                                        <SelectItem value="sab">البنك السعودي البريطاني SABB</SelectItem>
+                                        <SelectItem value="alinma">بنك الإنماء</SelectItem>
+                                        <SelectItem value="aljazira">بنك الجزيرة</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            {/* Account Number */}
+                            <div>
+                                <Label className="text-sm font-medium text-slate-700">رقم الحساب *</Label>
+                                <Input
+                                    type="tel"
+                                    value={newBankAccount.accountNumber}
+                                    onChange={(e) => setNewBankAccount({ ...newBankAccount, accountNumber: e.target.value })}
+                                    placeholder="0000000000"
+                                    className="mt-1.5 h-11 font-mono"
+                                    maxLength="20"
+                                />
+                            </div>
+
+                            {/* IBAN */}
+                            <div>
+                                <Label className="text-sm font-medium text-slate-700">رقم الآيبان (IBAN) *</Label>
+                                <Input
+                                    type="text"
+                                    value={newBankAccount.iban}
+                                    onChange={(e) => setNewBankAccount({ ...newBankAccount, iban: e.target.value.toUpperCase() })}
+                                    placeholder="SA00 0000 0000 0000 0000 0000"
+                                    className="mt-1.5 h-11 font-mono"
+                                    maxLength="32"
+                                />
+                                <p className="text-xs text-slate-400 mt-1">ابدأ بـ SA ثم الأرقام</p>
+                            </div>
+
+                            {/* SWIFT/BIC Code */}
+                            <div>
+                                <Label className="text-sm font-medium text-slate-700">كود SWIFT/BIC *</Label>
+                                <Input
+                                    type="text"
+                                    value={newBankAccount.swiftCode}
+                                    onChange={(e) => setNewBankAccount({ ...newBankAccount, swiftCode: e.target.value.toUpperCase() })}
+                                    placeholder="RJHISARI"
+                                    className="mt-1.5 h-11 font-mono"
+                                    maxLength="11"
+                                />
+                            </div>
+
+                            {/* Phone Number */}
+                            <div>
+                                <Label className="text-sm font-medium text-slate-700">رقم الجوال المرتبط بالحساب *</Label>
+                                <Input
+                                    type="tel"
+                                    value={newBankAccount.phoneNumber}
+                                    onChange={(e) => setNewBankAccount({ ...newBankAccount, phoneNumber: e.target.value })}
+                                    placeholder="+966 50 000 0000"
+                                    className="mt-1.5 h-11"
+                                    dir="ltr"
+                                />
+                            </div>
+
+                            {/* Billing Address */}
+                            <div>
+                                <Label className="text-sm font-medium text-slate-700">عنوان الفواتير (اختياري)</Label>
+                                <Textarea
+                                    value={newBankAccount.billingAddress}
+                                    onChange={(e) => setNewBankAccount({ ...newBankAccount, billingAddress: e.target.value })}
+                                    placeholder="أدخل العنوان الموجود في كشف الحساب البنكي"
+                                    className="mt-1.5 min-h-[80px] resize-none"
+                                />
+                            </div>
+
+                            {/* Document Upload */}
+                            <div>
+                                <Label className="text-sm font-medium text-slate-700">كشف حساب بنكي (آخر 3 أشهر) *</Label>
+                                <div className="mt-1.5 border-2 border-dashed border-slate-200 rounded-xl p-8 text-center hover:bg-slate-50 cursor-pointer transition">
+                                    <Upload className="mx-auto text-slate-400 mb-3" size={36} />
+                                    <p className="text-sm text-slate-600 font-medium mb-1">اسحب الملف هنا أو انقر للاختيار</p>
+                                    <p className="text-xs text-slate-400">PDF, JPG, PNG حتى 10MB</p>
+                                    <p className="text-xs text-amber-600 mt-2">تأكد من ظهور الاسم والعنوان للتحقق</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex gap-3">
+                        <Button
+                            variant="outline"
+                            className="flex-1"
+                            onClick={() => setShowAddBankSheet(false)}
+                        >
+                            إلغاء
+                        </Button>
+                        <Button
+                            className="flex-1 bg-blue-600 hover:bg-blue-700 gap-2"
+                            disabled={
+                                !newBankAccount.holderName ||
+                                !newBankAccount.bankName ||
+                                !newBankAccount.accountNumber ||
+                                !newBankAccount.iban ||
+                                !newBankAccount.swiftCode ||
+                                !newBankAccount.phoneNumber
+                            }
+                        >
+                            <Check size={18} />
+                            إضافة الحساب
+                        </Button>
+                    </div>
+                </SheetContent>
+            </Sheet>
         </div>
     );
 }

@@ -20,7 +20,8 @@ import {
     MoreVertical,
     Edit,
     Trash2,
-    ExternalLink
+    ExternalLink,
+    Minus
 } from 'lucide-react';
 
 import {
@@ -47,6 +48,14 @@ import {
     DialogTitle,
     DialogFooter,
 } from "@/components/ui/dialog";
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetDescription,
+    SheetFooter,
+} from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -140,6 +149,12 @@ export default function Inventory() {
     const [showTransferModal, setShowTransferModal] = useState(false);
     const [transferQty, setTransferQty] = useState('');
 
+    // Add Stock Sheet states
+    const [showAddStockSheet, setShowAddStockSheet] = useState(false);
+    const [addStockQty, setAddStockQty] = useState('');
+    const [addStockTarget, setAddStockTarget] = useState('merchant'); // 'merchant' or 'platform'
+    const [addStockNote, setAddStockNote] = useState('');
+
     // New modal states
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -152,6 +167,21 @@ export default function Inventory() {
 
     const handleTransfer = (item) => {
         setSelectedItem(item);
+        setTransferQty('');
+        setShowTransferModal(true);
+    };
+
+    const handleAddStock = (item) => {
+        setSelectedItem(item);
+        setAddStockQty('');
+        setAddStockTarget('merchant');
+        setAddStockNote('');
+        setShowAddStockSheet(true);
+    };
+
+    const handleOpenTransferSheet = () => {
+        // Open transfer sheet without specific item (general transfer)
+        setSelectedItem(null);
         setTransferQty('');
         setShowTransferModal(true);
     };
@@ -206,11 +236,11 @@ export default function Inventory() {
                     <p className="text-sm text-slate-500 mt-1">{t('inventory.subtitle')}</p>
                 </div>
                 <div className="flex gap-3">
-                    <Button variant="outline" className="gap-2 border-slate-200">
+                    <Button variant="outline" className="gap-2 border-slate-200" onClick={handleOpenTransferSheet}>
                         <ArrowLeftRight size={18} />
                         {t('inventory.transferStock')}
                     </Button>
-                    <Button className="bg-blue-600 hover:bg-blue-700 gap-2">
+                    <Button className="bg-blue-600 hover:bg-blue-700 gap-2" onClick={() => setShowAddStockSheet(true)}>
                         <Plus size={18} />
                         {t('inventory.addQuantity')}
                     </Button>
@@ -338,7 +368,9 @@ export default function Inventory() {
                                                     >
                                                         <Eye size={16} />
                                                     </Button>
-                                                    {item.stockType === 'merchant' && (
+
+                                                    {/* Transfer Button - Always rendered but invisible when not merchant */}
+                                                    {item.stockType === 'merchant' ? (
                                                         <Button
                                                             variant="ghost"
                                                             size="icon"
@@ -348,6 +380,8 @@ export default function Inventory() {
                                                         >
                                                             <ArrowLeftRight size={16} />
                                                         </Button>
+                                                    ) : (
+                                                        <div className="h-8 w-8" />
                                                     )}
 
                                                     {/* Dropdown Menu */}
@@ -388,324 +422,449 @@ export default function Inventory() {
                 </CardContent>
             </Card>
 
-            {/* Transfer Stock Modal */}
-            {showTransferModal && (
-                <>
-                    <div className="fixed inset-0 bg-black/40 z-40" onClick={() => setShowTransferModal(false)} />
-                    <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl z-50 w-full max-w-md shadow-2xl overflow-hidden">
-                        {/* Header */}
-                        <div className="flex items-center justify-between p-5 border-b border-slate-100">
-                            <div>
-                                <h3 className="text-lg font-bold text-slate-900">تحويل مخزون للمنصة</h3>
-                                <p className="text-sm text-slate-500">{selectedItem?.name}</p>
-                            </div>
-                            <button
-                                onClick={() => setShowTransferModal(false)}
-                                className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors"
-                            >
-                                <X size={18} />
-                            </button>
-                        </div>
+            {/* Transfer Stock Sheet */}
+            <Sheet open={showTransferModal} onOpenChange={setShowTransferModal}>
+                <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 overflow-hidden">
+                    <SheetHeader className="px-6 pt-12 pb-6 border-b border-slate-100 flex-none">
+                        <SheetTitle className="text-xl font-bold text-slate-900 text-start">
+                            تحويل مخزون للمنصة
+                        </SheetTitle>
+                        {selectedItem && (
+                            <SheetDescription className="text-start text-slate-500">
+                                {selectedItem.name}
+                            </SheetDescription>
+                        )}
+                    </SheetHeader>
 
-                        {/* Body */}
-                        <div className="p-6">
-                            {/* Transfer Flow Visual */}
-                            <div className="flex items-center justify-center gap-4 mb-6 p-4 bg-slate-50 rounded-xl">
-                                <div className="flex flex-col items-center gap-2">
-                                    <div className="w-14 h-14 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600">
-                                        <Boxes size={28} />
-                                    </div>
-                                    <span className="text-xs font-medium text-slate-600">مخزون التاجر</span>
+                    <div className="flex-1 overflow-y-auto px-6 py-6">
+                        {/* Transfer Flow Visual */}
+                        <div className="flex items-center justify-center gap-4 mb-6 p-4 bg-slate-50 rounded-xl">
+                            <div className="flex flex-col items-center gap-2">
+                                <div className="w-14 h-14 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600">
+                                    <Boxes size={28} />
                                 </div>
-                                <div className="flex flex-col items-center">
-                                    <ArrowLeft size={24} className="text-blue-500" />
-                                </div>
-                                <div className="flex flex-col items-center gap-2">
-                                    <div className="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
-                                        <Warehouse size={28} />
-                                    </div>
-                                    <span className="text-xs font-medium text-slate-600">مخزون المنصة</span>
-                                </div>
+                                <span className="text-xs font-medium text-slate-600">مخزون التاجر</span>
                             </div>
-
-                            {/* Quantity Input */}
-                            <div className="space-y-3 mb-6">
-                                <Label className="text-slate-700 font-medium">الكمية المراد تحويلها</Label>
-                                <Input
-                                    type="number"
-                                    value={transferQty}
-                                    onChange={(e) => setTransferQty(e.target.value)}
-                                    placeholder="أدخل الكمية"
-                                    className="h-12 text-lg text-center font-bold"
-                                    max={currentMerchantStock}
-                                />
+                            <div className="flex flex-col items-center">
+                                <ArrowLeft size={24} className="text-blue-500" />
                             </div>
-
-                            {/* Summary */}
-                            <div className="bg-slate-50 rounded-xl p-4 space-y-3">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm text-slate-600">المخزون الحالي (التاجر)</span>
-                                    <span className="font-bold text-slate-900">{currentMerchantStock} قطعة</span>
+                            <div className="flex flex-col items-center gap-2">
+                                <div className="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
+                                    <Warehouse size={28} />
                                 </div>
-                                <div className="border-t border-slate-200"></div>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm text-slate-600">المخزون بعد التحويل (التاجر)</span>
-                                    <span className={`font-bold ${newMerchantStock === 0 ? 'text-red-600' : 'text-emerald-600'}`}>
-                                        {newMerchantStock} قطعة
-                                    </span>
-                                </div>
+                                <span className="text-xs font-medium text-slate-600">مخزون المنصة</span>
                             </div>
                         </div>
 
-                        {/* Footer */}
-                        <div className="flex gap-3 p-5 border-t border-slate-100 bg-slate-50">
-                            <Button
-                                variant="outline"
-                                className="flex-1"
-                                onClick={() => setShowTransferModal(false)}
-                            >
-                                إلغاء
-                            </Button>
-                            <Button
-                                className="flex-1 bg-blue-600 hover:bg-blue-700 gap-2"
-                                disabled={!transferQty || parseInt(transferQty) <= 0 || parseInt(transferQty) > currentMerchantStock}
-                            >
-                                <Check size={18} />
-                                تأكيد التحويل
-                            </Button>
+                        {/* Current Stock Info */}
+                        <div className="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                            <p className="text-xs text-slate-600 mb-1">المخزون المتاح حالياً (التاجر)</p>
+                            <p className="text-2xl font-bold text-blue-600">{currentMerchantStock} قطعة</p>
                         </div>
-                    </div>
-                </>
-            )}
 
-            {/* Movements Modal */}
-            <Dialog open={showMovements} onOpenChange={setShowMovements}>
-                <DialogContent className="sm:max-w-[600px] bg-white">
-                    <DialogHeader>
-                        <DialogTitle className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4">
-                            سجل حركات: {selectedItem?.name}
-                        </DialogTitle>
-                    </DialogHeader>
-                    {selectedItem && (
-                        <div className="py-4">
-                            <div className="grid grid-cols-4 gap-3 mb-6">
-                                <div className="p-3 bg-emerald-50 rounded-lg text-center">
-                                    <p className="text-xs text-emerald-600 mb-1">متاح</p>
-                                    <p className="text-xl font-bold text-emerald-700">{selectedItem.available}</p>
-                                </div>
-                                <div className="p-3 bg-purple-50 rounded-lg text-center">
-                                    <p className="text-xs text-purple-600 mb-1">محجوز</p>
-                                    <p className="text-xl font-bold text-purple-700">{selectedItem.reserved}</p>
-                                </div>
-                                <div className="p-3 bg-blue-50 rounded-lg text-center">
-                                    <p className="text-xs text-blue-600 mb-1">مستلم</p>
-                                    <p className="text-xl font-bold text-blue-700">{selectedItem.received}</p>
-                                </div>
-                                <div className="p-3 bg-red-50 rounded-lg text-center">
-                                    <p className="text-xs text-red-600 mb-1">تالف</p>
-                                    <p className="text-xl font-bold text-red-700">{selectedItem.damaged}</p>
-                                </div>
-                            </div>
-
-                            <h4 className="text-sm font-bold text-slate-900 mb-4">آخر الحركات</h4>
-                            <div className="space-y-3 max-h-[250px] overflow-y-auto pr-2">
-                                <div className="flex items-center gap-4 p-3 bg-white border border-slate-100 rounded-lg">
-                                    <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                                        <ArrowUp size={18} />
-                                    </div>
-                                    <div className="flex-1">
-                                        <div className="flex items-center justify-between mb-1">
-                                            <p className="font-semibold text-slate-900 text-sm">إضافة مخزون</p>
-                                            <span className="font-bold text-sm text-emerald-600">+50</span>
-                                        </div>
-                                        <div className="flex items-center justify-between text-xs text-slate-500">
-                                            <span>شحنة جديدة</span>
-                                            <span>2024-12-15</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-4 p-3 bg-white border border-slate-100 rounded-lg">
-                                    <div className="w-10 h-10 rounded-full bg-red-50 text-red-600 flex items-center justify-center">
-                                        <ArrowDown size={18} />
-                                    </div>
-                                    <div className="flex-1">
-                                        <div className="flex items-center justify-between mb-1">
-                                            <p className="font-semibold text-slate-900 text-sm">عملية بيع</p>
-                                            <span className="font-bold text-sm text-red-600">-20</span>
-                                        </div>
-                                        <div className="flex items-center justify-between text-xs text-slate-500">
-                                            <span>مبيعات</span>
-                                            <span>2024-12-16</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        {/* Quantity Input */}
+                        <div className="space-y-3 mb-6">
+                            <Label className="text-slate-700 font-medium">الكمية المراد تحويلها</Label>
+                            <Input
+                                type="number"
+                                value={transferQty}
+                                onChange={(e) => setTransferQty(e.target.value)}
+                                placeholder="أدخل الكمية"
+                                className={`h-12 text-lg text-center font-bold ${transferQty && parseInt(transferQty) > currentMerchantStock
+                                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                                    : ''
+                                    }`}
+                                max={currentMerchantStock}
+                            />
+                            {transferQty && parseInt(transferQty) > currentMerchantStock && (
+                                <p className="text-xs text-red-600">الكمية المدخلة أكبر من المخزون المتاح</p>
+                            )}
                         </div>
-                    )}
-                    <DialogFooter className="gap-2 border-t border-slate-100 pt-4">
-                        <Button variant="outline" className="flex-1" onClick={() => setShowMovements(false)}>إغلاق</Button>
-                        <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
-                            <Plus size={16} className="ml-2" />
-                            إضافة حركة
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
 
-            {/* View Details Modal */}
-            <Dialog open={showDetailsModal} onOpenChange={setShowDetailsModal}>
-                <DialogContent className="sm:max-w-[550px] bg-white">
-                    <DialogHeader>
-                        <DialogTitle className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4">
-                            تفاصيل المنتج
-                        </DialogTitle>
-                    </DialogHeader>
-                    {selectedItem && (
-                        <div className="py-4 space-y-6">
-                            {/* Product Info */}
-                            <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
-                                <div className="w-20 h-20 rounded-xl overflow-hidden border border-slate-200">
-                                    <img src={selectedItem.image} alt={selectedItem.name} className="w-full h-full object-cover" />
-                                </div>
-                                <div>
-                                    <h3 className="font-bold text-slate-900">{selectedItem.name}</h3>
-                                    <p className="text-sm text-slate-500 font-mono">{selectedItem.sku}</p>
-                                    <Badge variant="outline" className={`mt-2 ${stockTypeConfig[selectedItem.stockType].color}`}>
-                                        {stockTypeConfig[selectedItem.stockType].label}
-                                    </Badge>
-                                </div>
+                        {/* Summary */}
+                        <div className="bg-slate-50 rounded-xl p-4 space-y-3">
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm text-slate-600">سيتم إرسال</span>
+                                <span className="font-bold text-blue-600">{transferQty || 0} قطعة</span>
                             </div>
-
-                            {/* Stock Details */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                                    <p className="text-xs text-slate-500 mb-1">متاح للبيع</p>
-                                    <p className="text-2xl font-bold text-emerald-600">{selectedItem.available}</p>
-                                </div>
-                                <div className="p-4 bg-purple-50 rounded-xl border border-purple-100">
-                                    <p className="text-xs text-slate-500 mb-1">محجوز</p>
-                                    <p className="text-2xl font-bold text-purple-600">{selectedItem.reserved}</p>
-                                </div>
-                                <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
-                                    <p className="text-xs text-slate-500 mb-1">مستلم</p>
-                                    <p className="text-2xl font-bold text-blue-600">{selectedItem.received}</p>
-                                </div>
-                                <div className="p-4 bg-red-50 rounded-xl border border-red-100">
-                                    <p className="text-xs text-slate-500 mb-1">تالف</p>
-                                    <p className="text-2xl font-bold text-red-600">{selectedItem.damaged}</p>
-                                </div>
+                            <div className="border-t border-slate-200"></div>
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm text-slate-600">المخزون بعد التحويل (التاجر)</span>
+                                <span className={`font-bold ${newMerchantStock === 0 ? 'text-red-600' : 'text-emerald-600'}`}>
+                                    {newMerchantStock} قطعة
+                                </span>
                             </div>
-
-                            {/* Selling Method */}
-                            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
-                                <span className="text-slate-600">طريقة البيع</span>
-                                <Badge className={sellingMethodConfig[selectedItem.sellingMethod].color}>
-                                    {sellingMethodConfig[selectedItem.sellingMethod].label}
+                            <div className="border-t border-slate-200"></div>
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm text-slate-600">الحالة</span>
+                                <Badge variant="secondary" className="bg-amber-100 text-amber-700">
+                                    بانتظار الاستلام
                                 </Badge>
                             </div>
                         </div>
-                    )}
-                    <DialogFooter>
-                        <Button variant="outline" onClick={() => setShowDetailsModal(false)}>إغلاق</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                    </div>
 
-            {/* Edit Product Modal */}
-            <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
-                <DialogContent className="sm:max-w-[500px] bg-white">
-                    <DialogHeader>
-                        <DialogTitle className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4">
-                            تعديل المنتج
-                        </DialogTitle>
-                    </DialogHeader>
-                    {selectedItem && (
-                        <div className="py-4 space-y-4">
-                            <div className="flex items-center gap-4 p-3 bg-slate-50 rounded-xl mb-4">
-                                <div className="w-12 h-12 rounded-lg overflow-hidden border border-slate-200">
-                                    <img src={selectedItem.image} alt={selectedItem.name} className="w-full h-full object-cover" />
-                                </div>
-                                <div>
-                                    <p className="font-semibold text-slate-900">{selectedItem.name}</p>
-                                    <p className="text-xs text-slate-500 font-mono">{selectedItem.sku}</p>
-                                </div>
-                            </div>
+                    <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex gap-3 flex-none">
+                        <Button
+                            variant="outline"
+                            className="flex-1 border-slate-200"
+                            onClick={() => setShowTransferModal(false)}
+                        >
+                            إلغاء
+                        </Button>
+                        <Button
+                            className="flex-1 bg-blue-600 hover:bg-blue-700 gap-2"
+                            disabled={!transferQty || parseInt(transferQty) <= 0 || parseInt(transferQty) > currentMerchantStock}
+                        >
+                            <Check size={18} />
+                            تأكيد التحويل
+                        </Button>
+                    </div>
+                </SheetContent>
+            </Sheet>
 
-                            <div className="space-y-2">
-                                <Label>اسم المنتج</Label>
-                                <Input defaultValue={selectedItem.name} className="bg-white" />
-                            </div>
+            {/* Add Stock Sheet */}
+            <Sheet open={showAddStockSheet} onOpenChange={setShowAddStockSheet}>
+                <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 overflow-hidden">
+                    <SheetHeader className="px-6 pt-12 pb-6 border-b border-slate-100 flex-none">
+                        <SheetTitle className="text-xl font-bold text-slate-900 text-start">
+                            {t('inventory.addQuantity')}
+                        </SheetTitle>
+                        {selectedItem && (
+                            <SheetDescription className="text-start text-slate-500">
+                                {selectedItem.name}
+                            </SheetDescription>
+                        )}
+                    </SheetHeader>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <Label>الكمية المتاحة</Label>
-                                    <Input type="number" defaultValue={selectedItem.available} className="bg-white" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label>الكمية المحجوزة</Label>
-                                    <Input type="number" defaultValue={selectedItem.reserved} className="bg-white" />
-                                </div>
-                            </div>
+                    <div className="flex-1 overflow-y-auto px-6 py-6">
+                        {/* Target Selector */}
+                        <div className="bg-slate-50 p-1 rounded-xl flex mb-6">
+                            <button
+                                className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${addStockTarget === 'merchant'
+                                    ? 'bg-white text-orange-600 shadow-sm ring-1 ring-slate-200'
+                                    : 'text-slate-500 hover:text-slate-700'
+                                    }`}
+                                onClick={() => setAddStockTarget('merchant')}
+                            >
+                                مخزون التاجر
+                            </button>
+                            <button
+                                className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${addStockTarget === 'platform'
+                                    ? 'bg-white text-blue-600 shadow-sm ring-1 ring-slate-200'
+                                    : 'text-slate-500 hover:text-slate-700'
+                                    }`}
+                                onClick={() => setAddStockTarget('platform')}
+                            >
+                                مخزون المنصة
+                            </button>
+                        </div>
 
-                            <div className="space-y-2">
-                                <Label>نوع المخزون</Label>
-                                <Select defaultValue={selectedItem.stockType}>
-                                    <SelectTrigger className="bg-white">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="platform">مخزون المنصة</SelectItem>
-                                        <SelectItem value="merchant">مخزون التاجر</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                        {/* Quantity Input with Steppers */}
+                        <div className="space-y-3 mb-6">
+                            <Label className="text-slate-700 font-medium">الكمية</Label>
+                            <div className="flex items-center gap-3">
+                                <Button
+                                    variant="outline"
+                                    className="h-12 w-12 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-blue-600"
+                                    onClick={() => setAddStockQty(prev => Math.max(0, (parseInt(prev) || 0) + 1).toString())}
+                                >
+                                    <Plus size={20} />
+                                </Button>
+                                <Input
+                                    type="number"
+                                    value={addStockQty}
+                                    onChange={(e) => setAddStockQty(e.target.value)}
+                                    placeholder="0"
+                                    className="h-12 text-xl text-center font-bold"
+                                    min="1"
+                                />
+                                <Button
+                                    variant="outline"
+                                    className="h-12 w-12 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-red-600"
+                                    onClick={() => setAddStockQty(prev => Math.max(0, (parseInt(prev) || 0) - 1).toString())}
+                                >
+                                    <Minus size={20} />
+                                </Button>
                             </div>
                         </div>
-                    )}
-                    <DialogFooter className="gap-2 border-t border-slate-100 pt-4">
-                        <Button variant="outline" onClick={() => setShowEditModal(false)}>إلغاء</Button>
-                        <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => setShowEditModal(false)}>
-                            <Check size={16} className="ml-2" />
+
+                        {/* Note Input */}
+                        <div className="space-y-3 mb-6">
+                            <Label className="text-slate-700 font-medium">سبب الإضافة (اختياري)</Label>
+                            <Textarea
+                                value={addStockNote}
+                                onChange={(e) => setAddStockNote(e.target.value)}
+                                placeholder="اكتب ملاحظة..."
+                                className="min-h-[80px] resize-none"
+                            />
+                        </div>
+
+                        {/* Summary Preview */}
+                        <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                            <div className="flex items-center justify-between mb-2">
+                                <span className="text-sm text-slate-500">الكمية الحالية</span>
+                                <span className="font-semibold text-slate-700">
+                                    {selectedItem ? (addStockTarget === 'merchant' ? selectedItem.available : selectedItem.received) : 0}
+                                </span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm text-slate-900 font-medium">الإجمالي الجديد</span>
+                                <span className="font-bold text-blue-600 text-lg">
+                                    {selectedItem ?
+                                        ((parseInt(addStockQty) || 0) + (addStockTarget === 'merchant' ? selectedItem.available : selectedItem.received))
+                                        : 0
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex gap-3 flex-none">
+                        <Button
+                            variant="outline"
+                            className="flex-1 border-slate-200"
+                            onClick={() => setShowAddStockSheet(false)}
+                        >
+                            إلغاء
+                        </Button>
+                        <Button
+                            className="flex-1 bg-blue-600 hover:bg-blue-700 gap-2"
+                            disabled={!addStockQty || parseInt(addStockQty) <= 0}
+                        >
+                            <Plus size={18} />
+                            إضافة الكمية
+                        </Button>
+                    </div>
+                </SheetContent>
+            </Sheet>
+
+            {/* Movements Sheet */}
+            <Sheet open={showMovements} onOpenChange={setShowMovements}>
+                <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 overflow-hidden">
+                    <SheetHeader className="px-6 pt-12 pb-6 border-b border-slate-100 flex-none">
+                        <SheetTitle className="text-xl font-bold text-slate-900 text-start">
+                            سجل حركات المخزون
+                        </SheetTitle>
+                        {selectedItem && (
+                            <SheetDescription className="text-start text-slate-500">
+                                {selectedItem.name}
+                            </SheetDescription>
+                        )}
+                    </SheetHeader>
+
+                    <div className="flex-1 overflow-y-auto px-6 py-6">
+                        {selectedItem && (
+                            <>
+                                <div className="grid grid-cols-4 gap-3 mb-6">
+                                    <div className="p-3 bg-emerald-50 rounded-lg text-center border border-emerald-100">
+                                        <p className="text-xs text-emerald-600 mb-1">متاح</p>
+                                        <p className="text-xl font-bold text-emerald-700">{selectedItem.available}</p>
+                                    </div>
+                                    <div className="p-3 bg-purple-50 rounded-lg text-center border border-purple-100">
+                                        <p className="text-xs text-purple-600 mb-1">محجوز</p>
+                                        <p className="text-xl font-bold text-purple-700">{selectedItem.reserved}</p>
+                                    </div>
+                                    <div className="p-3 bg-blue-50 rounded-lg text-center border border-blue-100">
+                                        <p className="text-xs text-blue-600 mb-1">مستلم</p>
+                                        <p className="text-xl font-bold text-blue-700">{selectedItem.received}</p>
+                                    </div>
+                                    <div className="p-3 bg-red-50 rounded-lg text-center border border-red-100">
+                                        <p className="text-xs text-red-600 mb-1">تالف</p>
+                                        <p className="text-xl font-bold text-red-700">{selectedItem.damaged}</p>
+                                    </div>
+                                </div>
+
+                                <h4 className="text-sm font-bold text-slate-900 mb-4">آخر الحركات</h4>
+                                <div className="space-y-3">
+                                    <div className="flex items-center gap-4 p-3 bg-white border border-slate-100 rounded-lg">
+                                        <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                            <ArrowUp size={18} />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="flex items-center justify-between mb-1">
+                                                <p className="font-semibold text-slate-900 text-sm">إضافة مخزون</p>
+                                                <span className="font-bold text-sm text-emerald-600">+50</span>
+                                            </div>
+                                            <div className="flex items-center justify-between text-xs text-slate-500">
+                                                <span>شحنة جديدة</span>
+                                                <span>2024-12-15</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-4 p-3 bg-white border border-slate-100 rounded-lg">
+                                        <div className="w-10 h-10 rounded-full bg-red-50 text-red-600 flex items-center justify-center">
+                                            <ArrowDown size={18} />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="flex items-center justify-between mb-1">
+                                                <p className="font-semibold text-slate-900 text-sm">عملية بيع</p>
+                                                <span className="font-bold text-sm text-red-600">-20</span>
+                                            </div>
+                                            <div className="flex items-center justify-between text-xs text-slate-500">
+                                                <span>مبيعات</span>
+                                                <span>2024-12-16</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </div>
+
+                    <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex gap-3 flex-none">
+                        <Button variant="outline" className="flex-1 border-slate-200" onClick={() => setShowMovements(false)}>إغلاق</Button>
+                        <Button className="flex-1 bg-blue-600 hover:bg-blue-700 gap-2">
+                            <Plus size={16} />
+                            إضافة حركة
+                        </Button>
+                    </div>
+                </SheetContent>
+            </Sheet>
+
+            {/* View Details Sheet */}
+            <Sheet open={showDetailsModal} onOpenChange={setShowDetailsModal}>
+                <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 overflow-hidden">
+                    <SheetHeader className="px-6 pt-12 pb-6 border-b border-slate-100 flex-none">
+                        <SheetTitle className="text-xl font-bold text-slate-900 text-start">تفاصيل المنتج</SheetTitle>
+                    </SheetHeader>
+                    <div className="flex-1 overflow-y-auto px-6 py-6">
+                        {selectedItem && (
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
+                                    <div className="w-20 h-20 rounded-xl overflow-hidden border border-slate-200">
+                                        <img src={selectedItem.image} alt={selectedItem.name} className="w-full h-full object-cover" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-slate-900">{selectedItem.name}</h3>
+                                        <p className="text-sm text-slate-500 font-mono">{selectedItem.sku}</p>
+                                        <Badge variant="outline" className={`mt-2 ${stockTypeConfig[selectedItem.stockType].color}`}>
+                                            {stockTypeConfig[selectedItem.stockType].label}
+                                        </Badge>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                                        <p className="text-xs text-slate-500 mb-1">متاح للبيع</p>
+                                        <p className="text-2xl font-bold text-emerald-600">{selectedItem.available}</p>
+                                    </div>
+                                    <div className="p-4 bg-purple-50 rounded-xl border border-purple-100">
+                                        <p className="text-xs text-slate-500 mb-1">محجوز</p>
+                                        <p className="text-2xl font-bold text-purple-600">{selectedItem.reserved}</p>
+                                    </div>
+                                    <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                                        <p className="text-xs text-slate-500 mb-1">مستلم</p>
+                                        <p className="text-2xl font-bold text-blue-600">{selectedItem.received}</p>
+                                    </div>
+                                    <div className="p-4 bg-red-50 rounded-xl border border-red-100">
+                                        <p className="text-xs text-slate-500 mb-1">تالف</p>
+                                        <p className="text-2xl font-bold text-red-600">{selectedItem.damaged}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                                    <span className="text-slate-600">طريقة البيع</span>
+                                    <Badge className={sellingMethodConfig[selectedItem.sellingMethod].color}>
+                                        {sellingMethodConfig[selectedItem.sellingMethod].label}
+                                    </Badge>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <div className="p-6 border-t border-slate-100 bg-slate-50/50">
+                        <Button variant="outline" className="w-full" onClick={() => setShowDetailsModal(false)}>إغلاق</Button>
+                    </div>
+                </SheetContent>
+            </Sheet>
+
+            {/* Edit Product Sheet */}
+            <Sheet open={showEditModal} onOpenChange={setShowEditModal}>
+                <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 overflow-hidden">
+                    <SheetHeader className="px-6 pt-12 pb-6 border-b border-slate-100 flex-none">
+                        <SheetTitle className="text-xl font-bold text-slate-900 text-start">تعديل المنتج</SheetTitle>
+                    </SheetHeader>
+                    <div className="flex-1 overflow-y-auto px-6 py-6">
+                        {selectedItem && (
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-4 p-3 bg-slate-50 rounded-xl mb-4">
+                                    <div className="w-12 h-12 rounded-lg overflow-hidden border border-slate-200">
+                                        <img src={selectedItem.image} alt={selectedItem.name} className="w-full h-full object-cover" />
+                                    </div>
+                                    <div>
+                                        <p className="font-semibold text-slate-900">{selectedItem.name}</p>
+                                        <p className="text-xs text-slate-500 font-mono">{selectedItem.sku}</p>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>اسم المنتج</Label>
+                                    <Input defaultValue={selectedItem.name} className="bg-white" />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label>الكمية المتاحة</Label>
+                                        <Input type="number" defaultValue={selectedItem.available} className="bg-white" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>الكمية المحجوزة</Label>
+                                        <Input type="number" defaultValue={selectedItem.reserved} className="bg-white" />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>نوع المخزون</Label>
+                                    <Select defaultValue={selectedItem.stockType}>
+                                        <SelectTrigger className="bg-white"><SelectValue /></SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="platform">مخزون المنصة</SelectItem>
+                                            <SelectItem value="merchant">مخزون التاجر</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex gap-3">
+                        <Button variant="outline" className="flex-1" onClick={() => setShowEditModal(false)}>إلغاء</Button>
+                        <Button className="flex-1 bg-blue-600 hover:bg-blue-700 gap-2" onClick={() => setShowEditModal(false)}>
+                            <Check size={16} />
                             حفظ التغييرات
                         </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                    </div>
+                </SheetContent>
+            </Sheet>
 
-            {/* Delete Confirmation Modal */}
-            <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
-                <DialogContent className="sm:max-w-[400px] bg-white">
-                    <DialogHeader>
-                        <DialogTitle className="text-xl font-bold text-slate-900">
-                            حذف المنتج
-                        </DialogTitle>
-                    </DialogHeader>
-                    {selectedItem && (
-                        <div className="py-4">
-                            <div className="flex items-center gap-4 p-4 bg-red-50 rounded-xl border border-red-100 mb-4">
-                                <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-600">
-                                    <Trash2 size={24} />
+            {/* Delete Confirmation Sheet */}
+            <Sheet open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+                <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 overflow-hidden">
+                    <SheetHeader className="px-6 pt-12 pb-6 border-b border-slate-100 flex-none">
+                        <SheetTitle className="text-xl font-bold text-red-600 text-start">حذف المنتج</SheetTitle>
+                    </SheetHeader>
+                    <div className="flex-1 overflow-y-auto px-6 py-6">
+                        {selectedItem && (
+                            <>
+                                <div className="flex items-center gap-4 p-4 bg-red-50 rounded-xl border border-red-100 mb-4">
+                                    <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                                        <Trash2 size={24} />
+                                    </div>
+                                    <div>
+                                        <p className="font-semibold text-slate-900">هل أنت متأكد؟</p>
+                                        <p className="text-sm text-slate-500">سيتم حذف المنتج بشكل نهائي</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="font-semibold text-slate-900">هل أنت متأكد؟</p>
-                                    <p className="text-sm text-slate-500">سيتم حذف المنتج بشكل نهائي</p>
+                                <div className="p-4 bg-slate-50 rounded-xl">
+                                    <p className="font-medium text-slate-900">{selectedItem.name}</p>
+                                    <p className="text-sm text-slate-500 font-mono">{selectedItem.sku}</p>
                                 </div>
-                            </div>
-
-                            <div className="p-4 bg-slate-50 rounded-xl">
-                                <p className="font-medium text-slate-900">{selectedItem.name}</p>
-                                <p className="text-sm text-slate-500 font-mono">{selectedItem.sku}</p>
-                            </div>
-                        </div>
-                    )}
-                    <DialogFooter className="gap-2">
+                            </>
+                        )}
+                    </div>
+                    <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex gap-3">
                         <Button variant="outline" className="flex-1" onClick={() => setShowDeleteModal(false)}>إلغاء</Button>
-                        <Button variant="destructive" className="flex-1 bg-red-600 hover:bg-red-700" onClick={() => setShowDeleteModal(false)}>
-                            <Trash2 size={16} className="ml-2" />
+                        <Button variant="destructive" className="flex-1 bg-red-600 hover:bg-red-700 gap-2" onClick={() => setShowDeleteModal(false)}>
+                            <Trash2 size={16} />
                             تأكيد الحذف
                         </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                    </div>
+                </SheetContent>
+            </Sheet>
         </div>
     );
 }

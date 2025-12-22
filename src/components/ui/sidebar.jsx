@@ -328,7 +328,7 @@ function SidebarSeparator({ className, ...props }) {
         <Separator
             data-slot="sidebar-separator"
             data-sidebar="separator"
-            className={cn("bg-sidebar-border mx-2 w-auto", className)}
+            className={cn("bg-sidebar-border mx-2 w-auto group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:w-8", className)}
             {...props}
         />
     )

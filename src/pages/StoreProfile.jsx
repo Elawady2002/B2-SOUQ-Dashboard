@@ -784,7 +784,7 @@ export default function StoreProfile() {
 
             {/* Policy Edit Sheet */}
             <Sheet open={isPolicySheetOpen} onOpenChange={setIsPolicySheetOpen}>
-                <SheetContent side="left" className="sm:max-w-xl p-0 gap-0 flex flex-col h-full">
+                <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 gap-0 flex flex-col h-full">
                     <SheetHeader className="px-6 pb-6 pt-14 border-b border-slate-100 flex-none relative">
                         <SheetTitle className="flex items-center gap-2.5 text-xl font-bold text-slate-900">
                             {currentPolicy && React.createElement(currentPolicy.icon, {

@@ -1,249 +1,373 @@
-import { useState } from 'react';
-import { Send, Clock, Search, MoreHorizontal, Image, Paperclip, Smile, ChevronDown, X, Headphones, Pin } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+    Send,
+    Search,
+    Plus,
+    Headphones,
+    Paperclip,
+    FileText,
+    X
+} from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetDescription,
+} from '@/components/ui/sheet';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
-const conversations = [
-    { id: 0, name: 'الدعم الفني', avatar: '', lastMessage: 'أهلاً بك! نحن سعداء بخدمتك...', time: 'متصل', unread: false, online: true, isPinned: true, isSupport: true },
-    { id: 1, name: 'أحمد محمود', avatar: 'https://i.pravatar.cc/150?img=11', lastMessage: 'اشتريت المنتج ده من عندكم وعاوز استفسر...', time: '3 د', unread: true, online: false, product: 'شاحن لاسلكي' },
-    { id: 2, name: 'سارة علي', avatar: 'https://i.pravatar.cc/150?img=5', lastMessage: 'مرحبا، عندي سؤال عن المنتج...', time: '5 د', unread: true, online: true, product: 'سماعة AirPods' },
-    { id: 3, name: 'محمد حسن', avatar: 'https://i.pravatar.cc/150?img=12', lastMessage: 'صباح الخير، المنتج وصل متأخر...', time: '12 د', unread: false, online: false, product: 'ساعة Apple Watch' },
-    { id: 4, name: 'نورهان طه', avatar: 'https://i.pravatar.cc/150?img=9', lastMessage: 'عندي مشكلة في الطلب...', time: '25 د', unread: false, online: false, product: 'هاتف iPhone 15' },
-    { id: 5, name: 'يوسف أحمد', avatar: 'https://i.pravatar.cc/150?img=15', lastMessage: 'هل يوجد ضمان على المنتج؟', time: '1 س', unread: false, online: true, product: 'لابتوب MacBook' },
-];
+// Simplified configurations
+const categories = {
+    technical: { label: 'مشكلة تقנית', color: 'text-purple-600 bg-purple-50' },
+    billing: { label: 'استفسار مالي', color: 'text-blue-600 bg-blue-50' },
+    product: { label: 'مشكلة منتج', color: 'text-orange-600 bg-orange-50' },
+    account: { label: 'إعدادات الحساب', color: 'text-green-600 bg-green-50' },
+    other: { label: 'أخرى', color: 'text-slate-600 bg-slate-50' }
+};
 
-const supportMessages = [
-    { id: 1, sender: 'support', text: 'أهلاً بك في دعم B2 SOUQ! كيف يمكننا مساعدتك اليوم؟', time: '' },
-];
+const priorities = {
+    high: { label: 'عالية', color: 'text-red-600' },
+    medium: { label: 'متوسطة', color: 'text-amber-600' },
+    low: { label: 'منخفضة', color: 'text-emerald-600' }
+};
 
-const customerMessages = [
-    { id: 1, sender: 'customer', text: 'اشتريت المنتج ده من عندكم، بس فاتتني مدة الارجاع بيوم واحد. ممكن تعملوا استثناء؟', time: '8 د' },
-    { id: 2, sender: 'customer', text: 'شمعة Baies المعطرة', time: '8 د', type: 'product', image: 'https://images.unsplash.com/photo-1602607445090-038e2c30ecff?w=120', price: '450 ج.م' },
-    { id: 3, sender: 'agent', text: 'أهلاً أحمد! خليني أشوف الموضوع ده واحل لك المشكلة.', time: '5 د' },
-    { id: 4, sender: 'agent', text: 'ممكن توضحلي سبب الارجاع؟', time: '4 د' },
-    { id: 5, sender: 'customer', text: 'أنا اشتريت المنتج الغلط بالخطأ 😅', time: '4 د' },
-    { id: 6, sender: 'agent', text: 'تحب تستبدل المنتج بالمنتج الصح بدل الارجاع؟', time: '3 د' },
+const statuses = {
+    open: { label: 'مفتوحة', color: 'bg-blue-100 text-blue-700' },
+    in_progress: { label: 'قيد المعالجة', color: 'bg-amber-100 text-amber-700' },
+    resolved: { label: 'محلولة', color: 'bg-emerald-100 text-emerald-700' },
+    closed: { label: 'مغلقة', color: 'bg-slate-100 text-slate-600' }
+};
+
+const tickets = [
+    {
+        id: 'T-001',
+        subject: 'مشكلة في عملية الدفع',
+        category: 'billing',
+        priority: 'high',
+        status: 'open',
+        lastUpdate: '5 د',
+        unread: 2,
+        assignedTo: 'أحمد',
+        messages: [
+            { id: 1, sender: 'merchant', text: 'مرحباً، أواجه مشكلة في استلام المدفوعات', time: '10:30' },
+            { id: 2, sender: 'support', text: 'أهلاً بك! نحن نعمل على حل هذه المشكلة', time: '10:35' },
+        ]
+    },
+    {
+        id: 'T-002',
+        subject: 'كيفية تعطيل المنتجات مؤقتاً',
+        category: 'technical',
+        priority: 'medium',
+        status: 'in_progress',
+        lastUpdate: '1 س',
+        unread: 0,
+        assignedTo: 'سارة',
+        messages: [
+            { id: 1, sender: 'merchant', text: 'هل يمكن تعطيل المنتجات مؤقتاً؟', time: '14:20' },
+            { id: 2, sender: 'support', text: 'نعم بالتأكيد! يمكنك ذلك من خلال...', time: '14:25' },
+        ]
+    },
+    {
+        id: 'T-003',
+        subject: 'تحديث بيانات المتجر',
+        category: 'account',
+        priority: 'low',
+        status: 'resolved',
+        lastUpdate: '2 يوم',
+        unread: 0,
+        assignedTo: 'محمد',
+        messages: [
+            { id: 1, sender: 'merchant', text: 'أريد تحديث عنوان المتجر', time: '09:00' },
+            { id: 2, sender: 'support', text: 'تم التحديث بنجاح!', time: '09:15' },
+        ]
+    },
 ];
 
 export default function Messages() {
     const { t } = useLanguage();
-    const [selectedConv, setSelectedConv] = useState(conversations[0]);
+    const [selectedTicket, setSelectedTicket] = useState(tickets[0]);
     const [messageInput, setMessageInput] = useState('');
+    const [showNewTicketSheet, setShowNewTicketSheet] = useState(false);
+    const [filterStatus, setFilterStatus] = useState('all');
+    const [newTicket, setNewTicket] = useState({
+        subject: '',
+        category: 'technical',
+        priority: 'medium',
+        description: ''
+    });
 
-    const messages = selectedConv?.isSupport ? supportMessages : customerMessages;
+    const filteredTickets = filterStatus === 'all'
+        ? tickets
+        : tickets.filter(t => t.status === filterStatus);
 
     return (
-        <div className="flex h-[calc(100vh-120px)] bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
-
-            {/* Right Sidebar */}
-            <div className="w-[340px] border-l border-slate-100 flex flex-col bg-white">
-
-                {/* Title */}
-                <div className="p-5 border-b border-slate-100">
-                    <h3 className="text-lg font-bold text-slate-900">{t('messages.title')}</h3>
+        <div className="flex flex-col gap-4">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+                <div>
+                    <h2 className="text-2xl font-bold text-slate-900">الدعم الفني</h2>
+                    <p className="text-sm text-slate-500 mt-0.5">تواصل مع فريق الدعم</p>
                 </div>
-
-                {/* Search & Filter */}
-                <div className="p-4 border-b border-slate-100 space-y-3">
-                    <div className="relative">
-                        <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                        <Input
-                            type="text"
-                            placeholder={t('messages.searchConversation') || 'Search conversation...'}
-                            className="pr-10 bg-slate-50 border-slate-200 text-sm h-10"
-                        />
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Button size="sm" className="gap-2 bg-blue-600 hover:bg-blue-700 flex-1">
-                            <Badge variant="secondary" className="bg-white/20 text-white hover:bg-white/20 text-xs px-2">5</Badge>
-                            {t('messages.open') || 'Open'}
-                            <ChevronDown size={14} />
-                        </Button>
-                        <Button variant="outline" size="sm" className="text-slate-600">
-                            {t('messages.newest') || 'Newest'}
-                        </Button>
-                    </div>
-                </div>
-
-                {/* Conversations List */}
-                <ScrollArea className="flex-1">
-                    {conversations.map((conv) => (
-                        <div
-                            key={conv.id}
-                            onClick={() => setSelectedConv(conv)}
-                            className={`flex items-start gap-3 p-4 cursor-pointer border-b border-slate-50 transition-colors ${selectedConv?.id === conv.id
-                                ? 'bg-slate-50'
-                                : conv.isPinned
-                                    ? 'bg-blue-50/50 hover:bg-blue-50'
-                                    : 'hover:bg-slate-50'
-                                }`}
-                        >
-                            {conv.isSupport ? (
-                                <div className="w-11 h-11 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
-                                    <Headphones size={22} className="text-white" />
-                                </div>
-                            ) : (
-                                <div className="relative flex-shrink-0">
-                                    <Avatar className="h-11 w-11">
-                                        <AvatarImage src={conv.avatar} alt={conv.name} />
-                                        <AvatarFallback>{conv.name.charAt(0)}</AvatarFallback>
-                                    </Avatar>
-                                    {conv.online && <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white" />}
-                                </div>
-                            )}
-                            <div className="flex-1 min-w-0">
-                                <div className="flex justify-between items-center mb-1">
-                                    <div className="flex items-center gap-1.5">
-                                        {conv.isPinned && <Pin size={12} className="text-blue-600" />}
-                                        <span className={`text-sm ${conv.unread || conv.isPinned ? 'font-semibold' : 'font-medium'} text-slate-900`}>
-                                            {conv.name}
-                                        </span>
-                                    </div>
-                                    <span className={`text-xs ${conv.isSupport ? 'text-emerald-500' : 'text-slate-400'}`}>
-                                        {conv.time}
-                                    </span>
-                                </div>
-                                <p className="text-xs text-slate-600 overflow-hidden text-ellipsis whitespace-nowrap mb-1.5">
-                                    {conv.lastMessage}
-                                </p>
-                                {conv.product && (
-                                    <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700 hover:bg-blue-50">
-                                        {conv.product}
-                                    </Badge>
-                                )}
-                                {conv.isSupport && (
-                                    <Badge className="text-xs bg-blue-600 hover:bg-blue-700">
-                                        {t('messages.technicalSupport')}
-                                    </Badge>
-                                )}
-                            </div>
-                            {conv.unread && <span className="w-2.5 h-2.5 bg-red-500 rounded-full flex-shrink-0 mt-1.5" />}
-                        </div>
-                    ))}
-                </ScrollArea>
+                <Button
+                    className="bg-blue-600 hover:bg-blue-700"
+                    onClick={() => setShowNewTicketSheet(true)}
+                >
+                    <Plus size={18} className="ml-2" />
+                    تذكرة جديدة
+                </Button>
             </div>
 
-            {/* Chat Area */}
-            <div className="flex-1 flex flex-col bg-slate-50">
+            {/* Main Content */}
+            <div className="grid grid-cols-[320px_1fr] gap-4 h-[calc(100vh-200px)]">
 
-                {/* Header */}
-                <div className="flex items-center justify-between p-4 bg-white border-b border-slate-100">
-                    <div className="flex items-center gap-3">
-                        {selectedConv?.isSupport ? (
-                            <div className="w-11 h-11 rounded-full bg-blue-600 flex items-center justify-center">
-                                <Headphones size={22} className="text-white" />
+                {/* Tickets Sidebar */}
+                <Card className="border-slate-200">
+                    <CardContent className="p-0 h-full flex flex-col">
+                        {/* Search & Filters */}
+                        <div className="p-4 space-y-3 border-b">
+                            <div className="relative">
+                                <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                <Input
+                                    type="text"
+                                    placeholder="بحث..."
+                                    className="pr-9 h-9 text-sm"
+                                />
                             </div>
-                        ) : (
-                            <Avatar className="h-11 w-11">
-                                <AvatarImage src={selectedConv?.avatar} alt={selectedConv?.name} />
-                                <AvatarFallback>{selectedConv?.name?.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                        )}
-                        <div>
-                            <p className="font-semibold text-sm text-slate-900">{selectedConv?.name}</p>
-                            {selectedConv?.product && (
-                                <p className="text-xs text-slate-600">
-                                    استفسار عن: <span className="text-blue-600">{selectedConv.product}</span>
-                                </p>
-                            )}
-                            {selectedConv?.isSupport && <p className="text-xs text-emerald-500">● متصل الآن</p>}
-                        </div>
-                    </div>
-                    {!selectedConv?.isSupport && (
-                        <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm" className="gap-2">
-                                <Clock size={16} />
-                                تأجيل
-                            </Button>
-                            <Button size="sm" className="gap-2 bg-emerald-500 hover:bg-emerald-600">
-                                ✓ تم الحل
-                            </Button>
-                            <Button size="sm" variant="destructive" className="gap-2">
-                                <X size={16} />
-                                إغلاق
-                            </Button>
-                        </div>
-                    )}
-                </div>
 
-                {/* Messages */}
-                <ScrollArea className="flex-1 p-6">
-                    <div className="flex flex-col gap-4">
-                        {messages.map((msg) => {
-                            const isAgent = msg.sender === 'agent' || msg.sender === 'support';
-                            return (
-                                <div key={msg.id} className={`flex ${isAgent ? 'justify-start' : 'justify-end'}`}>
-                                    <div className="max-w-[60%]">
-                                        {msg.type === 'product' ? (
-                                            <Card className="border-slate-200">
-                                                <CardContent className="p-4">
-                                                    <img
-                                                        src={msg.image}
-                                                        alt=""
-                                                        className="w-[140px] h-[140px] rounded-xl object-cover mb-3"
-                                                    />
-                                                    <p className="text-sm font-semibold text-blue-600 mb-1">{msg.text}</p>
-                                                    <p className="text-sm text-emerald-600 font-semibold">{msg.price}</p>
-                                                </CardContent>
-                                            </Card>
-                                        ) : (
-                                            <div className={`
-                                                px-4 py-3.5 rounded-2xl
-                                                ${isAgent
-                                                    ? 'bg-blue-600 text-white rounded-br-sm'
-                                                    : 'bg-white text-slate-900 border border-slate-200 rounded-bl-sm'
-                                                }
-                                            `}>
-                                                <p className="text-sm leading-relaxed">{msg.text}</p>
-                                                {msg.time && (
-                                                    <p className={`text-xs mt-2 text-left ${isAgent ? 'text-white/70' : 'text-slate-400'
-                                                        }`}>
-                                                        {msg.time}
-                                                    </p>
-                                                )}
-                                            </div>
+                            <div className="flex gap-2">
+                                {['all', 'open', 'in_progress', 'resolved'].map((status) => (
+                                    <button
+                                        key={status}
+                                        onClick={() => setFilterStatus(status)}
+                                        className={`px-2.5 py-1 rounded text-xs font-medium transition ${filterStatus === status
+                                                ? 'bg-blue-600 text-white'
+                                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                            }`}
+                                    >
+                                        {status === 'all' ? 'الكل' : statuses[status].label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Tickets List */}
+                        <div className="flex-1 overflow-y-auto">
+                            {filteredTickets.map((ticket) => (
+                                <div
+                                    key={ticket.id}
+                                    onClick={() => setSelectedTicket(ticket)}
+                                    className={`p-3 border-b cursor-pointer transition ${selectedTicket?.id === ticket.id
+                                            ? 'bg-blue-50 border-r-2 border-r-blue-600'
+                                            : 'hover:bg-slate-50'
+                                        }`}
+                                >
+                                    <div className="flex items-start justify-between mb-1.5">
+                                        <span className="text-xs font-mono text-slate-500">{ticket.id}</span>
+                                        <span className="text-xs text-slate-400">{ticket.lastUpdate}</span>
+                                    </div>
+
+                                    <p className="text-sm font-semibold text-slate-900 mb-2 line-clamp-1">
+                                        {ticket.subject}
+                                    </p>
+
+                                    <div className="flex items-center gap-2">
+                                        <Badge variant="secondary" className={`text-xs ${categories[ticket.category].color}`}>
+                                            {categories[ticket.category].label}
+                                        </Badge>
+                                        <Badge variant="secondary" className={`text-xs ${statuses[ticket.status].color}`}>
+                                            {statuses[ticket.status].label}
+                                        </Badge>
+                                        {ticket.unread > 0 && (
+                                            <span className="text-xs text-red-600 font-medium">{ticket.unread}</span>
                                         )}
                                     </div>
                                 </div>
-                            );
-                        })}
-                    </div>
-                </ScrollArea>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
 
-                {/* Input */}
-                <div className="p-5 bg-white border-t border-slate-100">
-                    <div className="flex items-center gap-3">
-                        <Button className="gap-2 bg-blue-600 hover:bg-blue-700">
-                            إرسال
-                            <Send size={18} />
-                        </Button>
-                        <Input
-                            type="text"
-                            placeholder="اكتب رسالتك هنا..."
-                            value={messageInput}
-                            onChange={(e) => setMessageInput(e.target.value)}
-                            className="flex-1 bg-slate-50 border-slate-200 text-right"
-                        />
-                        <div className="flex gap-1">
-                            <Button variant="outline" size="icon" className="h-11 w-11">
-                                <Smile size={20} className="text-slate-600" />
-                            </Button>
-                            <Button variant="outline" size="icon" className="h-11 w-11">
-                                <Paperclip size={20} className="text-slate-600" />
-                            </Button>
-                            <Button variant="outline" size="icon" className="h-11 w-11">
-                                <Image size={20} className="text-slate-600" />
-                            </Button>
+                {/* Chat Area */}
+                <Card className="border-slate-200">
+                    <CardContent className="p-0 h-full flex flex-col">
+                        {/* Header */}
+                        <div className="p-4 border-b flex items-center justify-between">
+                            <div>
+                                <h3 className="font-bold text-slate-900">{selectedTicket?.subject}</h3>
+                                <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
+                                    <span>{selectedTicket?.id}</span>
+                                    <span>•</span>
+                                    <span>{categories[selectedTicket?.category].label}</span>
+                                    <span>•</span>
+                                    <span className={priorities[selectedTicket?.priority].color}>
+                                        الأولوية: {priorities[selectedTicket?.priority].label}
+                                    </span>
+                                </div>
+                            </div>
+                            <Badge className={statuses[selectedTicket?.status].color}>
+                                {statuses[selectedTicket?.status].label}
+                            </Badge>
+                        </div>
+
+                        {/* Messages */}
+                        <div className="flex-1 overflow-y-auto p-4 bg-slate-50">
+                            <div className="flex flex-col gap-3">
+                                {selectedTicket?.messages.map((msg) => {
+                                    const isSupport = msg.sender === 'support';
+                                    return (
+                                        <div key={msg.id} className={`flex ${isSupport ? 'justify-start' : 'justify-end'}`}>
+                                            <div className={`max-w-[70%] ${isSupport ? 'mr-2' : 'ml-2'}`}>
+                                                {isSupport && (
+                                                    <div className="flex items-center gap-1.5 mb-1">
+                                                        <div className="w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center">
+                                                            <Headphones size={12} className="text-white" />
+                                                        </div>
+                                                        <span className="text-xs text-slate-600">الدعم</span>
+                                                    </div>
+                                                )}
+                                                <div className={`px-3 py-2 rounded-lg ${isSupport
+                                                        ? 'bg-white text-slate-900 border'
+                                                        : 'bg-blue-600 text-white'
+                                                    }`}>
+                                                    <p className="text-sm">{msg.text}</p>
+                                                    <p className={`text-xs mt-1 ${isSupport ? 'text-slate-400' : 'text-white/70'}`}>
+                                                        {msg.time}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Input */}
+                        <div className="p-4 border-t bg-white">
+                            <div className="flex items-end gap-2">
+                                <Button variant="ghost" size="icon" className="h-9 w-9">
+                                    <Paperclip size={18} />
+                                </Button>
+                                <Textarea
+                                    placeholder="اكتب رسالتك..."
+                                    value={messageInput}
+                                    onChange={(e) => setMessageInput(e.target.value)}
+                                    className="min-h-[36px] max-h-[100px] resize-none"
+                                    rows={1}
+                                />
+                                <Button className="bg-blue-600 hover:bg-blue-700 h-9">
+                                    <Send size={16} />
+                                </Button>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* New Ticket Sheet */}
+            <Sheet open={showNewTicketSheet} onOpenChange={setShowNewTicketSheet}>
+                <SheetContent side="left" className="w-[400px] sm:w-[520px] p-0 flex flex-col overflow-hidden">
+                    <SheetHeader className="px-6 pt-8 pb-4 border-b">
+                        <SheetTitle className="text-lg font-bold text-slate-900">تذكرة جديدة</SheetTitle>
+                        <SheetDescription className="text-sm">املأ البيانات وسيتم الرد عليك قريباً</SheetDescription>
+                    </SheetHeader>
+
+                    <div className="flex-1 overflow-y-auto px-6 py-4">
+                        <div className="space-y-4">
+                            <div>
+                                <Label className="text-sm font-medium">الموضوع *</Label>
+                                <Input
+                                    value={newTicket.subject}
+                                    onChange={(e) => setNewTicket({ ...newTicket, subject: e.target.value })}
+                                    placeholder="عنوان المشكلة"
+                                    className="mt-1.5"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <Label className="text-sm font-medium">التصنيف *</Label>
+                                    <Select
+                                        value={newTicket.category}
+                                        onValueChange={(value) => setNewTicket({ ...newTicket, category: value })}
+                                    >
+                                        <SelectTrigger className="mt-1.5">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {Object.entries(categories).map(([key, cat]) => (
+                                                <SelectItem key={key} value={key}>{cat.label}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div>
+                                    <Label className="text-sm font-medium">الأولوية *</Label>
+                                    <Select
+                                        value={newTicket.priority}
+                                        onValueChange={(value) => setNewTicket({ ...newTicket, priority: value })}
+                                    >
+                                        <SelectTrigger className="mt-1.5">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {Object.entries(priorities).map(([key, priority]) => (
+                                                <SelectItem key={key} value={key}>{priority.label}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <Label className="text-sm font-medium">الوصف *</Label>
+                                <Textarea
+                                    value={newTicket.description}
+                                    onChange={(e) => setNewTicket({ ...newTicket, description: e.target.value })}
+                                    placeholder="اشرح المشكلة بالتفصيل..."
+                                    className="mt-1.5 min-h-[100px] resize-none"
+                                />
+                            </div>
+
+                            <div>
+                                <Label className="text-sm font-medium">مرفقات (اختياري)</Label>
+                                <div className="mt-1.5 border-2 border-dashed rounded-lg p-6 text-center hover:bg-slate-50 cursor-pointer">
+                                    <FileText className="mx-auto text-slate-400 mb-2" size={28} />
+                                    <p className="text-xs text-slate-500">اسحب الملفات أو انقر للاختيار</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
+
+                    <div className="p-4 border-t flex gap-2">
+                        <Button variant="outline" className="flex-1" onClick={() => setShowNewTicketSheet(false)}>
+                            إلغاء
+                        </Button>
+                        <Button
+                            className="flex-1 bg-blue-600 hover:bg-blue-700"
+                            disabled={!newTicket.subject || !newTicket.description}
+                            onClick={() => setShowNewTicketSheet(false)}
+                        >
+                            إرسال
+                        </Button>
+                    </div>
+                </SheetContent>
+            </Sheet>
         </div>
     );
 }
