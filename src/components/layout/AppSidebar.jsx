@@ -73,7 +73,7 @@ export function AppSidebar({ ...props }) {
     const handleLogout = () => {
         localStorage.removeItem('isAuthenticated');
         localStorage.removeItem('sellerData');
-        window.location.href = '/login';
+        navigate('/login');
     }
 
     return (
