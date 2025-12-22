@@ -74,9 +74,9 @@ export default function Login() {
             {/* Right Side - Login Form */}
             <div className="flex-1 bg-white flex items-center justify-center p-8 lg:p-12">
                 <div className="w-full max-w-md">
-                    {/* Logo positioned on left (in RTL = right visually) */}
-                    <div className="mb-8 flex justify-start">
-                        <img src={Logo} alt="B2 SOUQ" className="h-12" />
+                    {/* Logo positioned on left */}
+                    <div className="mb-8 flex justify-end">
+                        <img src={Logo} alt="B2 SOUQ" className="h-8" />
                     </div>
 
                     {/* Header */}
