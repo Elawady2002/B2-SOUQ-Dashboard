@@ -73,7 +73,7 @@ export function AppSidebar({ ...props }) {
     const handleLogout = () => {
         localStorage.removeItem('isAuthenticated');
         localStorage.removeItem('sellerData');
-        navigate('/login');
+        navigate('/login', { replace: true });
     }
 
     return (

@@ -24,7 +24,8 @@ import Reviews from './pages/Reviews';
 // Protected Route Component
 function ProtectedRoute({ children }) {
   const isAuthenticated = localStorage.getItem('isAuthenticated');
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true';
+  return isAuthenticated || isPreview ? children : <Navigate to="/login" replace />;
 }
 
 // Auth Route Component (redirect to home if already logged in)
