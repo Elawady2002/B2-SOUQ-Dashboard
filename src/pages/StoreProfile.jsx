@@ -264,28 +264,32 @@ export default function StoreProfile() {
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                                 {/* Store Names Card */}
-                                <div className="bg-blue-50/30 rounded-2xl p-6 border border-blue-100 hover:border-blue-200 transition-colors">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <h4 className="text-base font-bold text-slate-800">{t('storeProfile.storeName')}</h4>
-                                        <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center shadow-sm shadow-blue-200">
-                                            <Store className="w-5 h-5 text-white" />
+                                <div className="bg-[#f0f9ff] rounded-[2rem] p-8 border border-blue-100 hover:border-blue-200 transition-colors h-full flex flex-col">
+                                    <div className="flex items-center justify-between mb-8">
+                                        <h4 className="text-lg font-bold text-slate-800">{t('storeProfile.storeName')}</h4>
+                                        <div className="w-12 h-12 rounded-2xl bg-[#3b82f6] flex items-center justify-center shadow-sm shadow-blue-200">
+                                            <Store className="w-6 h-6 text-white" />
                                         </div>
                                     </div>
-                                    <div className="space-y-4">
+                                    <div className="space-y-6 flex-1">
                                         <div className="space-y-2">
-                                            <Label className="text-xs font-medium text-slate-500">{t('storeProfile.inArabic')}</Label>
+                                            <div className="flex justify-end">
+                                                <Label className="text-xs font-medium text-slate-500">{t('storeProfile.inArabic')}</Label>
+                                            </div>
                                             <Input
                                                 value={storeName}
                                                 onChange={(e) => setStoreName(e.target.value)}
-                                                className="bg-white h-11 text-sm border-slate-200 focus-visible:ring-blue-500 rounded-xl"
+                                                className="bg-white h-14 text-sm font-medium text-slate-700 border-slate-200 focus-visible:ring-blue-500 rounded-2xl px-4 shadow-sm"
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <Label className="text-xs font-medium text-slate-500">{t('storeProfile.inEnglish')}</Label>
+                                            <div className="flex justify-end">
+                                                <Label className="text-xs font-medium text-slate-500">{t('storeProfile.inEnglish')}</Label>
+                                            </div>
                                             <Input
                                                 value={storeNameEn}
                                                 onChange={(e) => setStoreNameEn(e.target.value)}
-                                                className="bg-white h-11 text-sm text-left border-slate-200 focus-visible:ring-blue-500 rounded-xl"
+                                                className="bg-white h-14 text-sm font-medium text-slate-700 text-left border-slate-200 focus-visible:ring-blue-500 rounded-2xl px-4 shadow-sm"
                                                 dir="ltr"
                                             />
                                         </div>
@@ -293,44 +297,44 @@ export default function StoreProfile() {
                                 </div>
 
                                 {/* Description Card */}
-                                <div className="bg-emerald-50/30 rounded-2xl p-6 border border-emerald-100 hover:border-emerald-200 transition-colors">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <h4 className="text-base font-bold text-slate-800">{t('storeProfile.storeDescription')}</h4>
-                                        <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-sm shadow-emerald-200">
-                                            <FileText className="w-5 h-5 text-white" />
+                                <div className="bg-[#f0fdf4] rounded-[2rem] p-8 border border-emerald-100 hover:border-emerald-200 transition-colors h-full flex flex-col">
+                                    <div className="flex items-center justify-between mb-8">
+                                        <h4 className="text-lg font-bold text-slate-800">{t('storeProfile.storeDescription')}</h4>
+                                        <div className="w-12 h-12 rounded-2xl bg-[#10b981] flex items-center justify-center shadow-sm shadow-emerald-200">
+                                            <FileText className="w-6 h-6 text-white" />
                                         </div>
                                     </div>
-                                    <div className="space-y-2 h-[calc(100%-88px)] flex flex-col">
+                                    <div className="flex-1 flex flex-col bg-white rounded-2xl border border-emerald-100 shadow-sm overflow-hidden p-1">
                                         <Textarea
                                             value={storeDescription}
                                             onChange={(e) => setStoreDescription(e.target.value)}
-                                            className="bg-white resize-none text-sm border-slate-200 focus-visible:ring-emerald-500 min-h-[160px] rounded-xl flex-1 p-4 leading-relaxed"
+                                            className="resize-none border-0 focus-visible:ring-0 rounded-xl h-full p-4 text-sm leading-relaxed text-slate-700 font-medium text-center flex items-center justify-center"
                                             placeholder={t('storeProfile.descriptionPlaceholder')}
                                         />
-                                        <p className="text-[10px] text-slate-400 text-center pt-2">{t('storeProfile.descriptionNote')}</p>
                                     </div>
+                                    <p className="text-[11px] text-slate-400 text-center mt-4 font-medium">{t('storeProfile.descriptionNote')}</p>
                                 </div>
 
                                 {/* Domain Card */}
-                                <div className="bg-purple-50/30 rounded-2xl p-6 border border-purple-100 hover:border-purple-200 transition-colors">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <h4 className="text-base font-bold text-slate-800">{t('storeProfile.storeLink')}</h4>
-                                        <div className="w-10 h-10 rounded-xl bg-purple-500 flex items-center justify-center shadow-sm shadow-purple-200">
-                                            <Globe className="w-5 h-5 text-white" />
+                                <div className="bg-[#faf5ff] rounded-[2rem] p-8 border border-purple-100 hover:border-purple-200 transition-colors h-full flex flex-col">
+                                    <div className="flex items-center justify-between mb-8">
+                                        <h4 className="text-lg font-bold text-slate-800">{t('storeProfile.storeLink')}</h4>
+                                        <div className="w-12 h-12 rounded-2xl bg-[#a855f7] flex items-center justify-center shadow-sm shadow-purple-200">
+                                            <Globe className="w-6 h-6 text-white" />
                                         </div>
                                     </div>
-                                    <div className="space-y-4">
+                                    <div className="space-y-6 flex-1 flex flex-col">
                                         <div className="space-y-2">
                                             <Input
                                                 value={website}
                                                 onChange={(e) => setWebsite(e.target.value)}
-                                                className="bg-white h-11 text-sm text-left border-slate-200 focus-visible:ring-purple-500 rounded-xl"
+                                                className="bg-white h-14 text-sm font-medium text-slate-700 text-left border-slate-200 focus-visible:ring-purple-500 rounded-2xl px-4 shadow-sm"
                                                 dir="ltr"
                                             />
                                         </div>
-                                        <div className="bg-white rounded-xl p-4 border border-purple-100 shadow-sm">
-                                            <p className="text-[10px] text-slate-400 mb-2 text-right">{t('storeProfile.yourStoreLink')}</p>
-                                            <p className="text-sm font-bold text-purple-600 font-mono truncate text-left" dir="ltr">
+                                        <div className="bg-white rounded-2xl p-6 border border-purple-100 shadow-sm flex-1 flex flex-col justify-center items-end">
+                                            <p className="text-[10px] text-slate-400 mb-2 font-medium">{t('storeProfile.yourStoreLink')}</p>
+                                            <p className="text-sm font-bold text-purple-600 font-mono text-left w-full truncate" dir="ltr">
                                                 ...{storeNameEn.toLowerCase().replace(/\s+/g, '')}.{website}
                                             </p>
                                         </div>
