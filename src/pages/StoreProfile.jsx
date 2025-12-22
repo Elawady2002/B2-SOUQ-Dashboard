@@ -264,28 +264,28 @@ export default function StoreProfile() {
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                                 {/* Store Names Card */}
-                                <div className="bg-gradient-to-br from-blue-50 to-slate-50 rounded-xl p-6 border border-blue-100/50">
-                                    <div className="flex items-center gap-2 mb-6">
-                                        <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
-                                            <Store className="w-4 h-4 text-white" />
+                                <div className="bg-blue-50/30 rounded-2xl p-6 border border-blue-100 hover:border-blue-200 transition-colors">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <h4 className="text-base font-bold text-slate-800">{t('storeProfile.storeName')}</h4>
+                                        <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center shadow-sm shadow-blue-200">
+                                            <Store className="w-5 h-5 text-white" />
                                         </div>
-                                        <h4 className="text-sm font-bold text-slate-800">{t('storeProfile.storeName')}</h4>
                                     </div>
                                     <div className="space-y-4">
                                         <div className="space-y-2">
-                                            <Label className="text-xs text-slate-500">{t('storeProfile.inArabic')}</Label>
+                                            <Label className="text-xs font-medium text-slate-500">{t('storeProfile.inArabic')}</Label>
                                             <Input
                                                 value={storeName}
                                                 onChange={(e) => setStoreName(e.target.value)}
-                                                className="bg-white h-10 text-sm border-slate-200 focus-visible:ring-blue-500"
+                                                className="bg-white h-11 text-sm border-slate-200 focus-visible:ring-blue-500 rounded-xl"
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <Label className="text-xs text-slate-500">{t('storeProfile.inEnglish')}</Label>
+                                            <Label className="text-xs font-medium text-slate-500">{t('storeProfile.inEnglish')}</Label>
                                             <Input
                                                 value={storeNameEn}
                                                 onChange={(e) => setStoreNameEn(e.target.value)}
-                                                className="bg-white h-10 text-sm text-left border-slate-200 focus-visible:ring-blue-500"
+                                                className="bg-white h-11 text-sm text-left border-slate-200 focus-visible:ring-blue-500 rounded-xl"
                                                 dir="ltr"
                                             />
                                         </div>
@@ -293,46 +293,45 @@ export default function StoreProfile() {
                                 </div>
 
                                 {/* Description Card */}
-                                <div className="bg-gradient-to-br from-emerald-50 to-slate-50 rounded-xl p-6 border border-emerald-100/50">
-                                    <div className="flex items-center gap-2 mb-6">
-                                        <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
-                                            <FileText className="w-4 h-4 text-white" />
+                                <div className="bg-emerald-50/30 rounded-2xl p-6 border border-emerald-100 hover:border-emerald-200 transition-colors">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <h4 className="text-base font-bold text-slate-800">{t('storeProfile.storeDescription')}</h4>
+                                        <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-sm shadow-emerald-200">
+                                            <FileText className="w-5 h-5 text-white" />
                                         </div>
-                                        <h4 className="text-sm font-bold text-slate-800">{t('storeProfile.storeDescription')}</h4>
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 h-[calc(100%-88px)] flex flex-col">
                                         <Textarea
                                             value={storeDescription}
                                             onChange={(e) => setStoreDescription(e.target.value)}
-                                            rows={8}
-                                            className="bg-white resize-none text-sm border-slate-200 focus-visible:ring-emerald-500 min-h-[160px]"
+                                            className="bg-white resize-none text-sm border-slate-200 focus-visible:ring-emerald-500 min-h-[160px] rounded-xl flex-1 p-4 leading-relaxed"
                                             placeholder={t('storeProfile.descriptionPlaceholder')}
                                         />
-                                        <p className="text-[10px] text-slate-400">{t('storeProfile.descriptionNote')}</p>
+                                        <p className="text-[10px] text-slate-400 text-center pt-2">{t('storeProfile.descriptionNote')}</p>
                                     </div>
                                 </div>
 
                                 {/* Domain Card */}
-                                <div className="bg-gradient-to-br from-purple-50 to-slate-50 rounded-xl p-6 border border-purple-100/50">
-                                    <div className="flex items-center gap-2 mb-6">
-                                        <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center">
-                                            <Globe className="w-4 h-4 text-white" />
+                                <div className="bg-purple-50/30 rounded-2xl p-6 border border-purple-100 hover:border-purple-200 transition-colors">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <h4 className="text-base font-bold text-slate-800">{t('storeProfile.storeLink')}</h4>
+                                        <div className="w-10 h-10 rounded-xl bg-purple-500 flex items-center justify-center shadow-sm shadow-purple-200">
+                                            <Globe className="w-5 h-5 text-white" />
                                         </div>
-                                        <h4 className="text-sm font-bold text-slate-800">{t('storeProfile.storeLink')}</h4>
                                     </div>
                                     <div className="space-y-4">
                                         <div className="space-y-2">
                                             <Input
                                                 value={website}
                                                 onChange={(e) => setWebsite(e.target.value)}
-                                                className="bg-white h-10 text-sm text-left border-slate-200 focus-visible:ring-purple-500"
+                                                className="bg-white h-11 text-sm text-left border-slate-200 focus-visible:ring-purple-500 rounded-xl"
                                                 dir="ltr"
                                             />
                                         </div>
-                                        <div className="bg-white rounded-lg p-3 border border-slate-200">
-                                            <p className="text-[10px] text-slate-400 mb-1">{t('storeProfile.yourStoreLink')}</p>
-                                            <p className="text-sm font-mono text-purple-600 font-medium truncate">
-                                                {storeNameEn.toLowerCase().replace(/\s+/g, '')}.{website}
+                                        <div className="bg-white rounded-xl p-4 border border-purple-100 shadow-sm">
+                                            <p className="text-[10px] text-slate-400 mb-2 text-right">{t('storeProfile.yourStoreLink')}</p>
+                                            <p className="text-sm font-bold text-purple-600 font-mono truncate text-left" dir="ltr">
+                                                ...{storeNameEn.toLowerCase().replace(/\s+/g, '')}.{website}
                                             </p>
                                         </div>
                                     </div>
@@ -343,8 +342,9 @@ export default function StoreProfile() {
                             <Separator className="my-8" />
 
                             {/* Categories & Brand */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
+                            {/* Categories & Brand */}
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                                <div className="space-y-2 md:col-span-3">
                                     <Label className="text-slate-600">{t('storeProfile.mainCategory')}</Label>
                                     <Select value={mainCategory} onValueChange={setMainCategory}>
                                         <SelectTrigger className="bg-white h-10 border-slate-200">
@@ -357,7 +357,7 @@ export default function StoreProfile() {
                                         </SelectContent>
                                     </Select>
                                 </div>
-                                <div className="space-y-2">
+                                <div className="space-y-2 md:col-span-3">
                                     <Label className="text-slate-600">{t('storeProfile.brandName')}</Label>
                                     <Input
                                         value={brandName}
@@ -366,35 +366,30 @@ export default function StoreProfile() {
                                         className="bg-white h-10 border-slate-200"
                                     />
                                 </div>
-                            </div>
-
-                            <div className="space-y-2 mt-6">
-                                <Label className="text-slate-600">{t('storeProfile.subCategories')}</Label>
-                                <Input
-                                    value={subCategories}
-                                    onChange={(e) => setSubCategories(e.target.value)}
-                                    className="bg-white h-10 border-slate-200"
-                                />
-                                <p className="text-xs text-slate-400">{t('storeProfile.separateByComma')}</p>
+                                <div className="space-y-2 md:col-span-6">
+                                    <Label className="text-slate-600">{t('storeProfile.subCategories')}</Label>
+                                    <Input
+                                        value={subCategories}
+                                        onChange={(e) => setSubCategories(e.target.value)}
+                                        className="bg-white h-10 border-slate-200"
+                                    />
+                                    <p className="text-xs text-slate-400">{t('storeProfile.separateByComma')}</p>
+                                </div>
                             </div>
 
                             {/* Read-only Stats */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                                <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-100">
-                                    <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
-                                        <Star className="w-4 h-4 fill-amber-600" />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500">{t('storeProfile.avgRating')}</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                                <div className="flex items-center gap-3 px-3 border border-slate-200 rounded-md h-10 bg-white">
+                                    <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                                    <div className="flex items-center gap-2">
+                                        <p className="text-xs text-slate-500">{t('storeProfile.avgRating')}:</p>
                                         <p className="text-sm font-bold text-slate-700">4.8 / 5.0</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-100">
-                                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                                        <CalendarIcon className="w-4 h-4" />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500">{t('sellerProfile.registrationDate')}</p>
+                                <div className="flex items-center gap-3 px-3 border border-slate-200 rounded-md h-10 bg-white">
+                                    <CalendarIcon className="w-4 h-4 text-blue-500" />
+                                    <div className="flex items-center gap-2">
+                                        <p className="text-xs text-slate-500">{t('sellerProfile.registrationDate')}:</p>
                                         <p className="text-sm font-bold text-slate-700">12 يناير 2023</p>
                                     </div>
                                 </div>
