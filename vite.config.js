@@ -4,11 +4,11 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/B2-SOUQ-Dashboard/',
   plugins: [react()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
-  base: '/B2-SOUQ-Dashboard/',
 })

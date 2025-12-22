@@ -151,72 +151,60 @@ export default function SellerProfile() {
                 <h1 className="text-2xl font-bold text-slate-900">{t('sellerProfile.financialWallet')}</h1>
             </div>
 
-            {/* Top Section - Wallet Card & Stats */}
-            <div className="grid grid-cols-[380px_1fr] gap-6">
-                {/* Wallet Card - Far Right */}
-                <div className="relative">
-                    <img
-                        src={VisaCard}
-                        alt="B2-SOUQ Visa Card"
-                        className="w-full h-auto rounded-2xl object-cover bg-transparent"
-                    />
-                </div>
+            {/* Stats Cards - Full Width in One Row */}
+            <div className="grid grid-cols-4 gap-4">
 
-                {/* Stats Cards - Left Side - 2x2 Grid */}
-                <div className="grid grid-cols-2 gap-4">
-
-                    {/* Card 1: Withdrawable Balance */}
-                    <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
-                        <CardContent className="p-6 flex items-center gap-4">
-                            <img src={WalletIcon} alt="Wallet" className="w-12 h-12" />
-                            <div className="flex-1">
-                                <p className="text-sm font-medium text-slate-500 mb-1">{t('sellerProfile.withdrawableBalance')}</p>
-                                <div className="text-2xl font-bold text-slate-900">
-                                    156,000 <span className="text-xs font-medium text-slate-400">{t('home.currency')}</span>
-                                </div>
+                {/* Card 1: Withdrawable Balance */}
+                <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
+                    <CardContent className="p-6 flex items-center gap-4">
+                        <img src={WalletIcon} alt="Wallet" className="w-12 h-12" />
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-slate-500 mb-1">{t('sellerProfile.withdrawableBalance')}</p>
+                            <div className="text-2xl font-bold text-slate-900">
+                                156,000 <span className="text-xs font-medium text-slate-400">{t('home.currency')}</span>
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </CardContent>
+                </Card>
 
-                    {/* Card 2: Pending Profits */}
-                    <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
-                        <CardContent className="p-6 flex items-center gap-4">
-                            <img src={SalesIcon} alt="Sales" className="w-12 h-12" />
-                            <div className="flex-1">
-                                <p className="text-sm font-medium text-slate-500 mb-1">{t('sellerProfile.pendingProfits')}</p>
-                                <div className="text-2xl font-bold text-slate-900">
-                                    156,000 <span className="text-xs font-medium text-slate-400">{t('home.currency')}</span>
-                                </div>
+                {/* Card 2: Pending Profits */}
+                <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
+                    <CardContent className="p-6 flex items-center gap-4">
+                        <img src={SalesIcon} alt="Sales" className="w-12 h-12" />
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-slate-500 mb-1">{t('sellerProfile.pendingProfits')}</p>
+                            <div className="text-2xl font-bold text-slate-900">
+                                156,000 <span className="text-xs font-medium text-slate-400">{t('home.currency')}</span>
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </CardContent>
+                </Card>
 
-                    {/* Card 3: Total Sales */}
-                    <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
-                        <CardContent className="p-6 flex items-center gap-4">
-                            <img src={RevenueIcon} alt="Revenue" className="w-12 h-12" />
-                            <div className="flex-1">
-                                <p className="text-sm font-medium text-slate-500 mb-1">{t('home.totalSales')}</p>
-                                <div className="text-2xl font-bold text-slate-900">
-                                    156,000 <span className="text-xs font-medium text-slate-400">{t('home.currency')}</span>
-                                </div>
+                {/* Card 3: Total Sales */}
+                <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
+                    <CardContent className="p-6 flex items-center gap-4">
+                        <img src={RevenueIcon} alt="Revenue" className="w-12 h-12" />
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-slate-500 mb-1">{t('home.totalSales')}</p>
+                            <div className="text-2xl font-bold text-slate-900">
+                                156,000 <span className="text-xs font-medium text-slate-400">{t('home.currency')}</span>
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </CardContent>
+                </Card>
 
-                    {/* Card 4: Transaction Count */}
-                    <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
-                        <CardContent className="p-6 flex items-center gap-4">
-                            <img src={TransactionIcon} alt="Transactions" className="w-12 h-12" />
-                            <div className="flex-1">
-                                <p className="text-sm font-medium text-slate-500 mb-1">{t('sellerProfile.transactionCount')}</p>
-                                <div className="text-2xl font-bold text-slate-900">
-                                    156 <span className="text-xs font-medium text-slate-400">{t('sellerProfile.transaction')}</span>
-                                </div>
+                {/* Card 4: Transaction Count */}
+                <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
+                    <CardContent className="p-6 flex items-center gap-4">
+                        <img src={TransactionIcon} alt="Transactions" className="w-12 h-12" />
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-slate-500 mb-1">{t('sellerProfile.transactionCount')}</p>
+                            <div className="text-2xl font-bold text-slate-900">
+                                156 <span className="text-xs font-medium text-slate-400">{t('sellerProfile.transaction')}</span>
                             </div>
-                        </CardContent>
-                    </Card>
-                </div>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
 
             {/* Transactions Table */}
