@@ -38,6 +38,15 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetDescription,
+    SheetFooter,
+} from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const orders = [
     {
@@ -338,166 +347,159 @@ export default function Orders() {
                 </div>
             </Card >
 
-            {/* Side Drawer */}
-            {
-                selectedOrder && (
-                    <>
-                        {/* Backdrop */}
-                        <div
-                            className="fixed inset-0 bg-black/30 z-40"
-                            onClick={() => setSelectedOrder(null)}
-                        />
+            {/* Order Details Sheet */}
+            <Sheet open={!!selectedOrder} onOpenChange={(open) => !open && setSelectedOrder(null)}>
+                <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 border-r border-slate-200">
+                    <SheetHeader className="px-3 pt-12 pb-6 border-b border-slate-100 bg-slate-50/30">
+                        <SheetTitle className="text-xl font-bold text-slate-900 text-start">
+                            {t('orders.orderDetails')}
+                        </SheetTitle>
+                        {selectedOrder && (
+                            <SheetDescription className="text-start flex items-center gap-2 mt-2">
+                                <span className="font-mono text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-500">
+                                    {selectedOrder.id}
+                                </span>
+                            </SheetDescription>
+                        )}
+                    </SheetHeader>
 
-                        {/* Drawer */}
-                        <div className="fixed top-0 left-0 h-full w-[480px] bg-white shadow-2xl z-50 overflow-y-auto animate-in slide-in-from-left duration-300">
-                            {/* Header */}
-                            <div className="sticky top-0 bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between">
-                                <div>
-                                    <h3 className="text-lg font-bold text-slate-900">{t('orders.orderDetails')}</h3>
-                                    <p className="text-sm text-blue-600 font-mono">{selectedOrder.id}</p>
-                                </div>
-                                <button
-                                    onClick={() => setSelectedOrder(null)}
-                                    className="w-10 h-10 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors"
-                                >
-                                    <X size={20} />
-                                </button>
-                            </div>
-
-                            {/* Content */}
-                            <div className="p-6 space-y-4">
-                                {/* Status Cards */}
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="p-4 bg-slate-50 rounded-xl">
-                                        <p className="text-xs text-slate-500 mb-2">{t('orders.orderStatus')}</p>
-                                        <Badge variant="secondary" className={`${statusConfig[selectedOrder.status].color} gap-1 font-semibold`}>
-                                            {React.createElement(statusConfig[selectedOrder.status].icon, { size: 14 })}
-                                            {statusConfig[selectedOrder.status].label}
-                                        </Badge>
-                                    </div>
-                                    <div className="p-4 bg-slate-50 rounded-xl">
-                                        <p className="text-xs text-slate-500 mb-2">{t('orders.paymentStatus')}</p>
-                                        <Badge variant="secondary" className={`${paymentStatusConfig[selectedOrder.paymentStatus].color} font-semibold`}>
-                                            {paymentStatusConfig[selectedOrder.paymentStatus].label}
-                                        </Badge>
-                                    </div>
-                                </div>
-
-                                {/* Customer Info */}
-                                <div className="bg-white border border-slate-200 rounded-xl p-4">
-                                    <h4 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
-                                        <User size={16} className="text-blue-600" />
-                                        {t('orders.customerData')}
-                                    </h4>
-                                    <div className="space-y-4">
-                                        <div className="flex items-start gap-3">
-                                            <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
-                                                <User size={16} />
-                                            </div>
-                                            <div>
-                                                <p className="text-xs text-slate-500">{t('orders.name')}</p>
-                                                <p className="font-medium text-slate-900">{selectedOrder.customer}</p>
-                                            </div>
+                    {selectedOrder && (
+                        <>
+                            <ScrollArea className="flex-1">
+                                <div className="p-6 space-y-6" dir="rtl">
+                                    {/* Status Cards */}
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 text-center">
+                                            <p className="text-xs text-slate-500 mb-2">{t('orders.orderStatus')}</p>
+                                            <Badge variant="secondary" className={`${statusConfig[selectedOrder.status].color} gap-1 font-semibold justify-center`}>
+                                                {React.createElement(statusConfig[selectedOrder.status].icon, { size: 14 })}
+                                                {statusConfig[selectedOrder.status].label}
+                                            </Badge>
                                         </div>
-                                        <div className="flex items-start gap-3">
-                                            <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
-                                                <Phone size={16} />
-                                            </div>
-                                            <div>
-                                                <p className="text-xs text-slate-500">{t('orders.phone')}</p>
-                                                <p className="font-medium text-slate-900" dir="ltr">{selectedOrder.phone}</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-start gap-3">
-                                            <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
-                                                <MapPin size={16} />
-                                            </div>
-                                            <div>
-                                                <p className="text-xs text-slate-500">{t('orders.address')}</p>
-                                                <p className="font-medium text-slate-900">{selectedOrder.address}</p>
-                                            </div>
+                                        <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 text-center">
+                                            <p className="text-xs text-slate-500 mb-2">{t('orders.paymentStatus')}</p>
+                                            <Badge variant="secondary" className={`${paymentStatusConfig[selectedOrder.paymentStatus].color} font-semibold justify-center`}>
+                                                {paymentStatusConfig[selectedOrder.paymentStatus].label}
+                                            </Badge>
                                         </div>
                                     </div>
-                                </div>
 
-                                {/* Shipping Info */}
-                                <div className="bg-white border border-slate-200 rounded-xl p-4">
-                                    <h4 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
-                                        <Truck size={16} className="text-blue-600" />
-                                        {t('orders.shippingData')}
-                                    </h4>
-                                    <div className="space-y-4">
-                                        <div className="flex items-start gap-3">
-                                            <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
-                                                <Truck size={16} />
-                                            </div>
-                                            <div>
-                                                <p className="text-xs text-slate-500">{t('orders.shippingCompany')}</p>
-                                                <p className="font-medium text-slate-900">{selectedOrder.carrier}</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-start gap-3">
-                                            <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
-                                                <FileText size={16} />
-                                            </div>
-                                            <div>
-                                                <p className="text-xs text-slate-500">{t('orders.trackingNumber')}</p>
-                                                <p className="font-mono font-medium text-slate-900">{selectedOrder.trackingNumber}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Products */}
-                                <div className="bg-white border border-slate-200 rounded-xl p-4">
-                                    <h4 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
-                                        <Package size={16} className="text-blue-600" />
-                                        {t('orders.products')}
-                                    </h4>
-                                    <div className="space-y-3">
-                                        {selectedOrder.products.map((product, idx) => (
-                                            <div key={idx} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
-                                                <div>
-                                                    <p className="font-medium text-slate-900 text-sm">{product.name}</p>
-                                                    <p className="text-xs text-slate-500">{t('orders.quantity')}: {product.qty}</p>
+                                    {/* Customer Info */}
+                                    <div className="bg-white border border-slate-200 rounded-xl p-4">
+                                        <h4 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                                            <User size={16} className="text-blue-600" />
+                                            {t('orders.customerData')}
+                                        </h4>
+                                        <div className="space-y-4">
+                                            <div className="flex items-start gap-3">
+                                                <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-500 shrink-0">
+                                                    <User size={16} />
                                                 </div>
-                                                <p className="font-semibold text-slate-900">{product.price.toLocaleString()} {t('home.currency')}</p>
+                                                <div>
+                                                    <p className="text-xs text-slate-500">{t('orders.name')}</p>
+                                                    <p className="font-medium text-slate-900">{selectedOrder.customer}</p>
+                                                </div>
                                             </div>
-                                        ))}
-                                        <div className="flex items-center justify-between pt-3 border-t border-slate-200">
-                                            <p className="font-semibold text-slate-900">{t('orders.total')}</p>
-                                            <p className="font-bold text-lg text-blue-600">{selectedOrder.total.toLocaleString()} {t('home.currency')}</p>
+                                            <div className="flex items-start gap-3">
+                                                <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-500 shrink-0">
+                                                    <Phone size={16} />
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs text-slate-500">{t('orders.phone')}</p>
+                                                    <p className="font-medium text-slate-900" dir="ltr">{selectedOrder.phone}</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-start gap-3">
+                                                <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-500 shrink-0">
+                                                    <MapPin size={16} />
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs text-slate-500">{t('orders.address')}</p>
+                                                    <p className="font-medium text-slate-900">{selectedOrder.address}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Shipping Info */}
+                                    <div className="bg-white border border-slate-200 rounded-xl p-4">
+                                        <h4 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                                            <Truck size={16} className="text-blue-600" />
+                                            {t('orders.shippingData')}
+                                        </h4>
+                                        <div className="space-y-4">
+                                            <div className="flex items-start gap-3">
+                                                <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
+                                                    <Truck size={16} />
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs text-slate-500">{t('orders.shippingCompany')}</p>
+                                                    <p className="font-medium text-slate-900">{selectedOrder.carrier}</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-start gap-3">
+                                                <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
+                                                    <FileText size={16} />
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs text-slate-500">{t('orders.trackingNumber')}</p>
+                                                    <p className="font-mono font-medium text-slate-900">{selectedOrder.trackingNumber}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Products */}
+                                    <div className="bg-white border border-slate-200 rounded-xl p-4">
+                                        <h4 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                                            <Package size={16} className="text-blue-600" />
+                                            {t('orders.products')}
+                                        </h4>
+                                        <div className="space-y-3">
+                                            {selectedOrder.products.map((product, idx) => (
+                                                <div key={idx} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
+                                                    <div>
+                                                        <p className="font-medium text-slate-900 text-sm">{product.name}</p>
+                                                        <p className="text-xs text-slate-500">{t('orders.quantity')}: {product.qty}</p>
+                                                    </div>
+                                                    <p className="font-semibold text-slate-900">{product.price.toLocaleString()} {t('home.currency')}</p>
+                                                </div>
+                                            ))}
+                                            <div className="flex items-center justify-between pt-3 border-t border-slate-200">
+                                                <p className="font-semibold text-slate-900">{t('orders.total')}</p>
+                                                <p className="font-bold text-lg text-blue-600">{selectedOrder.total.toLocaleString()} {t('home.currency')}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Payment Info */}
+                                    <div className="bg-slate-50 rounded-xl p-4 flex items-center gap-3 border border-slate-200">
+                                        <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-slate-600 shadow-sm border border-slate-100">
+                                            <CreditCard size={18} />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-slate-500">{t('orders.paymentMethod')}</p>
+                                            <p className="font-medium text-slate-900">{selectedOrder.paymentMethod}</p>
                                         </div>
                                     </div>
                                 </div>
-
-                                {/* Payment Info */}
-                                <div className="bg-slate-50 rounded-xl p-4 flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-slate-600 shadow-sm">
-                                        <CreditCard size={18} />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500">{t('orders.paymentMethod')}</p>
-                                        <p className="font-medium text-slate-900">{selectedOrder.paymentMethod}</p>
-                                    </div>
-                                </div>
-                            </div>
+                            </ScrollArea>
 
                             {/* Footer Actions */}
-                            <div className="sticky bottom-0 bg-white border-t border-slate-100 px-6 py-4 space-y-3">
+                            <div className="p-4 border-t border-slate-100 bg-slate-50/50 space-y-3">
                                 <Button className="w-full bg-blue-600 hover:bg-blue-700 h-11 gap-2">
                                     <Download size={18} />
                                     {t('orders.downloadInvoice')}
                                 </Button>
-                                <Button variant="outline" className="w-full h-11 gap-2 border-slate-200">
+                                <Button variant="outline" className="w-full h-11 gap-2 border-slate-200 bg-white hover:bg-slate-50 text-slate-700">
                                     <Headphones size={18} />
                                     {t('orders.contactSupport')}
                                 </Button>
                             </div>
-                        </div>
-                    </>
-                )
-            }
+                        </>
+                    )}
+                </SheetContent>
+            </Sheet>
         </div >
     );
 }

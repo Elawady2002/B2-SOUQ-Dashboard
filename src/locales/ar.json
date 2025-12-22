@@ -127,6 +127,8 @@
         "activeCampaign": "حملة نشطة",
         "yourOffers": "عروض متجرك",
         "yourOffersDescription": "العروض الخاصة بمتجرك",
+        "createOfferTitle": "إنشاء عرض جديد",
+        "products": "المنتجات",
         "offerName": "اسم العرض",
         "offerType": "نوع العرض",
         "discount": "الخصم",
@@ -315,6 +317,7 @@
         "cancel": "إلغاء",
         "allEmployees": "كل الموظفين",
         "allRoles": "كل الأدوار",
+        "addRole": "إضافة دور",
         "searchPlaceholder": "ابحث عن موظفين..."
     },
     "returns": {

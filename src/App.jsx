@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import SellerProfile from './pages/SellerProfile';
 import StoreProfile from './pages/StoreProfile';
 import Products from './pages/Products';
+import AddProduct from './pages/AddProduct';
 import Orders from './pages/Orders';
 import Inventory from './pages/Inventory';
 import Returns from './pages/Returns';
@@ -47,6 +48,7 @@ function App() {
         <Route path="/seller-profile" element={<SellerProfile />} />
         <Route path="/store-profile" element={<StoreProfile />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/products/add" element={<AddProduct />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/returns" element={<Returns />} />

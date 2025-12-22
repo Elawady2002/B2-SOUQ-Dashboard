@@ -450,7 +450,7 @@ export default function StoreProfile() {
                     <Card className="border-slate-100 shadow-sm bg-white">
                         <CardHeader className="pb-4 border-b border-slate-50">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-cyan-100 flex items-center justify-center">
+                                <div className="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center border border-cyan-100">
                                     <Clock className="w-5 h-5 text-cyan-600" />
                                 </div>
                                 <div>
@@ -460,55 +460,68 @@ export default function StoreProfile() {
                             </div>
                         </CardHeader>
                         <CardContent className="p-6">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 {/* Working Hours */}
-                                <div className="bg-gradient-to-br from-cyan-50 to-slate-50 rounded-xl p-4 border border-cyan-100/50">
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <Clock className="w-4 h-4 text-cyan-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">{t('storeProfile.workingHours')}</Label>
+                                <div className="space-y-3">
+                                    <Label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                                        <Clock className="w-4 h-4 text-cyan-500" />
+                                        {t('storeProfile.workingHours')}
+                                    </Label>
+                                    <div className="relative">
+                                        <Input
+                                            value={workingHours}
+                                            onChange={(e) => setWorkingHours(e.target.value)}
+                                            className="bg-white h-11 pl-10 border-slate-200 focus-visible:ring-cyan-500"
+                                            placeholder="ex: 09:00 AM - 05:00 PM"
+                                        />
+                                        <Clock className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
                                     </div>
-                                    <Input
-                                        value={workingHours}
-                                        onChange={(e) => setWorkingHours(e.target.value)}
-                                        className="bg-white h-10 text-sm border-slate-200"
-                                    />
+                                    <p className="text-[10px] text-slate-400">ساعات العمل الرسمية التي يظهر فيها المتجر "مفتوح"</p>
                                 </div>
 
                                 {/* Pickup Times */}
-                                <div className="bg-gradient-to-br from-orange-50 to-slate-50 rounded-xl p-4 border border-orange-100/50">
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <Truck className="w-4 h-4 text-orange-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">{t('storeProfile.pickupTimes')}</Label>
+                                <div className="space-y-3">
+                                    <Label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                                        <Truck className="w-4 h-4 text-orange-500" />
+                                        {t('storeProfile.pickupTimes')}
+                                    </Label>
+                                    <div className="relative">
+                                        <Input
+                                            value={pickupTimes}
+                                            onChange={(e) => setPickupTimes(e.target.value)}
+                                            className="bg-white h-11 pl-10 border-slate-200 focus-visible:ring-orange-500"
+                                        />
+                                        <Clock className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
                                     </div>
-                                    <Input
-                                        value={pickupTimes}
-                                        onChange={(e) => setPickupTimes(e.target.value)}
-                                        className="bg-white h-10 text-sm border-slate-200"
-                                    />
+                                    <p className="text-[10px] text-slate-400">الأوقات المتاحة لاستلام الشحنات من قبل شركات الشحن</p>
                                 </div>
 
                                 {/* Support Hours */}
-                                <div className="bg-gradient-to-br from-green-50 to-slate-50 rounded-xl p-4 border border-green-100/50">
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <Headphones className="w-4 h-4 text-green-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">{t('storeProfile.customerSupport')}</Label>
+                                <div className="space-y-3">
+                                    <Label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                                        <Headphones className="w-4 h-4 text-green-500" />
+                                        {t('storeProfile.customerSupport')}
+                                    </Label>
+                                    <div className="relative">
+                                        <Input
+                                            value={supportHours}
+                                            onChange={(e) => setSupportHours(e.target.value)}
+                                            className="bg-white h-11 pl-10 border-slate-200 focus-visible:ring-green-500"
+                                        />
+                                        <Clock className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
                                     </div>
-                                    <Input
-                                        value={supportHours}
-                                        onChange={(e) => setSupportHours(e.target.value)}
-                                        className="bg-white h-10 text-sm border-slate-200"
-                                    />
+                                    <p className="text-[10px] text-slate-400">أوقات توفر فريق دعم العملاء للرد على الاستفسارات</p>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Contact Information */}
+                    {/* Contact Information & Location */}
                     <Card className="border-slate-100 shadow-sm bg-white">
                         <CardHeader className="pb-4 border-b border-slate-50">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center">
-                                    <Phone className="w-5 h-5 text-rose-600" />
+                                <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center border border-rose-100">
+                                    <MapPin className="w-5 h-5 text-rose-600" />
                                 </div>
                                 <div>
                                     <CardTitle className="text-lg font-bold text-slate-800">{t('storeProfile.contactLocation')}</CardTitle>
@@ -516,89 +529,109 @@ export default function StoreProfile() {
                                 </div>
                             </div>
                         </CardHeader>
-                        <CardContent className="p-6">
-                            {/* Contact Cards Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <CardContent className="p-6 space-y-8">
+                            {/* Contact Details Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 {/* Phone 1 */}
-                                <div className="bg-gradient-to-br from-blue-50 to-slate-50 rounded-xl p-4 border border-blue-100/50">
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <Phone className="w-4 h-4 text-blue-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">{t('storeProfile.phoneNumber')}</Label>
+                                <div className="space-y-2">
+                                    <Label className="text-sm font-semibold text-slate-700">{t('storeProfile.phoneNumber')}</Label>
+                                    <div className="relative">
+                                        <Input
+                                            value={phone1}
+                                            onChange={(e) => setPhone1(e.target.value)}
+                                            className="bg-white h-11 pl-10 text-left border-slate-200 focus-visible:ring-blue-500 font-mono"
+                                            dir="ltr"
+                                        />
+                                        <Phone className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
                                     </div>
-                                    <Input
-                                        value={phone1}
-                                        onChange={(e) => setPhone1(e.target.value)}
-                                        className="bg-white h-10 text-sm text-left border-slate-200"
-                                        dir="ltr"
-                                    />
                                 </div>
 
                                 {/* Phone 2 */}
-                                <div className="bg-gradient-to-br from-violet-50 to-slate-50 rounded-xl p-4 border border-violet-100/50">
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <Phone className="w-4 h-4 text-violet-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">هاتف بديل</Label>
+                                <div className="space-y-2">
+                                    <Label className="text-sm font-semibold text-slate-700">هاتف بديل</Label>
+                                    <div className="relative">
+                                        <Input
+                                            value={phone2}
+                                            onChange={(e) => setPhone2(e.target.value)}
+                                            className="bg-white h-11 pl-10 text-left border-slate-200 focus-visible:ring-blue-500 font-mono"
+                                            dir="ltr"
+                                        />
+                                        <Phone className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
                                     </div>
-                                    <Input
-                                        value={phone2}
-                                        onChange={(e) => setPhone2(e.target.value)}
-                                        className="bg-white h-10 text-sm text-left border-slate-200"
-                                        dir="ltr"
-                                    />
                                 </div>
 
                                 {/* Email */}
-                                <div className="bg-gradient-to-br from-pink-50 to-slate-50 rounded-xl p-4 border border-pink-100/50">
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <Mail className="w-4 h-4 text-pink-600" />
-                                        <Label className="text-sm font-semibold text-slate-700">البريد الإلكتروني</Label>
+                                <div className="space-y-2">
+                                    <Label className="text-sm font-semibold text-slate-700">البريد الإلكتروني</Label>
+                                    <div className="relative">
+                                        <Input
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            className="bg-white h-11 pl-10 text-left border-slate-200 focus-visible:ring-blue-500 font-mono"
+                                            dir="ltr"
+                                        />
+                                        <Mail className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
                                     </div>
-                                    <Input
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className="bg-white h-10 text-sm text-left border-slate-200"
-                                        dir="ltr"
-                                    />
                                 </div>
                             </div>
 
-                            {/* Warehouse Address Section */}
-                            <div className="bg-slate-50 rounded-xl p-5 border border-slate-100">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <Building2 className="w-5 h-5 text-slate-600" />
-                                    <h4 className="text-sm font-bold text-slate-800">عنوان المستودع الرئيسي</h4>
-                                </div>
+                            <Separator className="bg-slate-100" />
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                    <div>
-                                        <Label className="text-xs text-slate-500 mb-1.5 block">المدينة</Label>
-                                        <Input
-                                            value={city}
-                                            onChange={(e) => setCity(e.target.value)}
-                                            className="bg-white h-10 text-sm border-slate-200"
-                                        />
+                            {/* Warehouse Address & Map */}
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <div className="space-y-6">
+                                    <div className="flex items-center gap-2">
+                                        <Building2 className="w-5 h-5 text-slate-600" />
+                                        <h4 className="text-base font-bold text-slate-800">عنوان المستودع الرئيسي</h4>
                                     </div>
-                                    <div>
-                                        <Label className="text-xs text-slate-500 mb-1.5 block">العنوان التفصيلي</Label>
-                                        <Input
-                                            value={address}
-                                            onChange={(e) => setAddress(e.target.value)}
-                                            className="bg-white h-10 text-sm border-slate-200"
-                                        />
+
+                                    <div className="space-y-4">
+                                        <div className="space-y-2">
+                                            <Label className="text-sm font-medium text-slate-700">المدينة</Label>
+                                            <Select value={city} onValueChange={setCity}>
+                                                <SelectTrigger className="h-11 bg-white border-slate-200">
+                                                    <SelectValue placeholder="اختر المدينة" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="Riyadh">الرياض</SelectItem>
+                                                    <SelectItem value="Jeddah">جدة</SelectItem>
+                                                    <SelectItem value="Dammam">الدمام</SelectItem>
+                                                    <SelectItem value="Aswan">أسوان</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label className="text-sm font-medium text-slate-700">العنوان التفصيلي</Label>
+                                            <Textarea
+                                                value={address}
+                                                onChange={(e) => setAddress(e.target.value)}
+                                                className="bg-white min-h-[100px] border-slate-200 resize-none leading-relaxed p-3"
+                                                placeholder="اسم الشارع، رقم المبنى، الرمز البريدي..."
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 
                                 {/* Map Preview */}
-                                <div className="h-36 bg-slate-200 rounded-xl relative overflow-hidden flex items-center justify-center">
-                                    <div
-                                        className="absolute inset-0 opacity-60 bg-cover bg-center"
-                                        style={{ backgroundImage: 'url(https://maps.googleapis.com/maps/api/staticmap?center=24.7136,46.6753&zoom=14&size=600x300&maptype=roadmap&key=demo)' }}
-                                    />
-                                    <div className="w-10 h-10 bg-rose-500 rounded-full flex items-center justify-center shadow-lg shadow-rose-500/30 z-10">
-                                        <MapPin className="text-white w-5 h-5" />
-                                    </div>
-                                    <div className="absolute bottom-2 bg-white/95 backdrop-blur px-3 py-1 rounded-full text-xs font-medium text-slate-600 shadow-sm">
-                                        {city || 'حدد الموقع'}
+                                <div className="space-y-2">
+                                    <Label className="text-sm font-medium text-slate-700 block text-right">الموقع على الخريطة</Label>
+                                    <div className="h-64 bg-slate-100 rounded-2xl relative overflow-hidden group border-2 border-slate-200 hover:border-blue-400 transition-colors cursor-pointer">
+                                        <div
+                                            className="absolute inset-0 opacity-80 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                                            style={{ backgroundImage: 'url(https://maps.googleapis.com/maps/api/staticmap?center=24.7136,46.6753&zoom=14&size=800x600&maptype=roadmap&key=demo)' }}
+                                        />
+                                        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-10 opacity-0 group-hover:opacity-20 transition-opacity" />
+
+                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-rose-500 rounded-full flex items-center justify-center shadow-xl shadow-rose-500/30 z-10 animate-pulse">
+                                            <MapPin className="text-white w-6 h-6" />
+                                        </div>
+
+                                        <div className="absolute bottom-4 left-4 right-4 animate-in slide-in-from-bottom-2 duration-300">
+                                            <Button className="w-full bg-white/95 text-slate-800 hover:bg-white backdrop-blur shadow-sm">
+                                                <MapPin className="mr-2 w-4 h-4 text-blue-600" />
+                                                تحديد الموقع بدقة
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

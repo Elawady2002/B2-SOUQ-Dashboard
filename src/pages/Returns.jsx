@@ -36,12 +36,15 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogFooter,
-} from "@/components/ui/dialog";
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetDescription,
+} from "@/components/ui/sheet";
+import {
+    ScrollArea
+} from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
 const returns = [
@@ -206,20 +209,17 @@ export default function Returns() {
                 <CardContent className="p-0">
                     <Table>
                         <TableHeader>
-                            <TableRow className="hover:bg-transparent border-slate-100">
-                                <TableHead className="text-right font-semibold text-slate-600">رقم الطلب</TableHead>
-                                <TableHead className="text-right font-semibold text-slate-600">المنتج</TableHead>
-                                <TableHead className="text-right font-semibold text-slate-600">SKU</TableHead>
-                                <TableHead className="text-right font-semibold text-slate-600">الفئة</TableHead>
-                                <TableHead className="text-center font-semibold text-slate-600">الكمية</TableHead>
-                                <TableHead className="text-right font-semibold text-slate-600">السعر/وحدة</TableHead>
-                                <TableHead className="text-right font-semibold text-slate-600">الإجمالي</TableHead>
-                                <TableHead className="text-center font-semibold text-slate-600">سبب الإرجاع</TableHead>
-                                <TableHead className="text-center font-semibold text-slate-600">حالة الإرجاع</TableHead>
-                                <TableHead className="text-center font-semibold text-slate-600">طريقة الشحن</TableHead>
-                                <TableHead className="text-right font-semibold text-slate-600">العنوان</TableHead>
-                                <TableHead className="text-center font-semibold text-slate-600">حالة الطلب</TableHead>
-                                <TableHead className="text-center w-[50px]"></TableHead>
+                            <TableRow className="hover:bg-transparent border-slate-100 bg-slate-50 border-b border-slate-200">
+                                <TableHead className="text-start h-12 font-medium text-slate-500 w-[140px]">رقم الطلب</TableHead>
+                                <TableHead className="text-start h-12 font-medium text-slate-500">المنتج</TableHead>
+                                <TableHead className="text-start h-12 font-medium text-slate-500">SKU</TableHead>
+                                <TableHead className="text-start h-12 font-medium text-slate-500">الفئة</TableHead>
+                                <TableHead className="text-center h-12 font-medium text-slate-500">الكمية</TableHead>
+                                <TableHead className="text-start h-12 font-medium text-slate-500">السعر</TableHead>
+                                <TableHead className="text-start h-12 font-medium text-slate-500">الإجمالي</TableHead>
+                                <TableHead className="text-center h-12 font-medium text-slate-500">السبب</TableHead>
+                                <TableHead className="text-center h-12 font-medium text-slate-500">الحالة</TableHead>
+                                <TableHead className="text-start h-12 font-medium text-slate-500 w-[50px]"></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -229,47 +229,48 @@ export default function Returns() {
                                 const shipping = shippingMethods[item.shippingMethod];
                                 const originalStatus = originalStatusConfig[item.originalStatus];
                                 return (
-                                    <TableRow key={item.id} className="hover:bg-slate-50/50">
-                                        <TableCell>
-                                            <div>
-                                                <p className="font-mono font-semibold text-xs text-slate-600">{item.id}</p>
-                                                <p className="font-mono text-[10px] text-slate-400 bg-slate-50 px-1 rounded w-fit mt-1">{item.orderId}</p>
+                                    <TableRow key={item.id} className="hover:bg-slate-50/50 group transition-colors">
+                                        <TableCell className="font-medium align-top py-4">
+                                            <div className="flex flex-col gap-1">
+                                                <span className="font-mono text-xs font-bold text-slate-700">{item.id}</span>
+                                                <span className="font-mono text-[10px] text-slate-400">{item.orderId}</span>
                                             </div>
                                         </TableCell>
-                                        <TableCell className="font-medium text-slate-900 text-sm max-w-[150px] truncate" title={item.product}>{item.product}</TableCell>
-                                        <TableCell className="font-mono text-xs text-slate-500">{item.sku}</TableCell>
-                                        <TableCell className="text-slate-600 text-sm">{item.category}</TableCell>
-                                        <TableCell className="text-center font-bold text-slate-900">{item.quantity}</TableCell>
-                                        <TableCell className="text-slate-600 text-sm">{item.unitPrice.toLocaleString('en-US')} ج.م</TableCell>
-                                        <TableCell className="font-bold text-red-600 text-sm">{item.total.toLocaleString('en-US')} ج.م</TableCell>
-                                        <TableCell className="text-center">
-                                            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-100 font-normal whitespace-nowrap">
-                                                {item.reason}
+                                        <TableCell className="align-top py-4">
+                                            <div className="flex items-start gap-3">
+                                                <div className="w-8 h-8 rounded bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0">
+                                                    <Package size={14} className="text-slate-400" />
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-sm font-medium text-slate-900 line-clamp-2 max-w-[180px]" title={item.product}>{item.product}</span>
+                                                </div>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="align-top py-4 font-mono text-xs text-slate-500">{item.sku}</TableCell>
+                                        <TableCell className="align-top py-4">
+                                            <Badge variant="outline" className="font-normal text-slate-600 bg-white hover:bg-slate-50">
+                                                {item.category}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell className="text-center">
-                                            <Badge variant="secondary" className={`${status.color} gap-1 font-normal whitespace-nowrap`}>
+                                        <TableCell className="align-top py-4 text-center font-semibold text-slate-900">{item.quantity}</TableCell>
+                                        <TableCell className="align-top py-4 text-sm text-slate-600">{item.unitPrice.toLocaleString('en-US')} ج.م</TableCell>
+                                        <TableCell className="align-top py-4 text-sm font-bold text-slate-900">{item.total.toLocaleString('en-US')} ج.م</TableCell>
+                                        <TableCell className="align-top py-4 text-center">
+                                            <span className="inline-flex items-center px-2 py-1 rounded-md bg-amber-50 text-amber-700 text-xs font-medium border border-amber-100 whitespace-nowrap">
+                                                {item.reason}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell className="align-top py-4 text-center">
+                                            <Badge variant="secondary" className={`${status.color} gap-1.5 font-medium whitespace-nowrap px-2.5 py-0.5`}>
                                                 <StatusIcon size={12} />
                                                 {status.label}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell className="text-center">
-                                            <Badge variant="secondary" className={`${shipping.color} gap-1 font-normal whitespace-nowrap`}>
-                                                {React.createElement(shipping.icon, { size: 12 })}
-                                                {shipping.label}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className="text-xs text-slate-500 max-w-[150px] truncate" title={item.address}>{item.address}</TableCell>
-                                        <TableCell className="text-center">
-                                            <Badge variant="secondary" className={`${originalStatus.color} font-normal whitespace-nowrap`}>
-                                                {originalStatus.label}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell>
+                                        <TableCell className="align-top py-4 text-end">
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-8 w-8 text-slate-400 hover:text-blue-600 hover:bg-blue-50"
+                                                className="h-8 w-8 text-slate-400 hover:text-blue-600 hover:bg-blue-50 opacity-0 group-hover:opacity-100 transition-opacity"
                                                 onClick={() => setSelectedReturn(item)}
                                                 title="عرض التفاصيل"
                                             >
@@ -284,121 +285,133 @@ export default function Returns() {
                 </CardContent>
             </Card>
 
-            {/* Return Details Modal */}
-            <Dialog open={!!selectedReturn} onOpenChange={(open) => !open && setSelectedReturn(null)}>
-                <DialogContent className="sm:max-w-[700px] bg-white">
-                    <DialogHeader>
-                        <DialogTitle className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4">
+            {/* Return Details Side Menu (Sheet) */}
+            <Sheet open={!!selectedReturn} onOpenChange={(open) => !open && setSelectedReturn(null)}>
+                <SheetContent side="left" className="w-[400px] sm:w-[600px] p-0 flex flex-col gap-0 border-r border-slate-200">
+                    <SheetHeader className="px-3 pt-12 pb-6 border-b border-slate-100 bg-slate-50/30">
+                        <SheetTitle className="text-xl font-bold text-slate-900 text-start">
                             تفاصيل طلب الإرجاع: {selectedReturn?.id}
-                        </DialogTitle>
-                    </DialogHeader>
+                        </SheetTitle>
+                        {selectedReturn && (
+                            <SheetDescription className="text-start flex items-center gap-2 mt-2">
+                                <span className="font-mono text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-500">
+                                    {selectedReturn.orderId}
+                                </span>
+                                <span className="text-xs text-slate-400">|</span>
+                                <span className="text-xs text-slate-500">{selectedReturn.date}</span>
+                            </SheetDescription>
+                        )}
+                    </SheetHeader>
 
                     {selectedReturn && (
-                        <div className="py-4 space-y-6">
-                            {/* Status & Shipping */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
-                                    <p className="text-xs text-slate-500 mb-2">حالة الإرجاع</p>
-                                    <div className="flex items-center gap-2">
-                                        {React.createElement(statusConfig[selectedReturn.status].icon, { size: 18, className: statusConfig[selectedReturn.status].color.split(' ')[1] })}
-                                        <span className="font-semibold text-slate-900">{statusConfig[selectedReturn.status].label}</span>
-                                    </div>
-                                </div>
-                                <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
-                                    <p className="text-xs text-slate-500 mb-2">طريقة الشحن</p>
-                                    <div className="flex items-center gap-2">
-                                        {React.createElement(shippingMethods[selectedReturn.shippingMethod].icon, { size: 18, className: shippingMethods[selectedReturn.shippingMethod].color.split(' ')[0] })}
-                                        <span className="font-semibold text-slate-900">{shippingMethods[selectedReturn.shippingMethod].label}</span>
-                                    </div>
-                                </div>
-                            </div>
+                        <>
+                            <ScrollArea className="flex-1">
+                                <div className="p-6 space-y-8" dir="rtl">
 
-                            {/* Order Info */}
-                            <div>
-                                <h4 className="font-semibold text-slate-900 mb-3">معلومات الطلب</h4>
-                                <div className="grid grid-cols-2 gap-4 bg-white border border-slate-200 rounded-lg p-4">
-                                    <div>
-                                        <p className="text-xs text-slate-500">رقم الإرجاع</p>
-                                        <p className="font-mono font-medium text-slate-900">{selectedReturn.id}</p>
+                                    {/* Status Cards */}
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex flex-col justify-center text-center items-center gap-2">
+                                            <span className="text-xs text-slate-500">حالة الإرجاع</span>
+                                            <Badge variant="secondary" className={`${statusConfig[selectedReturn.status].color} gap-1.5 font-medium px-3 py-1`}>
+                                                {React.createElement(statusConfig[selectedReturn.status].icon, { size: 14 })}
+                                                {statusConfig[selectedReturn.status].label}
+                                            </Badge>
+                                        </div>
+                                        <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex flex-col justify-center text-center items-center gap-2">
+                                            <span className="text-xs text-slate-500">طريقة الشحن</span>
+                                            <Badge variant="secondary" className={`${shippingMethods[selectedReturn.shippingMethod].color} gap-1.5 font-medium px-3 py-1`}>
+                                                {React.createElement(shippingMethods[selectedReturn.shippingMethod].icon, { size: 14 })}
+                                                {shippingMethods[selectedReturn.shippingMethod].label}
+                                            </Badge>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500">رقم الطلب الأصلي</p>
-                                        <p className="font-mono font-medium text-slate-900">{selectedReturn.orderId}</p>
-                                    </div>
-                                </div>
-                            </div>
 
-                            {/* Product Info */}
-                            <div>
-                                <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
-                                    <Package size={16} className="text-blue-600" />
-                                    معلومات المنتج
-                                </h4>
-                                <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-                                    <div className="flex items-start gap-4 mb-4">
-                                        <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-slate-200 shadow-sm">
-                                            <Package size={24} className="text-slate-400" />
-                                        </div>
-                                        <div className="flex-1">
-                                            <p className="font-bold text-slate-900 text-sm">{selectedReturn.product}</p>
-                                            <p className="text-xs text-slate-500 font-mono mt-1">SKU: {selectedReturn.sku}</p>
-                                        </div>
-                                    </div>
-                                    <div className="grid grid-cols-3 gap-4 border-t border-slate-200 pt-4">
-                                        <div>
-                                            <p className="text-xs text-slate-500">الفئة</p>
-                                            <p className="font-medium text-slate-900">{selectedReturn.category}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-slate-500">الكمية</p>
-                                            <p className="font-bold text-slate-900">{selectedReturn.quantity}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-slate-500">المبلغ المسترد</p>
-                                            <p className="font-bold text-red-600">{selectedReturn.total.toLocaleString('en-US')} ج.م</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                    <div className="space-y-4">
+                                        <h4 className="flex items-center gap-2 text-sm font-bold text-slate-900">
+                                            <Package size={18} className="text-blue-600" />
+                                            معلومات المنتج
+                                        </h4>
 
-                            {/* Reason & Address */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="p-4 bg-amber-50 rounded-lg border border-amber-100">
-                                    <p className="text-xs text-amber-600/70 mb-1">سبب الإرجاع</p>
-                                    <p className="font-bold text-amber-700">{selectedReturn.reason}</p>
-                                </div>
-                                <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
-                                    <p className="text-xs text-slate-500 mb-1">تاريخ الطلب</p>
-                                    <p className="font-bold text-slate-900">{selectedReturn.date}</p>
-                                </div>
-                                <div className="col-span-2 p-4 bg-slate-50 rounded-lg border border-slate-100 flex items-start gap-3">
-                                    <MapPin size={18} className="text-slate-400 mt-0.5" />
-                                    <div>
-                                        <p className="text-xs text-slate-500 mb-1">عنوان الاستلام</p>
-                                        <p className="font-medium text-slate-900">{selectedReturn.address}</p>
+                                        <div className="border border-slate-200 rounded-xl overflow-hidden">
+                                            {/* Product Header */}
+                                            <div className="p-4 bg-slate-50/50 border-b border-slate-100 flex gap-4">
+                                                <div className="w-12 h-12 bg-white rounded-lg border border-slate-200 flex items-center justify-center shadow-sm shrink-0">
+                                                    <Package className="text-slate-300" size={24} />
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold text-slate-900 text-sm leading-tight mb-1">{selectedReturn.product}</p>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-[10px] text-slate-500">SKU:</span>
+                                                        <code className="bg-slate-100 px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-mono">{selectedReturn.sku}</code>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Product Details Grid */}
+                                            <div className="grid grid-cols-3 divide-x divide-x-reverse divide-slate-100 bg-white">
+                                                <div className="p-3 text-center">
+                                                    <span className="text-[10px] text-slate-400 block mb-1">الفئة</span>
+                                                    <span className="text-xs font-semibold text-slate-700">{selectedReturn.category}</span>
+                                                </div>
+                                                <div className="p-3 text-center">
+                                                    <span className="text-[10px] text-slate-400 block mb-1">الكمية</span>
+                                                    <span className="text-xs font-bold text-slate-900">{selectedReturn.quantity}</span>
+                                                </div>
+                                                <div className="p-3 text-center">
+                                                    <span className="text-[10px] text-slate-400 block mb-1">المبلغ المسترد</span>
+                                                    <span className="text-xs font-bold text-rose-600">{selectedReturn.total.toLocaleString()} ج.م</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+
+                                    {/* Additional Info Grid */}
+                                    <div className="grid grid-cols-1 gap-4">
+                                        {/* Reason */}
+                                        <div className="p-4 rounded-xl border border-amber-100 bg-amber-50">
+                                            <div className="flex items-start justify-between mb-1">
+                                                <span className="text-xs font-medium text-amber-800">سبب الإرجاع المحدد</span>
+                                                <AlertTriangle size={14} className="text-amber-600" />
+                                            </div>
+                                            <p className="text-sm font-bold text-amber-900">{selectedReturn.reason}</p>
+                                        </div>
+
+                                        {/* Dropoff Address */}
+                                        <div className="p-4 rounded-xl border border-slate-100 bg-slate-50 flex gap-3">
+                                            <MapPin size={18} className="text-slate-400 shrink-0 mt-0.5" />
+                                            <div>
+                                                <span className="text-xs text-slate-500 block mb-1">عنوان الاستلام / المستوع</span>
+                                                <p className="text-sm font-semibold text-slate-900 leading-snug">{selectedReturn.address}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
+                            </ScrollArea>
+
+                            {/* Footer Actions */}
+                            <div className="p-4 border-t border-slate-100 bg-slate-50/50 flex gap-3 rtl:flex-row-reverse" dir="rtl">
+                                {selectedReturn.status === 'pending' ? (
+                                    <>
+                                        <Button className="flex-1 bg-emerald-600 hover:bg-emerald-700 font-medium">
+                                            <CheckCircle size={18} className="ml-2" />
+                                            قبول الإرجاع
+                                        </Button>
+                                        <Button variant="outline" className="flex-1 border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700">
+                                            <XCircle size={18} className="ml-2" />
+                                            رفض الطلب
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <Button variant="outline" className="w-full" onClick={() => setSelectedReturn(null)}>
+                                        إغلاق التفاصيل
+                                    </Button>
+                                )}
                             </div>
-                        </div>
+                        </>
                     )}
-
-                    <DialogFooter className="gap-2 border-t border-slate-100 pt-4">
-                        <Button variant="outline" onClick={() => setSelectedReturn(null)}>إغلاق</Button>
-                        {selectedReturn && selectedReturn.status === 'pending' && (
-                            <>
-                                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
-                                    <CheckCircle size={16} className="ml-2" />
-                                    قبول الإرجاع
-                                </Button>
-                                <Button className="bg-red-600 hover:bg-red-700 text-white">
-                                    <XCircle size={16} className="ml-2" />
-                                    رفض الطلب
-                                </Button>
-                            </>
-                        )}
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                </SheetContent>
+            </Sheet>
         </div>
     );
 }

@@ -1,10 +1,7 @@
 import { Badge } from 'lucide-react';
 import {
     Search,
-    Moon,
     Globe,
-    ShoppingCart,
-    Settings,
     Bell,
     User,
     Menu
@@ -36,44 +33,30 @@ export default function Header() {
             </div>
 
             <div className="flex items-center gap-2 md:gap-4">
-                {/* Mobile Search Trigger (Optional - can add if needed) */}
-
                 {/* Language */}
-                <Button variant="ghost" size="icon" className="h-9 w-9">
+                <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-500 hover:text-slate-700 hover:bg-slate-100">
                     <Globe className="h-5 w-5" />
                     <span className="sr-only">اللغة</span>
                 </Button>
 
-                {/* Night Mode */}
-                <Button variant="ghost" size="icon" className="h-9 w-9">
-                    <Moon className="h-5 w-5" />
-                    <span className="sr-only">الوضع الليلي</span>
-                </Button>
-
-                {/* Shopping Cart */}
-                <Button variant="ghost" size="icon" className="h-9 w-9 relative">
-                    <ShoppingCart className="h-5 w-5" />
-                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-[10px] font-bold text-white flex items-center justify-center">
+                {/* Notifications */}
+                <Button variant="ghost" size="icon" className="h-9 w-9 relative text-slate-500 hover:text-slate-700 hover:bg-slate-100">
+                    <Bell className="h-5 w-5" />
+                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-[10px] font-bold text-white flex items-center justify-center border-2 border-white">
                         9
                     </span>
-                    <span className="sr-only">السلة</span>
+                    <span className="sr-only">الإشعارات</span>
                 </Button>
 
                 {/* Profile */}
-                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full overflow-hidden">
+                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full overflow-hidden border border-slate-200">
                     <img
                         src={Avatar}
                         alt="Profile"
                         className="h-full w-full object-cover"
                     />
                 </Button>
-
-                {/* Settings */}
-                <Button variant="ghost" size="icon" className="h-9 w-9">
-                    <Settings className="h-5 w-5" />
-                    <span className="sr-only">الإعدادات</span>
-                </Button>
             </div>
-        </header>
+        </header >
     );
 }

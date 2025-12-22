@@ -43,6 +43,14 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetDescription,
+    SheetFooter,
+} from "@/components/ui/sheet";
+import {
     Dialog,
     DialogContent,
     DialogHeader,
@@ -261,14 +269,9 @@ export default function Campaigns() {
             <Card className="bg-white border-slate-200 shadow-sm">
                 <CardHeader className="pb-4 border-b border-slate-100">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-                                <Megaphone className="w-5 h-5 text-white" />
-                            </div>
-                            <div>
-                                <CardTitle className="text-lg font-bold text-slate-800">{t('campaigns.platformCampaigns')}</CardTitle>
-                                <CardDescription className="text-slate-500">{t('campaigns.platformDescription')}</CardDescription>
-                            </div>
+                        <div>
+                            <CardTitle className="text-lg font-bold text-slate-800">{t('campaigns.platformCampaigns')}</CardTitle>
+                            <CardDescription className="text-slate-500">{t('campaigns.platformDescription')}</CardDescription>
                         </div>
                         <Badge variant="secondary" className="bg-blue-50 text-blue-700 font-medium">
                             {platformCampaigns.filter(c => c.status === 'active').length} {t('campaigns.activeCampaign')}
@@ -365,14 +368,9 @@ export default function Campaigns() {
             <Card className="bg-white border-slate-200 shadow-sm">
                 <CardHeader className="pb-4 border-b border-slate-100">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
-                                <Tag className="w-5 h-5 text-white" />
-                            </div>
-                            <div>
-                                <CardTitle className="text-lg font-bold text-slate-800">{t('campaigns.yourOffers')}</CardTitle>
-                                <CardDescription className="text-slate-500">{t('campaigns.yourOffersDescription')}</CardDescription>
-                            </div>
+                        <div>
+                            <CardTitle className="text-lg font-bold text-slate-800">{t('campaigns.yourOffers')}</CardTitle>
+                            <CardDescription className="text-slate-500">{t('campaigns.yourOffersDescription')}</CardDescription>
                         </div>
                     </div>
                 </CardHeader>
@@ -454,16 +452,16 @@ export default function Campaigns() {
                 </CardContent>
             </Card>
 
-            {/* Create Campaign Modal */}
-            <Dialog open={showModal} onOpenChange={setShowModal}>
-                <DialogContent className="sm:max-w-[600px] bg-white">
-                    <DialogHeader>
-                        <DialogTitle className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-4">
+            {/* Create Campaign Side Menu (Sheet) */}
+            <Sheet open={showModal} onOpenChange={setShowModal}>
+                <SheetContent side="left" className="w-[400px] sm:w-[540px] overflow-y-auto px-0">
+                    <SheetHeader className="px-3 pt-12 pb-6 border-b border-slate-100 bg-slate-50/30">
+                        <SheetTitle className="text-xl font-bold text-slate-900 text-start">
                             {t('campaigns.createOfferTitle')}
-                        </DialogTitle>
-                    </DialogHeader>
+                        </SheetTitle>
+                    </SheetHeader>
 
-                    <div className="py-4 space-y-4">
+                    <div className="py-6 px-6 space-y-6" dir="rtl">
                         <div className="space-y-2">
                             <Label>{t('campaigns.offerName')}</Label>
                             <Input placeholder={t('campaigns.offerName')} className="bg-white border-slate-200" />
@@ -512,17 +510,17 @@ export default function Campaigns() {
                                 <Input type="date" className="bg-white border-slate-200" />
                             </div>
                         </div>
-                    </div>
 
-                    <DialogFooter className="gap-2 border-t border-slate-100 pt-4">
-                        <Button variant="outline" onClick={() => setShowModal(false)}>{t('common.cancel')}</Button>
-                        <Button className="bg-blue-600 hover:bg-blue-700 text-white gap-2">
-                            <Plus size={18} />
-                            {t('campaigns.createTheOffer')}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                        <div className="flex gap-2 pt-4">
+                            <Button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white gap-2">
+                                <Plus size={18} />
+                                {t('campaigns.createTheOffer')}
+                            </Button>
+                            <Button variant="outline" onClick={() => setShowModal(false)} className="flex-1">{t('common.cancel')}</Button>
+                        </div>
+                    </div>
+                </SheetContent>
+            </Sheet>
 
             {/* Campaign Report Modal */}
             <Dialog open={showReportModal} onOpenChange={setShowReportModal}>

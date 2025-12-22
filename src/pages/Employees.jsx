@@ -38,12 +38,14 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogFooter,
-} from '@/components/ui/dialog';
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetDescription,
+    SheetFooter,
+} from '@/components/ui/sheet';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Label } from '@/components/ui/label';
 import {
     Select,
@@ -124,22 +126,22 @@ export default function Employees() {
             </div>
 
             {/* Tabs */}
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full max-w-md grid-cols-2">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" dir="rtl">
+                <TabsList className="grid w-full max-w-md grid-cols-2 ml-auto mr-0">
                     <TabsTrigger value="employees">{t('employees.allEmployees') || 'All Employees'}</TabsTrigger>
                     <TabsTrigger value="roles">{t('employees.allRoles') || 'All Roles'}</TabsTrigger>
                 </TabsList>
 
                 {/* Search & Actions */}
-                <div className="flex items-center justify-between gap-4 mt-4">
+                <div className="flex items-center justify-between gap-4 mt-4" dir="rtl">
                     <div className="relative flex-1 max-w-md">
-                        <Search size={18} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                         <Input
                             type="text"
                             placeholder={t('employees.searchPlaceholder') || 'Search employees'}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pr-10"
+                            className="pl-10 text-right"
                         />
                     </div>
                     <div className="flex gap-2">
@@ -153,203 +155,197 @@ export default function Employees() {
                 </div>
 
                 <TabsContent value="employees" className="mt-4">
-                    <Card>
-                        <CardContent className="p-0">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow className="hover:bg-transparent">
-                                        <TableHead className="text-right">{t('employees.name')}</TableHead>
-                                        <TableHead className="text-right">{t('employees.role')}</TableHead>
-                                        <TableHead className="text-right">{t('employees.phone')}</TableHead>
-                                        <TableHead className="text-right">{t('employees.email')}</TableHead>
-                                        <TableHead className="text-center">{t('employees.status')}</TableHead>
-                                        <TableHead className="text-center">{t('products.actions')}</TableHead>
+                    <div className="rounded-md border bg-white shadow-sm" dir="rtl">
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="bg-slate-50 border-b border-slate-100 h-10">
+                                    <TableHead className="text-start h-10 text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('employees.name')}</TableHead>
+                                    <TableHead className="text-start h-10 text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('employees.role')}</TableHead>
+                                    <TableHead className="text-start h-10 text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('employees.phone')}</TableHead>
+                                    <TableHead className="text-start h-10 text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('employees.email')}</TableHead>
+                                    <TableHead className="text-center h-10 text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('employees.status')}</TableHead>
+                                    <TableHead className="text-center h-10 text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('products.actions')}</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {paginatedEmployees.map((emp) => (
+                                    <TableRow key={emp.id} className="hover:bg-slate-50/50">
+                                        <TableCell className="font-medium">
+                                            <div className="flex items-center gap-3">
+                                                <Avatar className="h-9 w-9 border border-slate-100">
+                                                    <AvatarImage src={emp.avatar} alt={emp.name} />
+                                                    <AvatarFallback className="bg-slate-100 text-slate-500">{emp.name.charAt(0)}</AvatarFallback>
+                                                </Avatar>
+                                                <span className="text-slate-900">{emp.name}</span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="text-slate-600">{emp.role}</TableCell>
+                                        <TableCell className="text-slate-600 font-mono text-xs" dir="ltr">{emp.phone}</TableCell>
+                                        <TableCell className="text-slate-600">{emp.email}</TableCell>
+                                        <TableCell className="text-center">
+                                            <Badge variant="secondary" className={`font-normal ${emp.status === 'active' ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100' : 'bg-red-50 text-red-700 hover:bg-red-100'}`}>
+                                                <span className={`w-1.5 h-1.5 rounded-full ml-1.5 ${emp.status === 'active' ? 'bg-emerald-500' : 'bg-red-500'}`} />
+                                                {emp.status === 'active' ? t('employees.active') : t('employees.inactive')}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center justify-center gap-2">
+                                                <Button variant="ghost" size="icon" className="h-9 w-9 bg-amber-50 text-amber-600 hover:bg-amber-100 round-md">
+                                                    <Edit size={18} />
+                                                </Button>
+                                                <Button variant="ghost" size="icon" className="h-9 w-9 bg-red-50 text-red-600 hover:bg-red-100 rounded-md">
+                                                    <Trash2 size={18} />
+                                                </Button>
+                                            </div>
+                                        </TableCell>
                                     </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {paginatedEmployees.map((emp) => (
-                                        <TableRow key={emp.id}>
-                                            <TableCell>
-                                                <div className="flex items-center gap-3">
-                                                    <Avatar className="h-10 w-10">
-                                                        <AvatarImage src={emp.avatar} alt={emp.name} />
-                                                        <AvatarFallback>{emp.name.charAt(0)}</AvatarFallback>
-                                                    </Avatar>
-                                                    <span className="font-medium">{emp.name}</span>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell className="text-slate-600">{emp.role}</TableCell>
-                                            <TableCell className="text-slate-600" dir="ltr">{emp.phone}</TableCell>
-                                            <TableCell className="text-slate-600">{emp.email}</TableCell>
-                                            <TableCell className="text-center">
-                                                <Badge variant="secondary" className={emp.status === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}>
-                                                    <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${emp.status === 'active' ? 'bg-emerald-500' : 'bg-red-500'}`} />
-                                                    {emp.status === 'active' ? t('employees.active') : t('employees.inactive')}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell>
-                                                <div className="flex items-center justify-center gap-2">
-                                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-amber-600 hover:bg-amber-50">
-                                                        <X size={16} />
-                                                    </Button>
-                                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600 hover:bg-blue-50">
-                                                        <Edit size={16} />
-                                                    </Button>
-                                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600 hover:bg-red-50">
-                                                        <Trash2 size={16} />
-                                                    </Button>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </Card>
-
-                    {/* Pagination */}
-                    <div className="flex items-center justify-between mt-4 px-4">
-                        <span className="text-sm text-slate-600">{t('home.showing')} {itemsPerPage} {t('common.entries') || 'entries'}</span>
-                        <div className="flex items-center gap-2">
-                            <span className="text-sm text-slate-600">{t('home.previous')}</span>
-                            {Array.from({ length: totalPages }, (_, i) => (
-                                <Button
-                                    key={i + 1}
-                                    onClick={() => setCurrentPage(i + 1)}
-                                    variant={currentPage === i + 1 ? "default" : "ghost"}
-                                    size="sm"
-                                    className={currentPage === i + 1 ? 'bg-blue-600 hover:bg-blue-700' : ''}
-                                >
-                                    {i + 1}
-                                </Button>
-                            ))}
-                            <span className="text-sm text-blue-600 cursor-pointer">{t('home.next')}</span>
+                                ))}
+                            </TableBody>
+                        </Table>
+                        {/* Pagination */}
+                        <div className="flex items-center justify-between px-4 py-4 border-t border-slate-100" dir="rtl">
+                            <span className="text-sm text-slate-500 font-medium">{t('home.showing')} {itemsPerPage} {t('common.entries') || 'entries'}</span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm text-slate-500 ml-2 font-medium">{t('home.previous')}</span>
+                                {Array.from({ length: totalPages }, (_, i) => (
+                                    <Button
+                                        key={i + 1}
+                                        onClick={() => setCurrentPage(i + 1)}
+                                        variant={currentPage === i + 1 ? "default" : "outline"}
+                                        size="sm"
+                                        className={`w-8 h-8 p-0 rounded-md ${currentPage === i + 1 ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+                                    >
+                                        {i + 1}
+                                    </Button>
+                                ))}
+                                <span className="text-sm text-blue-600 cursor-pointer mr-2 font-medium hover:text-blue-700">{t('home.next')}</span>
+                            </div>
                         </div>
                     </div>
                 </TabsContent>
 
                 <TabsContent value="roles" className="mt-4">
-                    <Card>
-                        <CardContent className="p-0">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow className="hover:bg-transparent">
-                                        <TableHead className="text-right">اسم الدور</TableHead>
-                                        <TableHead className="text-right">اعضاء الفريق</TableHead>
-                                        <TableHead className="text-center">الحالة</TableHead>
-                                        <TableHead className="text-center">إجراءات</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {roles.map((role) => {
-                                        const RoleIcon = role.icon;
-                                        return (
-                                            <TableRow key={role.id}>
-                                                <TableCell>
-                                                    <div className="flex items-center gap-3">
-                                                        <div className={`w-11 h-11 rounded-lg ${role.bgColor} flex items-center justify-center`}>
-                                                            <RoleIcon size={22} className={role.color} />
-                                                        </div>
-                                                        <div>
-                                                            <p className="font-semibold text-slate-900">{role.name}</p>
-                                                            <p className="text-xs text-slate-500">{role.department}</p>
-                                                        </div>
+                    <div className="rounded-md border bg-white shadow-sm" dir="rtl">
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="bg-slate-50 hover:bg-slate-50 border-b border-slate-200">
+                                    <TableHead className="text-start h-12 font-medium text-slate-500">اسم الدور</TableHead>
+                                    <TableHead className="text-start h-12 font-medium text-slate-500">اعضاء الفريق</TableHead>
+                                    <TableHead className="text-center h-12 font-medium text-slate-500">الحالة</TableHead>
+                                    <TableHead className="text-center h-12 font-medium text-slate-500">إجراءات</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {roles.map((role) => {
+                                    const RoleIcon = role.icon;
+                                    return (
+                                        <TableRow key={role.id} className="hover:bg-slate-50/50">
+                                            <TableCell>
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`w-10 h-10 rounded-lg ${role.bgColor} flex items-center justify-center border border-white shadow-sm`}>
+                                                        <RoleIcon size={20} className={role.color} />
                                                     </div>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <div className="flex items-center">
-                                                        {role.members.map((av, i) => (
-                                                            <Avatar key={i} className={`h-8 w-8 border-2 border-white ${i > 0 ? '-mr-2' : ''}`}>
-                                                                <AvatarImage src={av} />
-                                                            </Avatar>
-                                                        ))}
-                                                        <Badge variant="secondary" className="mr-2 bg-slate-100 text-slate-600">
-                                                            +{role.extraMembers}
-                                                        </Badge>
+                                                    <div>
+                                                        <p className="font-semibold text-slate-900 text-sm">{role.name}</p>
+                                                        <p className="text-xs text-slate-500">{role.department}</p>
                                                     </div>
-                                                </TableCell>
-                                                <TableCell className="text-center">
-                                                    <Badge variant="secondary" className="bg-emerald-50 text-emerald-700">
-                                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5" />
-                                                        نشط
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="flex items-center">
+                                                    {role.members.map((av, i) => (
+                                                        <Avatar key={i} className={`h-8 w-8 border-2 border-white ${i > 0 ? '-mr-2' : ''}`}>
+                                                            <AvatarImage src={av} />
+                                                        </Avatar>
+                                                    ))}
+                                                    <Badge variant="secondary" className="mr-2 bg-slate-100 text-slate-600 border border-slate-200">
+                                                        +{role.extraMembers}
                                                     </Badge>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <div className="flex items-center justify-center gap-2">
-                                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-amber-600 hover:bg-amber-50">
-                                                            <RotateCcw size={16} />
-                                                        </Button>
-                                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600 hover:bg-blue-50">
-                                                            <Edit size={16} />
-                                                        </Button>
-                                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600 hover:bg-red-50">
-                                                            <Trash2 size={16} />
-                                                        </Button>
-                                                    </div>
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </Card>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="text-center">
+                                                <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100">
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ml-1.5" />
+                                                    نشط
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <Button variant="ghost" size="icon" className="h-9 w-9 bg-amber-50 text-amber-600 hover:bg-amber-100 rounded-md">
+                                                        <Edit size={18} />
+                                                    </Button>
+                                                    <Button variant="ghost" size="icon" className="h-9 w-9 bg-red-50 text-red-600 hover:bg-red-100 rounded-md">
+                                                        <Trash2 size={18} />
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </div>
                 </TabsContent>
             </Tabs>
 
             {/* Add Employee Modal */}
-            <Dialog open={showAddEmployeeModal} onOpenChange={setShowAddEmployeeModal}>
-                <DialogContent className="sm:max-w-[500px]">
-                    <DialogHeader>
-                        <DialogTitle>إضافة موظف جديد</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4 py-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="name">الاسم الكامل</Label>
-                            <Input id="name" placeholder="أدخل اسم الموظف" />
+            {/* Add Employee Sheet */}
+            <Sheet open={showAddEmployeeModal} onOpenChange={setShowAddEmployeeModal}>
+                <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0">
+                    <SheetHeader className="px-3 pt-12 pb-6 border-b border-slate-100 bg-slate-50/30">
+                        <SheetTitle className="text-right pr-6">إضافة موظف جديد</SheetTitle>
+                    </SheetHeader>
+                    <div className="flex-1 overflow-y-auto py-6 px-6 space-y-6" dir="rtl">
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="name">الاسم الكامل</Label>
+                                <Input id="name" placeholder="أدخل اسم الموظف" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="email">البريد الإلكتروني</Label>
+                                <Input id="email" type="email" placeholder="example@email.com" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="phone">رقم الهاتف</Label>
+                                <Input id="phone" type="tel" placeholder="+20 XXX XXX XXXX" className="text-left font-mono" dir="ltr" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="role">الدور الوظيفي</Label>
+                                <Select>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="اختر الدور" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="manager">مدير المتجر</SelectItem>
+                                        <SelectItem value="sales">مسؤول المبيعات</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="email">البريد الإلكتروني</Label>
-                            <Input id="email" type="email" placeholder="example@email.com" />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="phone">رقم الهاتف</Label>
-                            <Input id="phone" type="tel" placeholder="+20 XXX XXX XXXX" />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="role">الدور الوظيفي</Label>
-                            <Select>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="اختر الدور" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="manager">مدير المتجر</SelectItem>
-                                    <SelectItem value="sales">مسؤول المبيعات</SelectItem>
-                                </SelectContent>
-                            </Select>
+
+                        <div className="pt-6 border-t border-slate-100 flex items-center gap-2 justify-end">
+                            <Button variant="outline" onClick={() => setShowAddEmployeeModal(false)}>إلغاء</Button>
+                            <Button className="bg-blue-600 hover:bg-blue-700">إضافة</Button>
                         </div>
                     </div>
-                    <DialogFooter>
-                        <Button variant="outline" onClick={() => setShowAddEmployeeModal(false)}>إلغاء</Button>
-                        <Button className="bg-blue-600 hover:bg-blue-700">إضافة</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                </SheetContent>
+            </Sheet>
 
-            {/* Add Role Modal */}
-            <Dialog open={showAddRoleModal} onOpenChange={setShowAddRoleModal}>
-                <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle>إنشاء دور جديد</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-6 py-4">
-                        <div className="space-y-4">
+            {/* Add Role Sheet */}
+            <Sheet open={showAddRoleModal} onOpenChange={setShowAddRoleModal}>
+                <SheetContent side="left" className="w-[400px] sm:w-[600px] p-0 flex flex-col gap-0">
+                    <SheetHeader className="px-6 pt-12 pb-6 border-b border-slate-100 bg-slate-50/30 shrink-0">
+                        <SheetTitle className="text-right">إنشاء دور جديد</SheetTitle>
+                    </SheetHeader>
+
+                    <div className="flex-1 overflow-y-auto" dir="rtl">
+                        <div className="p-6 space-y-6">
                             <div>
                                 <h3 className="text-lg font-semibold mb-2">بيانات الدور</h3>
                                 <p className="text-sm text-slate-600 mb-4">قم بتعريف اسم الدور الجديد ليتم تعيينه للموظفين لاحقا</p>
                                 <div className="space-y-2">
                                     <Label htmlFor="roleName">اسم الدور الوظيفي</Label>
-                                    <Input id="roleName" placeholder="مثال: مدير المنتاج" />
+                                    <Input id="roleName" placeholder="مثال: مدير المنتجات" />
                                 </div>
                             </div>
 
@@ -363,39 +359,39 @@ export default function Employees() {
                                         const Icon = page.icon;
                                         const level = rolePermissions[page.id];
                                         return (
-                                            <div key={page.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                                            <div key={page.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-slate-50 rounded-lg gap-3">
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center">
                                                         <Icon size={18} className="text-slate-600" />
                                                     </div>
                                                     <span className="font-medium text-sm">{page.name}</span>
                                                 </div>
-                                                <div className="flex gap-1 bg-slate-100 rounded-lg p-1">
+                                                <div className="flex gap-1 bg-slate-100 rounded-lg p-1 self-end sm:self-auto">
                                                     <Button
                                                         onClick={() => setPermissionLevel(page.id, PERMISSION_LEVELS.HIDDEN)}
                                                         variant="ghost"
                                                         size="sm"
-                                                        className={`gap-1 ${level === PERMISSION_LEVELS.HIDDEN ? 'bg-blue-600 text-white hover:bg-blue-700 hover:text-white' : ''}`}
+                                                        className={`gap-1 h-7 text-xs ${level === PERMISSION_LEVELS.HIDDEN ? 'bg-blue-600 text-white hover:bg-blue-700 hover:text-white' : 'text-slate-500 hover:text-slate-700'}`}
                                                     >
-                                                        {level === PERMISSION_LEVELS.HIDDEN && <Check size={14} />}
+                                                        {level === PERMISSION_LEVELS.HIDDEN && <Check size={12} />}
                                                         مخفي
                                                     </Button>
                                                     <Button
                                                         onClick={() => setPermissionLevel(page.id, PERMISSION_LEVELS.VIEW_ONLY)}
                                                         variant="ghost"
                                                         size="sm"
-                                                        className={`gap-1 ${level === PERMISSION_LEVELS.VIEW_ONLY ? 'bg-blue-600 text-white hover:bg-blue-700 hover:text-white' : ''}`}
+                                                        className={`gap-1 h-7 text-xs ${level === PERMISSION_LEVELS.VIEW_ONLY ? 'bg-blue-600 text-white hover:bg-blue-700 hover:text-white' : 'text-slate-500 hover:text-slate-700'}`}
                                                     >
-                                                        {level === PERMISSION_LEVELS.VIEW_ONLY && <Check size={14} />}
-                                                        عرض فقط
+                                                        {level === PERMISSION_LEVELS.VIEW_ONLY && <Check size={12} />}
+                                                        عرض
                                                     </Button>
                                                     <Button
                                                         onClick={() => setPermissionLevel(page.id, PERMISSION_LEVELS.ADMIN)}
                                                         variant="ghost"
                                                         size="sm"
-                                                        className={`gap-1 ${level === PERMISSION_LEVELS.ADMIN ? 'bg-blue-600 text-white hover:bg-blue-700 hover:text-white' : ''}`}
+                                                        className={`gap-1 h-7 text-xs ${level === PERMISSION_LEVELS.ADMIN ? 'bg-blue-600 text-white hover:bg-blue-700 hover:text-white' : 'text-slate-500 hover:text-slate-700'}`}
                                                     >
-                                                        {level === PERMISSION_LEVELS.ADMIN && <Check size={14} />}
+                                                        {level === PERMISSION_LEVELS.ADMIN && <Check size={12} />}
                                                         مدير
                                                     </Button>
                                                 </div>
@@ -406,12 +402,13 @@ export default function Employees() {
                             </div>
                         </div>
                     </div>
-                    <DialogFooter>
+
+                    <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex items-center gap-2 justify-end shrink-0">
                         <Button variant="outline" onClick={() => setShowAddRoleModal(false)}>إلغاء</Button>
                         <Button className="bg-blue-600 hover:bg-blue-700">حفظ الدور</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                    </div>
+                </SheetContent>
+            </Sheet>
         </div>
     );
 }
