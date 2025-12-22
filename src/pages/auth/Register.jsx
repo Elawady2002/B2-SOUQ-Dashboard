@@ -261,13 +261,13 @@ export default function Register() {
                         <div
                             onClick={() => updateFormData('sellerType', 'individual')}
                             className={`p-6 rounded-xl cursor-pointer text-center transition-all ${formData.sellerType === 'individual'
-                                ? 'border-2 border-primary bg-primary-50'
+                                ? 'border-2 border-blue-600 bg-blue-50'
                                 : 'border-2 border-slate-200 bg-white hover:border-slate-300'
                                 }`}
                         >
                             <User
                                 size={40}
-                                className={`mx-auto mb-3 ${formData.sellerType === 'individual' ? 'text-primary' : 'text-slate-500'
+                                className={`mx-auto mb-3 ${formData.sellerType === 'individual' ? 'text-blue-600' : 'text-slate-500'
                                     }`}
                             />
                             <h4 className="text-base font-semibold mb-2 text-slate-700">تاجر فردي</h4>
@@ -278,13 +278,13 @@ export default function Register() {
                         <div
                             onClick={() => updateFormData('sellerType', 'company')}
                             className={`p-6 rounded-xl cursor-pointer text-center transition-all ${formData.sellerType === 'company'
-                                ? 'border-2 border-primary bg-primary-50'
+                                ? 'border-2 border-blue-600 bg-blue-50'
                                 : 'border-2 border-slate-200 bg-white hover:border-slate-300'
                                 }`}
                         >
                             <Building
                                 size={40}
-                                className={`mx-auto mb-3 ${formData.sellerType === 'company' ? 'text-primary' : 'text-slate-500'
+                                className={`mx-auto mb-3 ${formData.sellerType === 'company' ? 'text-blue-600' : 'text-slate-500'
                                     }`}
                             />
                             <h4 className="text-base font-semibold mb-2 text-slate-700">شركة / مؤسسة</h4>
@@ -591,8 +591,8 @@ export default function Register() {
                                 </div>
                             </div>
                         </Card>
-                        <div className="bg-primary-50 border border-primary rounded-lg p-6 text-center">
-                            <CheckCircle size={48} className="mx-auto mb-3 text-primary" />
+                        <div className="bg-blue-50 border border-blue-600 rounded-lg p-6 text-center">
+                            <CheckCircle size={48} className="mx-auto mb-3 text-blue-600" />
                             <h4 className="text-base font-semibold mb-2 text-slate-800">
                                 جاهز للمراجعة
                             </h4>
@@ -611,12 +611,20 @@ export default function Register() {
     return (
         <div className="min-h-screen flex" dir="rtl">
             {/* Right Side - Blue Panel */}
-            <div className="flex-[0_0_35%] bg-gradient-to-br from-primary to-primary-700 px-10 py-16 flex flex-col justify-center text-white relative overflow-hidden">
-                {/* Decorative circles */}
-                <div className="absolute w-[350px] h-[350px] rounded-full bg-white/5 -top-20 -right-20" />
-                <div className="absolute w-[250px] h-[250px] rounded-full bg-white/5 -bottom-16 -left-16" />
+            <div className="hidden lg:flex flex-1 bg-blue-600 p-12 flex-col justify-center items-center text-white relative overflow-hidden">
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-10">
+                    <svg className="w-full h-full" viewBox="0 0 400 400">
+                        <defs>
+                            <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+                                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1" />
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#gridPattern)" />
+                    </svg>
+                </div>
 
-                <div className="relative z-10">
+                <div className="relative z-10 max-w-xl w-full">
                     {/* Logo */}
                     <img
                         src={LogoFull}
@@ -635,45 +643,22 @@ export default function Register() {
                         سجل الآن واحصل على لوحة تحكم احترافية.
                     </p>
 
-                    {/* Testimonials Carousel */}
-                    <Card className="bg-white/95 rounded-xl p-6 border-none min-h-[180px] shadow-lg">
-                        <div className="transition-opacity duration-500">
-                            <p className="text-base leading-relaxed mb-4 text-slate-600 min-h-[60px]">
-                                "{TESTIMONIALS[currentTestimonial].text}"
-                            </p>
-                            <div className="flex items-center gap-3">
-                                <img
-                                    src={TESTIMONIALS[currentTestimonial].avatar}
-                                    alt={TESTIMONIALS[currentTestimonial].author}
-                                    className="w-10 h-10 rounded-full object-cover"
-                                />
-                                <div>
-                                    <div className="font-semibold text-sm text-slate-700">
-                                        {TESTIMONIALS[currentTestimonial].author}
-                                    </div>
-                                    <div className="text-xs text-slate-500">
-                                        {TESTIMONIALS[currentTestimonial].role}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="mt-3 flex gap-1">
-                                {[1, 2, 3, 4, 5].map(i => (
-                                    <span key={i} className="text-amber-400 text-base">★</span>
-                                ))}
-                            </div>
-                        </div>
-                    </Card>
+                    {/* Dashboard Mockup */}
+                    <div className="bg-white rounded-2xl p-6 shadow-2xl mb-8">
+                        <img
+                            src={new URL('../../assets/image/dashboard-mockup.png', import.meta.url).href}
+                            alt="معاينة لوحة التحكم"
+                            className="w-full h-auto rounded-lg"
+                        />
+                    </div>
 
-                    {/* Progress Indicators */}
-                    <div className="flex gap-2 mt-5 justify-center">
-                        {TESTIMONIALS.map((_, index) => (
-                            <div
-                                key={index}
-                                className={`h-1 flex-1 max-w-[60px] rounded-sm transition-all duration-300 cursor-pointer ${currentTestimonial === index ? 'bg-white' : 'bg-white/30'
-                                    }`}
-                                onClick={() => setCurrentTestimonial(index)}
-                            />
-                        ))}
+                    {/* Partner Logos */}
+                    <div className="flex items-center justify-center gap-6 opacity-70 flex-wrap">
+                        <span className="text-sm font-medium">Stripe</span>
+                        <span className="text-sm font-medium">Spotify</span>
+                        <span className="text-sm font-medium">Google</span>
+                        <span className="text-sm font-medium">Booking.com</span>
+                        <span className="text-sm font-medium">WeChat</span>
                     </div>
                 </div>
             </div>
@@ -688,7 +673,7 @@ export default function Register() {
 
                         {/* Active progress line */}
                         <div
-                            className="absolute top-4 right-[8.33%] h-0.5 bg-primary z-0 transition-all duration-300"
+                            className="absolute top-4 right-[8.33%] h-0.5 bg-blue-600 z-0 transition-all duration-300"
                             style={{ width: `calc((100% - 16.66%) * ${(currentStep - 1) / (STEPS.length - 1)})` }}
                         />
 
@@ -696,7 +681,7 @@ export default function Register() {
                             <div key={step.id} className="flex-1 flex flex-col items-center relative">
                                 {/* Step Circle */}
                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold mb-2 relative z-10 transition-all ${currentStep >= step.id
-                                    ? 'bg-primary text-white'
+                                    ? 'bg-blue-600 text-white'
                                     : 'bg-slate-200 text-slate-400'
                                     }`}>
                                     {currentStep > step.id ? '✓' : step.id}
@@ -736,7 +721,7 @@ export default function Register() {
                             <Button
                                 onClick={nextStep}
                                 size="lg"
-                                className="gap-2"
+                                className="gap-2 bg-blue-600 hover:bg-blue-700"
                             >
                                 التالي
                                 <ArrowLeft size={20} />
@@ -745,7 +730,7 @@ export default function Register() {
                             <Button
                                 onClick={handleSubmit}
                                 size="lg"
-                                className="gap-2"
+                                className="gap-2 bg-blue-600 hover:bg-blue-700"
                             >
                                 إتمام التسجيل
                                 <CheckCircle size={20} />
@@ -759,7 +744,7 @@ export default function Register() {
                             لديك حساب بالفعل؟{' '}
                             <button
                                 onClick={() => navigate('/login')}
-                                className="text-primary font-semibold hover:underline transition-all"
+                                className="text-blue-600 font-semibold hover:underline transition-all"
                             >
                                 تسجيل الدخول
                             </button>
