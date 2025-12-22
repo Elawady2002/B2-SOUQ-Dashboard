@@ -13,9 +13,11 @@ import {
     Plus,
     Upload,
     Building2,
-    Check
+    Check,
+    Wifi
 } from 'lucide-react';
 import VisaCard from '../assets/image/card profile.png';
+import Logo3 from '../assets/image/logo3.svg';
 import WalletIcon from '../assets/icons/Frame-3.svg';
 import SalesIcon from '../assets/icons/Frame-1.svg';
 import RevenueIcon from '../assets/icons/Frame-2.svg';
@@ -151,61 +153,7 @@ export default function SellerProfile() {
                 <h1 className="text-2xl font-bold text-slate-900">{t('sellerProfile.financialWallet')}</h1>
             </div>
 
-            {/* Stats Cards - Full Width in One Row */}
-            <div className="grid grid-cols-4 gap-4">
 
-                {/* Card 1: Withdrawable Balance */}
-                <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
-                    <CardContent className="p-6 flex items-center gap-4">
-                        <img src={WalletIcon} alt="Wallet" className="w-12 h-12" />
-                        <div className="flex-1">
-                            <p className="text-sm font-medium text-slate-500 mb-1">{t('sellerProfile.withdrawableBalance')}</p>
-                            <div className="text-2xl font-bold text-slate-900">
-                                156,000 <span className="text-xs font-medium text-slate-400">{t('home.currency')}</span>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Card 2: Pending Profits */}
-                <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
-                    <CardContent className="p-6 flex items-center gap-4">
-                        <img src={SalesIcon} alt="Sales" className="w-12 h-12" />
-                        <div className="flex-1">
-                            <p className="text-sm font-medium text-slate-500 mb-1">{t('sellerProfile.pendingProfits')}</p>
-                            <div className="text-2xl font-bold text-slate-900">
-                                156,000 <span className="text-xs font-medium text-slate-400">{t('home.currency')}</span>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Card 3: Total Sales */}
-                <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
-                    <CardContent className="p-6 flex items-center gap-4">
-                        <img src={RevenueIcon} alt="Revenue" className="w-12 h-12" />
-                        <div className="flex-1">
-                            <p className="text-sm font-medium text-slate-500 mb-1">{t('home.totalSales')}</p>
-                            <div className="text-2xl font-bold text-slate-900">
-                                156,000 <span className="text-xs font-medium text-slate-400">{t('home.currency')}</span>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Card 4: Transaction Count */}
-                <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
-                    <CardContent className="p-6 flex items-center gap-4">
-                        <img src={TransactionIcon} alt="Transactions" className="w-12 h-12" />
-                        <div className="flex-1">
-                            <p className="text-sm font-medium text-slate-500 mb-1">{t('sellerProfile.transactionCount')}</p>
-                            <div className="text-2xl font-bold text-slate-900">
-                                156 <span className="text-xs font-medium text-slate-400">{t('sellerProfile.transaction')}</span>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
 
             {/* Transactions Table */}
             <Card className="border-slate-100 shadow-sm bg-white overflow-hidden">
@@ -421,58 +369,102 @@ export default function SellerProfile() {
                     </div>
                 </CardHeader>
                 <CardContent className="p-6">
+                    {/* Stats Cards - Inside Bank Accounts Section */}
+                    <div className="grid grid-cols-4 gap-4 mb-6">
+                        {/* Card 1: Withdrawable Balance */}
+                        <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
+                            <CardContent className="p-4 flex items-center gap-3">
+                                <img src={WalletIcon} alt="Wallet" className="w-10 h-10" />
+                                <div className="flex-1">
+                                    <p className="text-xs font-medium text-slate-500 mb-0.5">{t('sellerProfile.withdrawableBalance')}</p>
+                                    <div className="text-xl font-bold text-slate-900">
+                                        156,000 <span className="text-[10px] font-medium text-slate-400">{t('home.currency')}</span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Card 2: Pending Profits */}
+                        <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
+                            <CardContent className="p-4 flex items-center gap-3">
+                                <img src={SalesIcon} alt="Sales" className="w-10 h-10" />
+                                <div className="flex-1">
+                                    <p className="text-xs font-medium text-slate-500 mb-0.5">{t('sellerProfile.pendingProfits')}</p>
+                                    <div className="text-xl font-bold text-slate-900">
+                                        156,000 <span className="text-[10px] font-medium text-slate-400">{t('home.currency')}</span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Card 3: Total Sales */}
+                        <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
+                            <CardContent className="p-4 flex items-center gap-3">
+                                <img src={RevenueIcon} alt="Revenue" className="w-10 h-10" />
+                                <div className="flex-1">
+                                    <p className="text-xs font-medium text-slate-500 mb-0.5">{t('home.totalSales')}</p>
+                                    <div className="text-xl font-bold text-slate-900">
+                                        156,000 <span className="text-[10px] font-medium text-slate-400">{t('home.currency')}</span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Card 4: Transaction Count */}
+                        <Card className="border-slate-100 shadow-sm bg-white hover:bg-slate-50/50 transition-colors">
+                            <CardContent className="p-4 flex items-center gap-3">
+                                <img src={TransactionIcon} alt="Transactions" className="w-10 h-10" />
+                                <div className="flex-1">
+                                    <p className="text-xs font-medium text-slate-500 mb-0.5">{t('sellerProfile.transactionCount')}</p>
+                                    <div className="text-xl font-bold text-slate-900">
+                                        156 <span className="text-[10px] font-medium text-slate-400">{t('sellerProfile.transaction')}</span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+
                     <div className="grid grid-cols-3 gap-6">
                         {/* Bank Card 1 - Blue Professional */}
                         <div className="w-full">
-                            <div className="relative aspect-[1.586/1] max-w-[340px] mx-auto rounded-2xl overflow-hidden bg-gradient-to-br from-[#0066FF] to-[#0052CC] p-5 cursor-pointer hover:scale-[1.02] transition-transform shadow-xl">
+                            <div className="relative aspect-[1.586/1] max-w-[340px] mx-auto rounded-2xl overflow-hidden bg-[#0066FF] p-5 cursor-pointer hover:scale-[1.02] transition-transform shadow-xl">
                                 {/* Diagonal Lines Pattern Background */}
-                                <div className="absolute inset-0 opacity-[0.08]">
+                                <div className="absolute inset-0 opacity-[0.1]">
                                     <svg className="w-full h-full" viewBox="0 0 400 250" preserveAspectRatio="none">
                                         <defs>
-                                            <pattern id="diagonalLines1" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
-                                                <line x1="0" y1="0" x2="0" y2="20" stroke="white" strokeWidth="15" />
+                                            <pattern id="wavyLines1" patternUnits="userSpaceOnUse" width="100" height="20" patternTransform="rotate(-10)">
+                                                <path d="M0 10 Q25 20 50 10 T100 10" fill="none" stroke="white" strokeWidth="1.5" opacity="0.5" />
                                             </pattern>
                                         </defs>
-                                        <rect width="100%" height="100%" fill="url(#diagonalLines1)" />
+                                        <rect width="100%" height="100%" fill="url(#wavyLines1)" />
                                     </svg>
                                 </div>
 
                                 <div className="relative h-full flex flex-col justify-between text-white">
                                     {/* Top Section - Logo & Contactless */}
                                     <div className="flex items-start justify-between">
-                                        <div className="text-white font-black text-xl tracking-tight">
-                                            B2<span className="font-light">SOUQ</span>
-                                        </div>
-                                        <div className="flex flex-col gap-0.5">
-                                            <div className="flex gap-0.5">
-                                                <div className="w-3 h-3 rounded-full border-2 border-white/80"></div>
-                                                <div className="w-3 h-3 rounded-full border-2 border-white/80 -ml-1.5"></div>
-                                            </div>
-                                            <div className="flex gap-0.5 -mt-1.5">
-                                                <div className="w-3 h-3 rounded-full border-2 border-white/80"></div>
-                                                <div className="w-3 h-3 rounded-full border-2 border-white/80 -ml-1.5"></div>
-                                            </div>
-                                        </div>
+                                        <Wifi className="text-white/80 rotate-90" size={24} />
+                                        <img src={Logo3} alt="B2 SOUQ" className="h-5 brightness-0 invert" />
                                     </div>
 
                                     {/* Middle Section - Bank Name Badge */}
                                     <div className="flex items-center justify-between">
-                                        <Badge className="bg-emerald-400/90 hover:bg-emerald-500 text-white border-0 text-[9px] px-2 py-0.5 font-medium">
-                                            <CheckCircle size={9} className="ml-0.5" />
+                                        <Badge className="bg-emerald-400/90 hover:bg-emerald-500 text-white border-0 text-[10px] px-2 py-0.5 font-medium">
+                                            <CheckCircle size={12} className="ml-0.5" />
                                             موثق
                                         </Badge>
-                                        <div className="text-white/90 text-[10px] font-medium">البنك الأهلي السعودي</div>
+                                        <div className="text-white/95 text-sm font-semibold">البنك الأهلي السعودي</div>
                                     </div>
 
                                     {/* Bottom Section - Card Details */}
                                     <div>
-                                        <div className="text-white/90 text-[10px] font-light mb-1 uppercase tracking-wide">عبدالله احمد العوضي</div>
+                                        <div className="text-white/95 text-xs font-medium mb-1 uppercase tracking-wide">عبدالله احمد العوضي</div>
                                         <div className="flex items-end justify-between">
                                             <div className="flex items-center gap-3">
-                                                <div className="text-white font-mono text-base tracking-wider">•••• 4521</div>
-                                                <div className="text-white/70 text-[10px] font-light">08/27</div>
+                                                <div className="text-white font-mono text-xl tracking-wider">•••• 4521</div>
+                                                <div className="text-white/80 text-xs font-light">08/27</div>
                                             </div>
-                                            <div className="bg-white px-2 py-1 rounded text-[#0066FF] font-black text-xs">
+                                            <div className="bg-white px-2 py-1 rounded text-[#0066FF] font-black text-sm">
                                                 VISA
                                             </div>
                                         </div>
@@ -484,55 +476,44 @@ export default function SellerProfile() {
 
                         {/* Bank Card 2 - Purple Professional */}
                         <div className="w-full">
-                            <div className="relative aspect-[1.586/1] max-w-[340px] mx-auto rounded-2xl overflow-hidden bg-gradient-to-br from-[#8B5CF6] to-[#6D28D9] p-5 cursor-pointer hover:scale-[1.02] transition-transform shadow-xl">
+                            <div className="relative aspect-[1.586/1] max-w-[340px] mx-auto rounded-2xl overflow-hidden bg-[#1e293b] p-5 cursor-pointer hover:scale-[1.02] transition-transform shadow-xl">
                                 {/* Diagonal Lines Pattern Background */}
-                                <div className="absolute inset-0 opacity-[0.08]">
+                                <div className="absolute inset-0 opacity-[0.1]">
                                     <svg className="w-full h-full" viewBox="0 0 400 250" preserveAspectRatio="none">
                                         <defs>
-                                            <pattern id="diagonalLines2" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
-                                                <line x1="0" y1="0" x2="0" y2="20" stroke="white" strokeWidth="15" />
+                                            <pattern id="wavyLines2" patternUnits="userSpaceOnUse" width="100" height="20" patternTransform="rotate(-10)">
+                                                <path d="M0 10 Q25 20 50 10 T100 10" fill="none" stroke="white" strokeWidth="1.5" opacity="0.5" />
                                             </pattern>
                                         </defs>
-                                        <rect width="100%" height="100%" fill="url(#diagonalLines2)" />
+                                        <rect width="100%" height="100%" fill="url(#wavyLines2)" />
                                     </svg>
                                 </div>
 
                                 <div className="relative h-full flex flex-col justify-between text-white">
                                     {/* Top Section - Logo & Contactless */}
                                     <div className="flex items-start justify-between">
-                                        <div className="text-white font-black text-xl tracking-tight">
-                                            B2<span className="font-light">SOUQ</span>
-                                        </div>
-                                        <div className="flex flex-col gap-0.5">
-                                            <div className="flex gap-0.5">
-                                                <div className="w-3 h-3 rounded-full border-2 border-white/80"></div>
-                                                <div className="w-3 h-3 rounded-full border-2 border-white/80 -ml-1.5"></div>
-                                            </div>
-                                            <div className="flex gap-0.5 -mt-1.5">
-                                                <div className="w-3 h-3 rounded-full border-2 border-white/80"></div>
-                                                <div className="w-3 h-3 rounded-full border-2 border-white/80 -ml-1.5"></div>
-                                            </div>
-                                        </div>
+                                        <Wifi className="text-white/80 rotate-90" size={24} />
+                                        <img src={Logo3} alt="B2 SOUQ" className="h-5 brightness-0 invert" />
                                     </div>
 
                                     {/* Middle Section - Bank Name Badge */}
                                     <div className="flex items-center justify-between">
-                                        <Badge className="bg-emerald-400/90 hover:bg-emerald-500 text-white border-0 text-[9px] px-2 py-0.5 font-medium">
-                                            <CheckCircle size={9} className="ml-0.5" />
+                                        <Badge className="bg-emerald-400/90 hover:bg-emerald-500 text-white border-0 text-[10px] px-2 py-0.5 font-medium">
+                                            <CheckCircle size={12} className="ml-0.5" />
                                             موثق
                                         </Badge>
-                                        <div className="text-white/90 text-[10px] font-medium">مصرف الراجحي</div>
+                                        <div className="text-white/95 text-sm font-semibold">مصرف الراجحي</div>
                                     </div>
 
                                     {/* Bottom Section - Card Details */}
                                     <div>
-                                        <div className="text-white/90 text-[10px] font-light mb-1 uppercase tracking-wide">عبدالله احمد العوضي</div>
+                                        <div className="text-white/95 text-xs font-medium mb-1 uppercase tracking-wide">عبدالله احمد العوضي</div>
                                         <div className="flex items-end justify-between">
                                             <div className="flex items-center gap-3">
-                                                <div className="text-white font-mono text-base tracking-wider">•••• 7832</div>
-                                                <div className="text-white/70 text-[10px] font-light">05/26</div>
+                                                <div className="text-white font-mono text-xl tracking-wider">•••• 7832</div>
+                                                <div className="text-white/80 text-xs font-light">05/26</div>
                                             </div>
-                                            <div className="bg-white px-2 py-1 rounded text-[#8B5CF6] font-black text-xs">
+                                            <div className="bg-white px-2 py-1 rounded text-[#8B5CF6] font-black text-sm">
                                                 VISA
                                             </div>
                                         </div>
@@ -545,7 +526,7 @@ export default function SellerProfile() {
                         <div className="w-full">
                             <button
                                 onClick={() => setShowAddBankSheet(true)}
-                                className="aspect-[1.586/1] max-w-[340px] mx-auto rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50/50 hover:bg-slate-100/50 hover:border-blue-400 transition-all flex flex-col items-center justify-center gap-3 group"
+                                className="w-full aspect-[1.586/1] max-w-[340px] mx-auto rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50/50 hover:bg-slate-100/50 hover:border-blue-400 transition-all flex flex-col items-center justify-center gap-3 group"
                             >
                                 <div className="w-14 h-14 rounded-full bg-slate-200 group-hover:bg-blue-100 flex items-center justify-center transition-colors">
                                     <Plus size={28} className="text-slate-500 group-hover:text-blue-600 transition-colors" />
@@ -559,6 +540,9 @@ export default function SellerProfile() {
                     </div>
                 </CardContent>
             </Card>
+
+
+
 
 
             {/* Bottom Grid - 3 Columns */}
