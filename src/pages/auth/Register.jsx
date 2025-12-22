@@ -625,23 +625,16 @@ export default function Register() {
                 </div>
 
                 <div className="relative z-10 max-w-xl w-full">
-                    {/* Logo */}
-                    <img
-                        src={LogoFull}
-                        alt="B2 SOUQ"
-                        className="h-12 mb-10"
-                    />
-
-                    {/* Title */}
-                    <h1 className="text-4xl font-bold mb-4 leading-tight text-white">
-                        انضم إلى منصة<br />
-                        B2-SOUQ
-                    </h1>
-
-                    <p className="text-base leading-relaxed mb-12 text-white/95">
-                        ابدأ رحلتك في التجارة الإلكترونية اليوم.<br />
-                        سجل الآن واحصل على لوحة تحكم احترافية.
-                    </p>
+                    {/* Logo & Content Centered */}
+                    <div className="mb-8 flex flex-col items-center text-center">
+                        <img src={LogoFull} alt="B2 SOUQ" className="h-10 mb-6" />
+                        <h1 className="text-4xl font-bold mb-3 leading-tight text-white">انضم إلى منصة B2-SOUQ</h1>
+                        <p className="text-white/90 text-lg leading-relaxed">
+                            ابدأ رحلتك في التجارة الإلكترونية اليوم.
+                            <br />
+                            سجل الآن واحصل على لوحة تحكم احترافية.
+                        </p>
+                    </div>
 
                     {/* Dashboard Mockup */}
                     <div className="bg-white rounded-2xl p-6 shadow-2xl mb-8">
@@ -666,6 +659,8 @@ export default function Register() {
             {/* Left Side - Form */}
             <div className="flex-1 bg-slate-50 flex items-center justify-center p-10 overflow-y-auto">
                 <div className="w-full max-w-[600px]">
+
+
                     {/* Horizontal Steps Progress */}
                     <div className="flex justify-between mb-10 gap-2 relative">
                         {/* Background line */}
