@@ -22,18 +22,11 @@ import Messages from './pages/Messages';
 import Reviews from './pages/Reviews';
 
 // Protected Route Component
+// Protected Route Component
+// Note: Authentication check is temporarily disabled to allow "Preview Mode" for all visitors.
 function ProtectedRoute({ children }) {
-  const isAuthenticated = localStorage.getItem('isAuthenticated');
-
-  // Check URL param and persist if present
-  const searchParams = new URLSearchParams(window.location.search);
-  if (searchParams.get('preview') === 'true') {
-    sessionStorage.setItem('isPreview', 'true');
-  }
-
-  const isPreview = sessionStorage.getItem('isPreview') === 'true';
-
-  return isAuthenticated || isPreview ? children : <Navigate to="/login" replace />;
+  // Always return children regardless of authentication state
+  return children;
 }
 
 // Auth Route Component (redirect to home if already logged in)
