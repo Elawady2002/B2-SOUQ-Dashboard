@@ -24,7 +24,15 @@ import Reviews from './pages/Reviews';
 // Protected Route Component
 function ProtectedRoute({ children }) {
   const isAuthenticated = localStorage.getItem('isAuthenticated');
-  const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true';
+
+  // Check URL param and persist if present
+  const searchParams = new URLSearchParams(window.location.search);
+  if (searchParams.get('preview') === 'true') {
+    sessionStorage.setItem('isPreview', 'true');
+  }
+
+  const isPreview = sessionStorage.getItem('isPreview') === 'true';
+
   return isAuthenticated || isPreview ? children : <Navigate to="/login" replace />;
 }
 
