@@ -80,6 +80,15 @@ function SidebarProvider({
         [setOpenProp, open]
     )
 
+    // Sync URL with sidebar state
+    React.useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const url = new URL(window.location)
+            url.searchParams.set('sidebar', open ? 'open' : 'closed')
+            window.history.replaceState({}, '', url)
+        }
+    }, [open])
+
     // Helper to toggle the sidebar.
     const toggleSidebar = React.useCallback(() => {
         return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open)
