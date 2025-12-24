@@ -249,7 +249,7 @@ export default function Inventory() {
                         <ArrowLeftRight size={18} />
                         {t('inventory.transferStock')}
                     </Button>
-                    <Button className="bg-blue-600 hover:bg-blue-700 gap-2" onClick={() => setShowAddStockSheet(true)}>
+                    <Button className="bg-blue-600 hover:bg-blue-700 gap-2" onClick={() => setSearchParams({ sheet: 'add-stock' })}>
                         <Plus size={18} />
                         {t('inventory.addQuantity')}
                     </Button>
