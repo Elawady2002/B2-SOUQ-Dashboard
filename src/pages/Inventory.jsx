@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import {
     Warehouse,
@@ -144,62 +145,70 @@ const inventoryItems = [
 
 export default function Inventory() {
     const { t } = useLanguage();
-    const [showMovements, setShowMovements] = useState(false);
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [showTransferModal, setShowTransferModal] = useState(false);
-    const [transferQty, setTransferQty] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    // Add Stock Sheet states
-    const [showAddStockSheet, setShowAddStockSheet] = useState(false);
+    // Derived State from URL
+    const sheet = searchParams.get('sheet');
+    const itemId = searchParams.get('itemId');
+    const selectedItem = itemId ? inventoryItems.find(i => i.id === Number(itemId)) : null;
+
+    const showMovements = sheet === 'movements';
+    const showTransferModal = sheet === 'transfer';
+    const showAddStockSheet = sheet === 'add-stock';
+    const showDetailsModal = sheet === 'details';
+    const showEditModal = sheet === 'edit';
+    const showDeleteModal = sheet === 'delete';
+
+    // Form States (Local)
+    const [transferQty, setTransferQty] = useState('');
     const [addStockQty, setAddStockQty] = useState('');
     const [addStockTarget, setAddStockTarget] = useState('merchant'); // 'merchant' or 'platform'
     const [addStockNote, setAddStockNote] = useState('');
 
-    // New modal states
-    const [showDetailsModal, setShowDetailsModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const closeSheet = (open) => {
+        if (!open) {
+            setSearchParams(prev => {
+                const newParams = new URLSearchParams(prev);
+                newParams.delete('sheet');
+                newParams.delete('itemId');
+                return newParams;
+            });
+        }
+    };
 
     const handleViewMovements = (item) => {
-        setSelectedItem(item);
-        setShowMovements(true);
+        setSearchParams({ sheet: 'movements', itemId: item.id });
     };
 
     const handleTransfer = (item) => {
-        setSelectedItem(item);
         setTransferQty('');
-        setShowTransferModal(true);
+        setSearchParams({ sheet: 'transfer', itemId: item.id });
     };
 
     const handleAddStock = (item) => {
-        setSelectedItem(item);
         setAddStockQty('');
         setAddStockTarget('merchant');
         setAddStockNote('');
-        setShowAddStockSheet(true);
+        setSearchParams({ sheet: 'add-stock', itemId: item.id });
     };
 
     const handleOpenTransferSheet = () => {
         // Open transfer sheet without specific item (general transfer)
-        setSelectedItem(null);
         setTransferQty('');
-        setShowTransferModal(true);
+        setSearchParams({ sheet: 'transfer' });
     };
 
     // New handlers
     const handleViewDetails = (item) => {
-        setSelectedItem(item);
-        setShowDetailsModal(true);
+        setSearchParams({ sheet: 'details', itemId: item.id });
     };
 
     const handleEditProduct = (item) => {
-        setSelectedItem(item);
-        setShowEditModal(true);
+        setSearchParams({ sheet: 'edit', itemId: item.id });
     };
 
     const handleDeleteProduct = (item) => {
-        setSelectedItem(item);
-        setShowDeleteModal(true);
+        setSearchParams({ sheet: 'delete', itemId: item.id });
     };
 
     const currentMerchantStock = selectedItem?.available || 0;
@@ -423,7 +432,7 @@ export default function Inventory() {
             </Card>
 
             {/* Transfer Stock Sheet */}
-            <Sheet open={showTransferModal} onOpenChange={setShowTransferModal}>
+            <Sheet open={showTransferModal} onOpenChange={closeSheet}>
                 <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 overflow-hidden">
                     <SheetHeader className="px-6 pt-12 pb-6 border-b border-slate-100 flex-none">
                         <SheetTitle className="text-xl font-bold text-slate-900 text-start">
@@ -508,7 +517,7 @@ export default function Inventory() {
                         <Button
                             variant="outline"
                             className="flex-1 border-slate-200"
-                            onClick={() => setShowTransferModal(false)}
+                            onClick={() => closeSheet(false)}
                         >
                             إلغاء
                         </Button>
@@ -524,7 +533,7 @@ export default function Inventory() {
             </Sheet>
 
             {/* Add Stock Sheet */}
-            <Sheet open={showAddStockSheet} onOpenChange={setShowAddStockSheet}>
+            <Sheet open={showAddStockSheet} onOpenChange={closeSheet}>
                 <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 overflow-hidden">
                     <SheetHeader className="px-6 pt-12 pb-6 border-b border-slate-100 flex-none">
                         <SheetTitle className="text-xl font-bold text-slate-900 text-start">
@@ -624,7 +633,7 @@ export default function Inventory() {
                         <Button
                             variant="outline"
                             className="flex-1 border-slate-200"
-                            onClick={() => setShowAddStockSheet(false)}
+                            onClick={() => closeSheet(false)}
                         >
                             إلغاء
                         </Button>
@@ -640,7 +649,7 @@ export default function Inventory() {
             </Sheet>
 
             {/* Movements Sheet */}
-            <Sheet open={showMovements} onOpenChange={setShowMovements}>
+            <Sheet open={showMovements} onOpenChange={closeSheet}>
                 <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 overflow-hidden">
                     <SheetHeader className="px-6 pt-12 pb-6 border-b border-slate-100 flex-none">
                         <SheetTitle className="text-xl font-bold text-slate-900 text-start">
@@ -713,7 +722,7 @@ export default function Inventory() {
                     </div>
 
                     <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex gap-3 flex-none">
-                        <Button variant="outline" className="flex-1 border-slate-200" onClick={() => setShowMovements(false)}>إغلاق</Button>
+                        <Button variant="outline" className="flex-1 border-slate-200" onClick={() => closeSheet(false)}>إغلاق</Button>
                         <Button className="flex-1 bg-blue-600 hover:bg-blue-700 gap-2">
                             <Plus size={16} />
                             إضافة حركة
@@ -723,7 +732,7 @@ export default function Inventory() {
             </Sheet>
 
             {/* View Details Sheet */}
-            <Sheet open={showDetailsModal} onOpenChange={setShowDetailsModal}>
+            <Sheet open={showDetailsModal} onOpenChange={closeSheet}>
                 <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 overflow-hidden">
                     <SheetHeader className="px-6 pt-12 pb-6 border-b border-slate-100 flex-none">
                         <SheetTitle className="text-xl font-bold text-slate-900 text-start">تفاصيل المنتج</SheetTitle>
@@ -771,13 +780,13 @@ export default function Inventory() {
                         )}
                     </div>
                     <div className="p-6 border-t border-slate-100 bg-slate-50/50">
-                        <Button variant="outline" className="w-full" onClick={() => setShowDetailsModal(false)}>إغلاق</Button>
+                        <Button variant="outline" className="w-full" onClick={() => closeSheet(false)}>إغلاق</Button>
                     </div>
                 </SheetContent>
             </Sheet>
 
             {/* Edit Product Sheet */}
-            <Sheet open={showEditModal} onOpenChange={setShowEditModal}>
+            <Sheet open={showEditModal} onOpenChange={closeSheet}>
                 <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 overflow-hidden">
                     <SheetHeader className="px-6 pt-12 pb-6 border-b border-slate-100 flex-none">
                         <SheetTitle className="text-xl font-bold text-slate-900 text-start">تعديل المنتج</SheetTitle>
@@ -822,8 +831,8 @@ export default function Inventory() {
                         )}
                     </div>
                     <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex gap-3">
-                        <Button variant="outline" className="flex-1" onClick={() => setShowEditModal(false)}>إلغاء</Button>
-                        <Button className="flex-1 bg-blue-600 hover:bg-blue-700 gap-2" onClick={() => setShowEditModal(false)}>
+                        <Button variant="outline" className="flex-1" onClick={() => closeSheet(false)}>إلغاء</Button>
+                        <Button className="flex-1 bg-blue-600 hover:bg-blue-700 gap-2" onClick={() => closeSheet(false)}>
                             <Check size={16} />
                             حفظ التغييرات
                         </Button>
@@ -832,7 +841,7 @@ export default function Inventory() {
             </Sheet>
 
             {/* Delete Confirmation Sheet */}
-            <Sheet open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+            <Sheet open={showDeleteModal} onOpenChange={closeSheet}>
                 <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 flex flex-col gap-0 overflow-hidden">
                     <SheetHeader className="px-6 pt-12 pb-6 border-b border-slate-100 flex-none">
                         <SheetTitle className="text-xl font-bold text-red-600 text-start">حذف المنتج</SheetTitle>
@@ -857,8 +866,8 @@ export default function Inventory() {
                         )}
                     </div>
                     <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex gap-3">
-                        <Button variant="outline" className="flex-1" onClick={() => setShowDeleteModal(false)}>إلغاء</Button>
-                        <Button variant="destructive" className="flex-1 bg-red-600 hover:bg-red-700 gap-2" onClick={() => setShowDeleteModal(false)}>
+                        <Button variant="outline" className="flex-1" onClick={() => closeSheet(false)}>إلغاء</Button>
+                        <Button variant="destructive" className="flex-1 bg-red-600 hover:bg-red-700 gap-2" onClick={() => closeSheet(false)}>
                             <Trash2 size={16} />
                             تأكيد الحذف
                         </Button>

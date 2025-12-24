@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import {
     Package,
@@ -212,17 +213,33 @@ const filters = [
 export default function Products() {
     const navigate = useNavigate();
     const { t } = useLanguage();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [activeFilter, setActiveFilter] = useState('all');
 
-    // Sheet State
-    const [sheetOpen, setSheetOpen] = useState(false);
-    const [activeProduct, setActiveProduct] = useState(null);
-    const [activeAction, setActiveAction] = useState('details'); // details, edit, analyze
+    // Sheet State - Derived from URL
+    const productId = searchParams.get('productId');
+    const activeAction = searchParams.get('action') || 'details'; // details, edit, analyze
+    const activeProduct = productId ? products.find(p => p.id === Number(productId)) : null;
+    const sheetOpen = !!activeProduct;
+
+    const setSheetOpen = (open) => {
+        if (!open) {
+            setSearchParams(prev => {
+                const newParams = new URLSearchParams(prev);
+                newParams.delete('productId');
+                newParams.delete('action');
+                return newParams;
+            });
+        }
+    };
 
     const handleAction = (product, action) => {
-        setActiveProduct(product);
-        setActiveAction(action);
-        setSheetOpen(true);
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev);
+            newParams.set('productId', product.id);
+            newParams.set('action', action);
+            return newParams;
+        });
     };
 
     const filteredProducts = activeFilter === 'all'

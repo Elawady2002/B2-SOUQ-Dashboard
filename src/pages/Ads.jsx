@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
 import {
@@ -115,7 +116,21 @@ const paymentHistory = [
 
 export default function Ads() {
     const { t } = useLanguage();
-    const [showModal, setShowModal] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // Create Ad Sheet State
+    const showModal = searchParams.get('sheet') === 'create-ad';
+    const setShowModal = (open) => {
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev);
+            if (open) {
+                newParams.set('sheet', 'create-ad');
+            } else {
+                newParams.delete('sheet');
+            }
+            return newParams;
+        });
+    };
     const [currentStep, setCurrentStep] = useState(1);
     const [showBudgetDepletedState, setShowBudgetDepletedState] = useState(false);
     const [showNoAdsState, setShowNoAdsState] = useState(false);

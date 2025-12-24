@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import {
     Store,
@@ -64,6 +65,7 @@ import {
 
 export default function StoreProfile() {
     const { t } = useLanguage();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [isStoreOpen, setIsStoreOpen] = useState(true);
 
     // Basic Identity
@@ -102,9 +104,8 @@ export default function StoreProfile() {
     const [city, setCity] = useState('أسوان');
     const [address, setAddress] = useState('56 شارع عبد السلام عارف بأسوان');
 
-    // Policy Sheet State
-    const [isPolicySheetOpen, setIsPolicySheetOpen] = useState(false);
-    const [currentPolicy, setCurrentPolicy] = useState(null);
+    // Policy Sheet State - Driven by URL
+    const policyId = searchParams.get('policyId');
     const [tempPolicyContent, setTempPolicyContent] = useState('');
 
     const policies = [
@@ -155,16 +156,32 @@ export default function StoreProfile() {
         }
     ];
 
+    const currentPolicy = policies.find(p => p.id === policyId) || null;
+    const isPolicySheetOpen = !!currentPolicy;
+
+    // Sync temp content when policy opens
+    React.useEffect(() => {
+        if (currentPolicy) {
+            setTempPolicyContent(currentPolicy.value);
+        }
+    }, [currentPolicy?.id, currentPolicy?.value]);
+
     const handleOpenPolicy = (policy) => {
-        setCurrentPolicy(policy);
-        setTempPolicyContent(policy.value);
-        setIsPolicySheetOpen(true);
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev);
+            newParams.set('policyId', policy.id);
+            return newParams;
+        });
     };
 
     const handleSavePolicy = () => {
         if (currentPolicy) {
             currentPolicy.setValue(tempPolicyContent);
-            setIsPolicySheetOpen(false);
+            setSearchParams(prev => {
+                const newParams = new URLSearchParams(prev);
+                newParams.delete('policyId');
+                return newParams;
+            });
         }
     };
 
@@ -783,7 +800,15 @@ export default function StoreProfile() {
             </div>
 
             {/* Policy Edit Sheet */}
-            <Sheet open={isPolicySheetOpen} onOpenChange={setIsPolicySheetOpen}>
+            <Sheet open={isPolicySheetOpen} onOpenChange={(open) => {
+                if (!open) {
+                    setSearchParams(prev => {
+                        const newParams = new URLSearchParams(prev);
+                        newParams.delete('policyId');
+                        return newParams;
+                    });
+                }
+            }}>
                 <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0 gap-0 flex flex-col h-full">
                     <SheetHeader className="px-6 pb-6 pt-14 border-b border-slate-100 flex-none relative">
                         <SheetTitle className="flex items-center gap-2.5 text-xl font-bold text-slate-900">

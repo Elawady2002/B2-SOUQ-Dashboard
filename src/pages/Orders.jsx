@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import {
     ShoppingCart,
@@ -139,8 +140,23 @@ const orders = [
 
 export default function Orders() {
     const { t } = useLanguage();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [activeFilter, setActiveFilter] = useState('all');
-    const [selectedOrder, setSelectedOrder] = useState(null);
+
+    const orderId = searchParams.get('orderId');
+    const selectedOrder = orders.find(o => o.id === orderId) || null;
+
+    const setSelectedOrder = (order) => {
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev);
+            if (order) {
+                newParams.set('orderId', order.id);
+            } else {
+                newParams.delete('orderId');
+            }
+            return newParams;
+        });
+    };
 
     // Dynamic status config with translations
     const statusConfig = {

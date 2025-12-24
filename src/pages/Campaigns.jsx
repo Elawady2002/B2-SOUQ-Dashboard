@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
 import {
@@ -183,7 +184,22 @@ const typeConfig = {
 
 export default function Campaigns() {
     const { t, isRTL } = useLanguage();
-    const [showModal, setShowModal] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // Create Offer Sheet State
+    const showModal = searchParams.get('sheet') === 'create-campaign';
+    const setShowModal = (open) => {
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev);
+            if (open) {
+                newParams.set('sheet', 'create-campaign');
+            } else {
+                newParams.delete('sheet');
+            }
+            return newParams;
+        });
+    };
+
     const [selectedCampaign, setSelectedCampaign] = useState(null);
     const [showReportModal, setShowReportModal] = useState(false);
 

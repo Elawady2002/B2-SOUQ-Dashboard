@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import {
     Download,
@@ -61,7 +62,25 @@ import {
 
 export default function SellerProfile() {
     const { t } = useLanguage();
-    const [showAddBankSheet, setShowAddBankSheet] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const showAddBankSheet = searchParams.get('sheet') === 'add-bank';
+
+    const setShowAddBankSheet = (open) => {
+        if (open) {
+            setSearchParams(prev => {
+                const newParams = new URLSearchParams(prev);
+                newParams.set('sheet', 'add-bank');
+                return newParams;
+            });
+        } else {
+            setSearchParams(prev => {
+                const newParams = new URLSearchParams(prev);
+                newParams.delete('sheet');
+                return newParams;
+            });
+        }
+    };
     const [newBankAccount, setNewBankAccount] = useState({
         holderName: '',
         bankName: '',

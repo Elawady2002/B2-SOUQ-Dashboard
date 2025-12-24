@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import {
     RotateCcw,
@@ -134,7 +135,21 @@ const originalStatusConfig = {
 
 export default function Returns() {
     const { t } = useLanguage();
-    const [selectedReturn, setSelectedReturn] = useState(null);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const returnId = searchParams.get('returnId');
+    const selectedReturn = returns.find(r => r.id === returnId) || null;
+
+    const setSelectedReturn = (returnItem) => {
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev);
+            if (returnItem) {
+                newParams.set('returnId', returnItem.id);
+            } else {
+                newParams.delete('returnId');
+            }
+            return newParams;
+        });
+    };
 
     return (
         <div className="flex flex-col gap-6">

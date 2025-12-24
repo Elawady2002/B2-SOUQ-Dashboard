@@ -1,0 +1,32 @@
+{
+    "name": "mcp-figma-bridge",
+    "version": "2.0.0",
+    "description": "Advanced MCP Server to bridge React/Tailwind to Figma using AST Parsing",
+    "main": "dist/server.js",
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/server.js",
+        "dev": "ts-node src/server.ts"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^0.6.0",
+        "express": "^4.18.2",
+        "ws": "^8.16.0",
+        "cors": "^2.8.5",
+        "tailwindcss": "^3.4.0",
+        "postcss": "^8.4.31",
+        "@babel/parser": "^7.23.0",
+        "@babel/traverse": "^7.23.0",
+        "@babel/types": "^7.23.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.0",
+        "@types/ws": "^8.5.10",
+        "@types/express": "^4.17.21",
+        "@types/cors": "^2.8.17",
+        "@types/babel__core": "^7.20.5",
+        "@types/babel__traverse": "^7.20.4",
+        "typescript": "^5.3.3",
+        "ts-node": "^10.9.2"
+    }
+}
