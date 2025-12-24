@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
     Package,
     CheckCircle,
@@ -80,7 +80,16 @@ const sellingMethods = [
 
 export default function AddProduct() {
     const navigate = useNavigate();
-    const [wizardStep, setWizardStep] = useState(1);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const wizardStep = parseInt(searchParams.get('step') || '1');
+
+    const setWizardStep = (step) => {
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev);
+            newParams.set('step', step.toString());
+            return newParams;
+        });
+    };
 
     // Form State
     const [selectedSellingMethod, setSelectedSellingMethod] = useState('platform_full');
