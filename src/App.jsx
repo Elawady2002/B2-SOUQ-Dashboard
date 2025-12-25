@@ -42,7 +42,7 @@ function ProtectedRoute({ children, allowedRole = 'merchant' }) {
   const userRole = localStorage.getItem('userRole') || 'merchant';
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const isPublicView = searchParams.get('public_view') === 'true';
+  const isPublicView = searchParams.get('public_view') === 'true' || searchParams.get('sidebar') === 'closed';
 
   if (!isAuthenticated && !isPublicView) {
     // Redirect to role selection, but save the intended location
