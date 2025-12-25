@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
     Mail, Lock, Phone, User, Building, FileText,
     CreditCard, CheckCircle, ArrowRight, ArrowLeft,
@@ -55,7 +55,12 @@ const STEPS = [
 
 export default function Register() {
     const navigate = useNavigate();
-    const [currentStep, setCurrentStep] = useState(1);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const currentStep = parseInt(searchParams.get('step') || '1', 10);
+
+    const setCurrentStep = (step) => {
+        setSearchParams({ step: step.toString() });
+    };
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [phoneCountryCode, setPhoneCountryCode] = useState('+962');
