@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import DashboardLayout from './components/layout/DashboardLayout';
 import AdminDashboardLayout from './components/layout/AdminDashboardLayout';
 import AuthLayout from './layouts/AuthLayout';
@@ -40,9 +40,11 @@ function ProtectedRoute({ children, allowedRole = 'merchant' }) {
   const isAuthenticated = localStorage.getItem('isAuthenticated');
   // Default to merchant for legacy support, or check if specific role logic exists
   const userRole = localStorage.getItem('userRole') || 'merchant';
+  const location = useLocation();
 
   if (!isAuthenticated) {
-    return <Navigate to="/role-select" replace />;
+    // Redirect to role selection, but save the intended location
+    return <Navigate to="/role-select" state={{ from: location }} replace />;
   }
 
   // If Admin tries to access Merchant routes

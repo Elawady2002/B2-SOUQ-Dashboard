@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,7 @@ import Logo3 from '../../assets/image/logo3.svg';
 
 export default function Login() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -20,13 +21,23 @@ export default function Login() {
     const handleLogin = (e) => {
         e.preventDefault();
         localStorage.setItem('isAuthenticated', 'true');
-        navigate('/');
+
+        // Redirect to intended page or home
+        const from = location.state?.from?.pathname || '/';
+        const search = location.state?.from?.search || '';
+
+        navigate(`${from}${search}`);
     };
 
     const handleSocialLogin = (provider) => {
         console.log(`Login with ${provider}`);
         localStorage.setItem('isAuthenticated', 'true');
-        navigate('/');
+
+        // Redirect to intended page or home
+        const from = location.state?.from?.pathname || '/';
+        const search = location.state?.from?.search || '';
+
+        navigate(`${from}${search}`);
     };
 
     return (

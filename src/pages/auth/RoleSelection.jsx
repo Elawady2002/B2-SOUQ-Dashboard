@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Store, ShieldCheck, ArrowRight, TrendingUp, Users } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,6 +6,7 @@ import Logo from '../../assets/image/logo2.svg';
 
 export default function RoleSelection() {
     const navigate = useNavigate();
+    const location = useLocation();
 
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 relative overflow-hidden" dir="rtl">
@@ -33,7 +34,7 @@ export default function RoleSelection() {
                     {/* Merchant Card */}
                     <Card
                         className="group relative overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 border-2 hover:border-blue-600"
-                        onClick={() => navigate('/login')}
+                        onClick={() => navigate('/login', { state: location.state })}
                     >
                         <div className="absolute top-0 left-0 w-2 h-full bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" />
 
@@ -75,7 +76,7 @@ export default function RoleSelection() {
                     {/* Admin Card */}
                     <Card
                         className="group relative overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 border-2 hover:border-purple-600"
-                        onClick={() => navigate('/admin/login')}
+                        onClick={() => navigate('/admin/login', { state: location.state })}
                     >
                         <div className="absolute top-0 left-0 w-2 h-full bg-purple-600 opacity-0 group-hover:opacity-100 transition-opacity" />
 

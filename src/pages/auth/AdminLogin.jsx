@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Eye, EyeOff, ShieldCheck, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +8,7 @@ import Logo from '../../assets/image/logo2.svg'; // Use generic logo or specific
 
 export default function AdminLogin() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -20,7 +21,12 @@ export default function AdminLogin() {
         // Set Admin Auth Flag
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('userRole', 'admin'); // Important for distinguishing roles
-        navigate('/admin/dashboard'); // Redirect to Admin Dashboard
+
+        // Redirect to intended page or admin dashboard
+        const from = location.state?.from?.pathname || '/admin/dashboard';
+        const search = location.state?.from?.search || '';
+
+        navigate(`${from}${search}`);
     };
 
     return (
