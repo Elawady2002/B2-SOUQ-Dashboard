@@ -41,19 +41,21 @@ function ProtectedRoute({ children, allowedRole = 'merchant' }) {
   // Default to merchant for legacy support, or check if specific role logic exists
   const userRole = localStorage.getItem('userRole') || 'merchant';
   const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const isPublicView = searchParams.get('public_view') === 'true';
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isPublicView) {
     // Redirect to role selection, but save the intended location
     return <Navigate to="/role-select" state={{ from: location.pathname + location.search }} replace />;
   }
 
   // If Admin tries to access Merchant routes
-  if (allowedRole === 'merchant' && userRole === 'admin') {
+  if (allowedRole === 'merchant' && userRole === 'admin' && !isPublicView) {
     return <Navigate to="/admin/dashboard" replace />;
   }
 
   // If Merchant tries to access Admin routes
-  if (allowedRole === 'admin' && userRole !== 'admin') {
+  if (allowedRole === 'admin' && userRole !== 'admin' && !isPublicView) {
     return <Navigate to="/" replace />;
   }
 
