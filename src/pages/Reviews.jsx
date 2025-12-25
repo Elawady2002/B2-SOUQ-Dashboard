@@ -1,4 +1,5 @@
 import { Star, ThumbsUp, ThumbsDown, MessageSquare, Quote, Reply } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -85,8 +86,23 @@ const renderStars = (rating) => {
 
 export default function Reviews() {
     const { t } = useLanguage();
-    const [selectedReview, setSelectedReview] = useState(null);
+    const [searchParams, setSearchParams] = useSearchParams();
     const [replyText, setReplyText] = useState('');
+
+    const reviewId = parseInt(searchParams.get('reviewId'));
+    const selectedReview = reviews.find(r => r.id === reviewId) || null;
+
+    const setSelectedReview = (review) => {
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev);
+            if (review) {
+                newParams.set('reviewId', review.id);
+            } else {
+                newParams.delete('reviewId');
+            }
+            return newParams;
+        });
+    };
 
     const stats = [
         { label: t('reviews.avgRating'), value: '4.8', icon: Star, iconBg: 'bg-amber-50', iconColor: 'text-amber-600' },

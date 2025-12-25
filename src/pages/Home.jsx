@@ -250,7 +250,7 @@ export default function Home() {
     return (
         <div>
             {/* Welcome Header - Full Width */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6" style={{ width: '1469px' }}>
                 <div>
                     <h2 className="page-title">{t('home.welcome')}, Jack Miller 👋</h2>
                     <p className="page-subtitle">{t('home.subtitle')}</p>
