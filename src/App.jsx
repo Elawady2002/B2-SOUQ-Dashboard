@@ -41,8 +41,16 @@ function ProtectedRoute({ children, allowedRole = 'merchant' }) {
   // Default to merchant for legacy support, or check if specific role logic exists
   const userRole = localStorage.getItem('userRole') || 'merchant';
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const isPublicView = searchParams.get('public_view') === 'true' || searchParams.get('sidebar') === 'closed';
+
+  // Check both hash params (from React Router) and global params (from browser window)
+  const hashParams = new URLSearchParams(location.search);
+  const globalParams = new URLSearchParams(window.location.search);
+
+  const isPublicView =
+    hashParams.get('public_view') === 'true' ||
+    hashParams.get('sidebar') === 'closed' ||
+    globalParams.get('public_view') === 'true' ||
+    globalParams.get('sidebar') === 'closed';
 
   if (!isAuthenticated && !isPublicView) {
     // Redirect to role selection, but save the intended location
