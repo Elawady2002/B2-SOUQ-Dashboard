@@ -23,10 +23,9 @@ export default function AdminLogin() {
         localStorage.setItem('userRole', 'admin'); // Important for distinguishing roles
 
         // Redirect to intended page or admin dashboard
-        const from = location.state?.from?.pathname || '/admin/dashboard';
-        const search = location.state?.from?.search || '';
+        const from = location.state?.from || '/admin/dashboard';
 
-        navigate(`${from}${search}`);
+        navigate(from);
     };
 
     return (

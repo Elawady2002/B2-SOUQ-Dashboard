@@ -21,23 +21,23 @@ export default function Login() {
     const handleLogin = (e) => {
         e.preventDefault();
         localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('userRole', 'merchant');
 
         // Redirect to intended page or home
-        const from = location.state?.from?.pathname || '/';
-        const search = location.state?.from?.search || '';
+        const from = location.state?.from || '/';
 
-        navigate(`${from}${search}`);
+        navigate(from);
     };
 
     const handleSocialLogin = (provider) => {
         console.log(`Login with ${provider}`);
         localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('userRole', 'merchant');
 
         // Redirect to intended page or home
-        const from = location.state?.from?.pathname || '/';
-        const search = location.state?.from?.search || '';
+        const from = location.state?.from || '/';
 
-        navigate(`${from}${search}`);
+        navigate(from);
     };
 
     return (

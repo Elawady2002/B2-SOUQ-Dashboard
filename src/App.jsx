@@ -44,7 +44,7 @@ function ProtectedRoute({ children, allowedRole = 'merchant' }) {
 
   if (!isAuthenticated) {
     // Redirect to role selection, but save the intended location
-    return <Navigate to="/role-select" state={{ from: location }} replace />;
+    return <Navigate to="/role-select" state={{ from: location.pathname + location.search }} replace />;
   }
 
   // If Admin tries to access Merchant routes
