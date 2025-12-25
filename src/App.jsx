@@ -128,7 +128,7 @@ function App() {
         <Route path="/reports" element={<Reports />} />
         <Route path="/employees" element={<Employees />} />
         <Route path="/activity-log" element={<ActivityLog />} />
-        <Route path="/messages" element={<Messages />} />
+        <Route path="/support" element={<Messages />} />
         <Route path="/reviews" element={<Reviews />} />
         {/* Fallback route */}
         <Route path="*" element={<Navigate to="/" replace />} />

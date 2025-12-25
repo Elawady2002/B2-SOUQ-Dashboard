@@ -66,7 +66,7 @@ export function AppSidebar({ ...props }) {
     const settingsNavItems = [
         { icon: Users, labelKey: 'nav.employees', path: '/employees' },
         { icon: Activity, labelKey: 'nav.activityLog', path: '/activity-log' },
-        { icon: MessageSquare, labelKey: 'nav.messages', path: '/messages' },
+        { icon: MessageSquare, labelKey: 'nav.support', path: '/support' },
         { icon: Star, labelKey: 'nav.reviews', path: '/reviews' },
     ]
 
