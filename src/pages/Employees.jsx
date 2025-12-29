@@ -44,7 +44,6 @@ import {
     SheetTitle,
     SheetDescription,
     SheetFooter,
-    SheetClose,
 } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Label } from '@/components/ui/label';
