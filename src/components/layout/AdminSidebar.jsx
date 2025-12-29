@@ -12,7 +12,9 @@ import {
     LogOut,
     MessageSquare,
     DollarSign,
-    AlertCircle
+    AlertCircle,
+    Activity, // For Audit Log
+    Briefcase // For Staff
 } from "lucide-react"
 import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import {
@@ -38,22 +40,38 @@ export function AdminSidebar({ ...props }) {
     const navigate = useNavigate()
     const { state, setOpen } = useSidebar()
 
-    const mainNavItems = [
+    // 1. Dashboard & Reports
+    const dashboardItems = [
         { icon: Home, label: 'الرئيسية', path: '/admin/dashboard' },
-        { icon: Store, label: 'إدارة التجار', path: '/admin/merchants' },
-        { icon: Users, label: 'المستخدمين', path: '/admin/users' },
+        { icon: FileText, label: 'التقارير', path: '/admin/reports' },
     ]
 
+    // 2. Stakeholder Management
+    const stakeholderItems = [
+        { icon: Users, label: 'العملاء', path: '/admin/users' },
+        { icon: Store, label: 'التجار', path: '/admin/merchants' },
+        { icon: Briefcase, label: 'الموظفين', path: '/admin/staff' },
+    ]
+
+    // 3. Operations
     const operationItems = [
         { icon: Package, label: 'المنتجات', path: '/admin/products' },
         { icon: ShoppingCart, label: 'الطلبات', path: '/admin/orders' },
         { icon: AlertCircle, label: 'المرتجعات', path: '/admin/returns' },
     ]
 
-    const marketingItems = [
+    // 4. Finance & Marketing
+    const financeItems = [
+        { icon: DollarSign, label: 'المالية', path: '/admin/finance' },
         { icon: Megaphone, label: 'الإعلانات', path: '/admin/ads' },
+    ]
+
+    // 5. System & Support
+    const systemItems = [
+        { icon: FileText, label: 'المحتوى (CMS)', path: '/admin/content' },
         { icon: MessageSquare, label: 'الدعم الفني', path: '/admin/support' },
-        { icon: FileText, label: 'التقارير المالية', path: '/admin/reports' },
+        { icon: Settings, label: 'الإعدادات', path: '/admin/settings' },
+        { icon: Activity, label: 'سجل النشاط', path: '/admin/audit-log' },
     ]
 
     const handleLogout = () => {
@@ -84,11 +102,12 @@ export function AdminSidebar({ ...props }) {
                 </div>
             </SidebarHeader>
             <SidebarContent>
+                {/* 1. Dashboard */}
                 <SidebarGroup>
                     <SidebarGroupLabel>لوحة القيادة</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {mainNavItems.map((item) => (
+                            {dashboardItems.map((item) => (
                                 <SidebarMenuItem key={item.path}>
                                     <SidebarMenuButton
                                         asChild
@@ -109,6 +128,33 @@ export function AdminSidebar({ ...props }) {
 
                 <SidebarSeparator />
 
+                {/* 2. Stakeholders */}
+                <SidebarGroup>
+                    <SidebarGroupLabel>إدارة الأطراف</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            {stakeholderItems.map((item) => (
+                                <SidebarMenuItem key={item.path}>
+                                    <SidebarMenuButton
+                                        asChild
+                                        isActive={location.pathname === item.path}
+                                        tooltip={item.label}
+                                        className="hover:bg-blue-50 hover:text-blue-600 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600"
+                                    >
+                                        <NavLink to={item.path}>
+                                            <item.icon />
+                                            <span>{item.label}</span>
+                                        </NavLink>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+
+                <SidebarSeparator />
+
+                {/* 3. Operations */}
                 <SidebarGroup>
                     <SidebarGroupLabel>العمليات</SidebarGroupLabel>
                     <SidebarGroupContent>
@@ -134,11 +180,12 @@ export function AdminSidebar({ ...props }) {
 
                 <SidebarSeparator />
 
+                {/* 4. Finance */}
                 <SidebarGroup>
-                    <SidebarGroupLabel>الإدارة والدعم</SidebarGroupLabel>
+                    <SidebarGroupLabel>المالية والتسويق</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {marketingItems.map((item) => (
+                            {financeItems.map((item) => (
                                 <SidebarMenuItem key={item.path}>
                                     <SidebarMenuButton
                                         asChild
@@ -156,6 +203,33 @@ export function AdminSidebar({ ...props }) {
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
+
+                <SidebarSeparator />
+
+                {/* 5. System */}
+                <SidebarGroup>
+                    <SidebarGroupLabel>النظام والدعم</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            {systemItems.map((item) => (
+                                <SidebarMenuItem key={item.path}>
+                                    <SidebarMenuButton
+                                        asChild
+                                        isActive={location.pathname === item.path}
+                                        tooltip={item.label}
+                                        className="hover:bg-blue-50 hover:text-blue-600 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600"
+                                    >
+                                        <NavLink to={item.path}>
+                                            <item.icon />
+                                            <span>{item.label}</span>
+                                        </NavLink>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+
             </SidebarContent>
 
             <SidebarFooter>

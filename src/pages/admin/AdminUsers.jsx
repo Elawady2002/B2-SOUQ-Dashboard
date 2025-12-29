@@ -6,7 +6,11 @@ import {
     ShieldAlert,
     Eye,
     Mail,
-    ShoppingBag
+    ShoppingBag,
+    MapPin,
+    FileText,
+    MessageSquare,
+    Gem
 } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -29,25 +33,32 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
 export default function AdminUsers() {
     const [searchTerm, setSearchTerm] = useState('');
 
     // Mock Data for Buyers
     const users = [
-        { id: 101, name: 'محمد علي', email: 'mohamed@gmail.com', orders: 15, spent: 'EGP 12,450', lastActive: '2025-12-24', status: 'active' },
-        { id: 102, name: 'هدى حسن', email: 'huda@yahoo.com', orders: 8, spent: 'EGP 5,200', lastActive: '2025-12-23', status: 'active' },
-        { id: 103, name: 'كريم محمود', email: 'kareem@hotmail.com', orders: 3, spent: 'EGP 1,200', lastActive: '2025-11-15', status: 'inactive' },
-        { id: 104, name: 'ليلى أحمد', email: 'laila@gmail.com', orders: 22, spent: 'EGP 35,000', lastActive: '2025-12-25', status: 'active' },
-        { id: 105, name: 'عماد سعيد', email: 'emad@outlook.com', orders: 0, spent: 'EGP 0', lastActive: '2025-10-01', status: 'banned' },
+        { id: 101, name: 'محمد علي', email: 'mohamed@gmail.com', orders: 15, spent: 'EGP 12,450', lastActive: '2025-12-24', status: 'active', type: 'vip' },
+        { id: 102, name: 'هدى حسن', email: 'huda@yahoo.com', orders: 8, spent: 'EGP 5,200', lastActive: '2025-12-23', status: 'active', type: 'normal' },
+        { id: 103, name: 'كريم محمود', email: 'kareem@hotmail.com', orders: 3, spent: 'EGP 1,200', lastActive: '2025-11-15', status: 'inactive', type: 'high_risk' },
+        { id: 104, name: 'ليلى أحمد', email: 'laila@gmail.com', orders: 22, spent: 'EGP 35,000', lastActive: '2025-12-25', status: 'active', type: 'vip' },
+        { id: 105, name: 'عماد سعيد', email: 'emad@outlook.com', orders: 0, spent: 'EGP 0', lastActive: '2025-10-01', status: 'banned', type: 'normal' },
     ];
 
     return (
         <div className="space-y-6" dir="rtl">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-900">المستخدمين</h1>
-                    <p className="text-slate-500 mt-1">إدارة حسابات المشترين والعملاء.</p>
+                    <h1 className="text-3xl font-bold text-slate-900">إدارة العملاء</h1>
+                    <p className="text-slate-500 mt-1">قائمة العملاء، التصنيفات، وسجل الشكاوى والفواتير.</p>
                 </div>
                 <Button className="bg-blue-600 hover:bg-blue-700">
                     <Mail className="ml-2 h-4 w-4" />
@@ -67,6 +78,17 @@ export default function AdminUsers() {
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
+                        <Select>
+                            <SelectTrigger className="w-[150px]">
+                                <SelectValue placeholder="التصنيف" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">الكل</SelectItem>
+                                <SelectItem value="vip">عميل مميز (VIP)</SelectItem>
+                                <SelectItem value="normal">عادي</SelectItem>
+                                <SelectItem value="high_risk">عالي المخاطر</SelectItem>
+                            </SelectContent>
+                        </Select>
                         <Button variant="outline" className="gap-2">
                             <Filter size={16} />
                             تصفية
@@ -81,6 +103,7 @@ export default function AdminUsers() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="text-right">المستخدم</TableHead>
+                                <TableHead className="text-right">التصنيف</TableHead>
                                 <TableHead className="text-right">عدد الطلبات</TableHead>
                                 <TableHead className="text-right">إجمالي الإنفاق</TableHead>
                                 <TableHead className="text-right">آخر ظهور</TableHead>
@@ -105,6 +128,11 @@ export default function AdminUsers() {
                                         </div>
                                     </TableCell>
                                     <TableCell>
+                                        {user.type === 'vip' && <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-200 border-purple-200 gap-1"><Gem size={10} /> مميز</Badge>}
+                                        {user.type === 'high_risk' && <Badge className="bg-red-100 text-red-700 hover:bg-red-200 border-red-200 gap-1"><ShieldAlert size={10} /> خطر</Badge>}
+                                        {user.type === 'normal' && <Badge variant="outline" className="text-slate-600">عادي</Badge>}
+                                    </TableCell>
+                                    <TableCell>
                                         <div className="flex items-center gap-1 font-medium">
                                             <ShoppingBag size={14} className="text-slate-400" />
                                             {user.orders}
@@ -125,12 +153,22 @@ export default function AdminUsers() {
                                                     <MoreHorizontal className="h-4 w-4" />
                                                 </Button>
                                             </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end" className="w-[160px]">
-                                                <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
+                                            <DropdownMenuContent align="end" className="w-[180px]">
+                                                <DropdownMenuLabel>بيانات العميل</DropdownMenuLabel>
                                                 <DropdownMenuSeparator />
                                                 <DropdownMenuItem className="gap-2">
-                                                    <Eye size={14} /> سجل الطلبات
+                                                    <Eye size={14} /> الملف الشخصي
                                                 </DropdownMenuItem>
+                                                <DropdownMenuItem className="gap-2">
+                                                    <MapPin size={14} /> العناوين
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem className="gap-2">
+                                                    <FileText size={14} /> الفواتير
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem className="gap-2">
+                                                    <MessageSquare size={14} /> الشكاوى
+                                                </DropdownMenuItem>
+                                                <DropdownMenuSeparator />
                                                 <DropdownMenuItem className="gap-2 text-red-600">
                                                     <ShieldAlert size={14} /> حظر المستخدم
                                                 </DropdownMenuItem>

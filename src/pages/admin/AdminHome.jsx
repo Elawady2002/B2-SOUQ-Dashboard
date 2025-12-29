@@ -7,7 +7,13 @@ import {
     ShoppingBag,
     DollarSign,
     MoreHorizontal,
-    ArrowUpRight
+    ArrowUpRight,
+    Clock,
+    CheckCircle2,
+    PackageX,
+    AlertCircle,
+    XCircle,
+    Activity
 } from 'lucide-react';
 import {
     Chart as ChartJS,
@@ -63,13 +69,13 @@ export default function AdminHome() {
             bgColor: 'bg-blue-100'
         },
         {
-            title: 'التجار النشطين',
-            value: '1,205',
-            change: '+23',
+            title: 'زيارات المنصة',
+            value: '125.4k',
+            change: '+18.2%',
             trend: 'up',
-            icon: Store,
-            color: 'text-indigo-600',
-            bgColor: 'bg-indigo-100'
+            icon: Activity,
+            color: 'text-purple-600',
+            bgColor: 'bg-purple-100'
         },
         {
             title: 'المستخدمين الجدد',
@@ -80,6 +86,20 @@ export default function AdminHome() {
             color: 'text-orange-600',
             bgColor: 'bg-orange-100'
         }
+    ];
+
+    // Order Status Breakdown
+    const orderStats = [
+        { label: 'طلبات جديدة', count: 142, icon: Clock, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+        { label: 'قيد التنفيذ', count: 85, icon: ShoppingBag, color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100' },
+        { label: 'طلبات مكتملة', count: 1250, icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100' },
+    ];
+
+    // Risk Indicators
+    const riskStats = [
+        { label: 'طلبات مرتجعة', value: 24, rate: '2.1%', icon: PackageX, color: 'text-rose-600', bg: 'bg-rose-50' },
+        { label: 'نزاعات مفتوحة', value: 5, rate: '0.4%', icon: AlertCircle, color: 'text-orange-600', bg: 'bg-orange-50' },
+        { label: 'فشل التسليم', value: 12, rate: '1.1%', icon: XCircle, color: 'text-slate-600', bg: 'bg-slate-100' },
     ];
 
     // Chart Data
@@ -119,11 +139,11 @@ export default function AdminHome() {
         <div className="space-y-6" dir="rtl">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-bold text-slate-900">لوحة التحكم الرئيسية</h1>
-                <p className="text-slate-500 mt-1">نظرة عامة على أداء المنصة اليوم.</p>
+                <h1 className="text-3xl font-bold text-slate-900">لوحة المؤشرات والتحليل</h1>
+                <p className="text-slate-500 mt-1">نظرة شاملة على أداء المنصة، المبيعات، والنشاط العام.</p>
             </div>
 
-            {/* Stats Cards */}
+            {/* Top Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {statsCards.map((stat, index) => (
                     <Card key={index} className="border-slate-100 shadow-sm hover:shadow-md transition-shadow">
@@ -144,6 +164,58 @@ export default function AdminHome() {
                         </CardContent>
                     </Card>
                 ))}
+            </div>
+
+            {/* Operational & Risk Insights */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Order Status Breakdown */}
+                <Card className="lg:col-span-2 border-slate-100 shadow-sm">
+                    <CardHeader>
+                        <CardTitle className="text-lg">حالة الطلبات الحالية</CardTitle>
+                        <CardDescription>متابعة سير العمليات والطلبات النشطة</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {orderStats.map((item, i) => (
+                                <div key={i} className={`flex items-center gap-4 p-4 rounded-lg border ${item.border} ${item.bg}`}>
+                                    <div className={`p-2 rounded-full ${item.color} bg-white/60`}>
+                                        <item.icon size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-slate-600 font-medium">{item.label}</p>
+                                        <p className={`text-xl font-bold ${item.color}`}>{item.count}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Risk Indicators */}
+                <Card className="border-slate-100 shadow-sm">
+                    <CardHeader>
+                        <CardTitle className="text-lg">مؤشرات المخاطر</CardTitle>
+                        <CardDescription>المرتجعات والنزاعات</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-4">
+                            {riskStats.map((risk, i) => (
+                                <div key={i} className="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition-colors">
+                                    <div className="flex items-center gap-3">
+                                        <div className={`p-2 rounded-lg ${risk.bg} ${risk.color}`}>
+                                            <risk.icon size={18} />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-medium text-slate-900">{risk.label}</p>
+                                            <p className="text-xs text-slate-500">معدل: {risk.rate}</p>
+                                        </div>
+                                    </div>
+                                    <span className="text-lg font-bold text-slate-700">{risk.value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
 
             {/* Main Charts & Tables */}

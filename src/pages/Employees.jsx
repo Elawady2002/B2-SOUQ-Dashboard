@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import {
     Users,
@@ -44,6 +44,7 @@ import {
     SheetTitle,
     SheetDescription,
     SheetFooter,
+    SheetClose,
 } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Label } from '@/components/ui/label';
@@ -90,9 +91,13 @@ const PERMISSION_LEVELS = { ADMIN: 'admin', VIEW_ONLY: 'view_only', HIDDEN: 'hid
 
 export default function Employees() {
     const { t } = useLanguage();
-    const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
-    const [showAddRoleModal, setShowAddRoleModal] = useState(false);
-    const [activeTab, setActiveTab] = useState('employees');
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // Derived state from URL
+    const activeTab = searchParams.get('tab') || 'employees';
+    const showAddEmployeeModal = searchParams.get('action') === 'add-employee';
+    const showAddRoleModal = searchParams.get('action') === 'add-role';
+
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
@@ -107,6 +112,30 @@ export default function Employees() {
     const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
     const paginatedEmployees = filteredEmployees.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+    const handleTabChange = (value) => {
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev);
+            newParams.set('tab', value);
+            return newParams;
+        });
+    };
+
+    const openModal = (actionName) => {
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev);
+            newParams.set('action', actionName);
+            return newParams;
+        });
+    };
+
+    const closeModal = () => {
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev);
+            newParams.delete('action');
+            return newParams;
+        });
+    };
+
     return (
         <div className="flex flex-col gap-6">
             {/* Header */}
@@ -116,17 +145,17 @@ export default function Employees() {
                     <p className="page-subtitle">{t('employees.subtitle')}</p>
                 </div>
                 <div className="flex gap-3">
-                    <Button variant="outline" onClick={() => setShowAddRoleModal(true)} className="gap-2">
+                    <Button variant="outline" onClick={() => openModal('add-role')} className="gap-2">
                         <Plus size={18} /> {t('employees.addRole') || 'Add Role'}
                     </Button>
-                    <Button onClick={() => setShowAddEmployeeModal(true)} className="gap-2 bg-blue-600 hover:bg-blue-700">
+                    <Button onClick={() => openModal('add-employee')} className="gap-2 bg-blue-600 hover:bg-blue-700">
                         <Plus size={18} /> {t('employees.addEmployee')}
                     </Button>
                 </div>
             </div>
 
             {/* Tabs */}
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" dir="rtl">
+            <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full" dir="rtl">
                 <TabsList className="grid w-full max-w-md grid-cols-2 ml-auto mr-0">
                     <TabsTrigger value="employees">{t('employees.allEmployees') || 'All Employees'}</TabsTrigger>
                     <TabsTrigger value="roles">{t('employees.allRoles') || 'All Roles'}</TabsTrigger>
@@ -290,7 +319,7 @@ export default function Employees() {
 
             {/* Add Employee Modal */}
             {/* Add Employee Sheet */}
-            <Sheet open={showAddEmployeeModal} onOpenChange={setShowAddEmployeeModal}>
+            <Sheet open={showAddEmployeeModal} onOpenChange={(open) => !open && closeModal()}>
                 <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0">
                     <SheetHeader className="px-3 pt-12 pb-6 border-b border-slate-100 bg-slate-50/30">
                         <SheetTitle className="text-right pr-6">إضافة موظف جديد</SheetTitle>
@@ -324,7 +353,7 @@ export default function Employees() {
                         </div>
 
                         <div className="pt-6 border-t border-slate-100 flex items-center gap-2 justify-end">
-                            <Button variant="outline" onClick={() => setShowAddEmployeeModal(false)}>إلغاء</Button>
+                            <Button variant="outline" onClick={closeModal}>إلغاء</Button>
                             <Button className="bg-blue-600 hover:bg-blue-700">إضافة</Button>
                         </div>
                     </div>
@@ -332,7 +361,7 @@ export default function Employees() {
             </Sheet>
 
             {/* Add Role Sheet */}
-            <Sheet open={showAddRoleModal} onOpenChange={setShowAddRoleModal}>
+            <Sheet open={showAddRoleModal} onOpenChange={(open) => !open && closeModal()}>
                 <SheetContent side="left" className="w-[400px] sm:w-[600px] p-0 flex flex-col gap-0">
                     <SheetHeader className="px-6 pt-12 pb-6 border-b border-slate-100 bg-slate-50/30 shrink-0">
                         <SheetTitle className="text-right">إنشاء دور جديد</SheetTitle>
@@ -404,7 +433,7 @@ export default function Employees() {
                     </div>
 
                     <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex items-center gap-2 justify-end shrink-0">
-                        <Button variant="outline" onClick={() => setShowAddRoleModal(false)}>إلغاء</Button>
+                        <Button variant="outline" onClick={closeModal}>إلغاء</Button>
                         <Button className="bg-blue-600 hover:bg-blue-700">حفظ الدور</Button>
                     </div>
                 </SheetContent>

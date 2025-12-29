@@ -34,6 +34,11 @@ import AdminReturns from './pages/admin/AdminReturns';
 import AdminAds from './pages/admin/AdminAds';
 import AdminSupport from './pages/admin/AdminSupport';
 import AdminReports from './pages/admin/AdminReports';
+import AdminStaff from './pages/admin/AdminStaff';
+import AdminAudit from './pages/admin/AdminAudit';
+import AdminFinance from './pages/admin/AdminFinance';
+import AdminContent from './pages/admin/AdminContent';
+import AdminSettings from './pages/admin/AdminSettings';
 
 // Protected Route Component
 function ProtectedRoute({ children, allowedRole = 'merchant' }) {
@@ -107,8 +112,13 @@ function App() {
         <Route path="orders" element={<AdminOrders />} />
         <Route path="returns" element={<AdminReturns />} />
         <Route path="ads" element={<AdminAds />} />
+        <Route path="finance" element={<AdminFinance />} />
+        <Route path="content" element={<AdminContent />} />
+        <Route path="settings" element={<AdminSettings />} />
         <Route path="support" element={<AdminSupport />} />
         <Route path="reports" element={<AdminReports />} />
+        <Route path="staff" element={<AdminStaff />} />
+        <Route path="audit-log" element={<AdminAudit />} />
 
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
       </Route>
