@@ -1,54 +1,83 @@
-import { useState } from 'react';
 import {
     TrendingUp,
     TrendingDown,
     Users,
-    Store,
     ShoppingBag,
     DollarSign,
-    MoreHorizontal,
+    Activity,
     ArrowUpRight,
-    Clock,
-    CheckCircle2,
-    PackageX,
-    AlertCircle,
-    XCircle,
-    Activity
+    CreditCard,
+    MoreHorizontal
 } from 'lucide-react';
 import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-    Filler,
-} from 'chart.js';
-import { Line, Bar } from 'react-chartjs-2';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+    Area,
+    AreaChart,
+    CartesianGrid,
+    XAxis,
+    ResponsiveContainer
+} from "recharts"
+
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+    CardFooter,
+    CardAction
+} from '@/components/ui/card';
+import {
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+} from "@/components/ui/tabs"
+import {
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from "@/components/ui/chart"
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
-// Register ChartJS
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-    Filler
-);
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export default function AdminHome() {
-    // Mock Data
+    // Recharts Data
+    const chartData = [
+        { month: "يناير", revenue: 65000 },
+        { month: "فبراير", revenue: 72000 },
+        { month: "مارس", revenue: 85000 },
+        { month: "أبريل", revenue: 92000 },
+        { month: "مايو", revenue: 115000 },
+        { month: "يونيو", revenue: 125000 },
+        { month: "يوليو", revenue: 140000 },
+        { month: "أغسطس", revenue: 165000 },
+    ]
+
+    const chartConfig = {
+        revenue: {
+            label: "الإيرادات",
+            color: "hsl(var(--primary))",
+        },
+    }
+
+    // Stats Data
     const statsCards = [
         {
             title: 'إجمالي الإيرادات',
@@ -56,8 +85,7 @@ export default function AdminHome() {
             change: '+12.5%',
             trend: 'up',
             icon: DollarSign,
-            color: 'text-green-600',
-            bgColor: 'bg-green-100'
+            description: 'مقارنة بالشهر الماضي'
         },
         {
             title: 'إجمالي الطلبات',
@@ -65,8 +93,7 @@ export default function AdminHome() {
             change: '+8.2%',
             trend: 'up',
             icon: ShoppingBag,
-            color: 'text-blue-600',
-            bgColor: 'bg-blue-100'
+            description: 'مقارنة بالشهر الماضي'
         },
         {
             title: 'زيارات المنصة',
@@ -74,8 +101,7 @@ export default function AdminHome() {
             change: '+18.2%',
             trend: 'up',
             icon: Activity,
-            color: 'text-purple-600',
-            bgColor: 'bg-purple-100'
+            description: 'مقارنة بالشهر الماضي'
         },
         {
             title: 'المستخدمين الجدد',
@@ -83,239 +109,222 @@ export default function AdminHome() {
             change: '-2.4%',
             trend: 'down',
             icon: Users,
-            color: 'text-orange-600',
-            bgColor: 'bg-orange-100'
+            description: 'مقارنة بالشهر الماضي'
         }
     ];
 
-    // Order Status Breakdown
-    const orderStats = [
-        { label: 'طلبات جديدة', count: 142, icon: Clock, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
-        { label: 'قيد التنفيذ', count: 85, icon: ShoppingBag, color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100' },
-        { label: 'طلبات مكتملة', count: 1250, icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100' },
-    ];
-
-    // Risk Indicators
-    const riskStats = [
-        { label: 'طلبات مرتجعة', value: 24, rate: '2.1%', icon: PackageX, color: 'text-rose-600', bg: 'bg-rose-50' },
-        { label: 'نزاعات مفتوحة', value: 5, rate: '0.4%', icon: AlertCircle, color: 'text-orange-600', bg: 'bg-orange-50' },
-        { label: 'فشل التسليم', value: 12, rate: '1.1%', icon: XCircle, color: 'text-slate-600', bg: 'bg-slate-100' },
-    ];
-
-    // Chart Data
-    const revenueChartData = {
-        labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس'],
-        datasets: [
-            {
-                label: 'الإيرادات (EGP)',
-                data: [65000, 72000, 85000, 92000, 115000, 125000, 140000, 165000],
-                borderColor: '#2563eb', // Blue
-                backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                fill: true,
-                tension: 0.4,
-                borderWidth: 2,
-                pointRadius: 3,
-            }
-        ],
-    };
-
-    const chartOptions = {
-        responsive: true,
-        plugins: {
-            legend: { display: false },
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: { display: true, drawBorder: false },
-            },
-            x: {
-                grid: { display: false, drawBorder: false },
-            },
-        },
-    };
-
     return (
-        <div className="space-y-6" dir="rtl">
-            {/* Header */}
-            <div>
-                <h1 className="text-3xl font-bold text-slate-900">لوحة المؤشرات والتحليل</h1>
-                <p className="text-slate-500 mt-1">نظرة شاملة على أداء المنصة، المبيعات، والنشاط العام.</p>
+        <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8" dir="rtl">
+            <div className="flex items-center justify-between space-y-2">
+                <div>
+                    <h2 className="text-2xl font-bold tracking-tight">لوحة التحكم</h2>
+                    <p className="text-muted-foreground">
+                        نظرة شاملة على أداء متجرك والعمليات الحالية.
+                    </p>
+                </div>
+                <div className="flex items-center gap-2">
+                    <Button variant="outline">تنزيل التقرير</Button>
+                </div>
             </div>
 
-            {/* Top Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {statsCards.map((stat, index) => (
-                    <Card key={index} className="border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                        <CardContent className="p-6">
-                            <div className="flex justify-between items-start mb-4">
-                                <div className={`p-3 rounded-xl ${stat.bgColor} ${stat.color}`}>
-                                    <stat.icon size={24} />
+            <Tabs defaultValue="overview" className="space-y-4">
+                <TabsList>
+                    <TabsTrigger value="overview">نظرة عامة</TabsTrigger>
+                    <TabsTrigger value="analytics">التحليلات</TabsTrigger>
+                    <TabsTrigger value="reports">التقارير</TabsTrigger>
+                    <TabsTrigger value="notifications">التنبيهات</TabsTrigger>
+                </TabsList>
+                <TabsContent value="overview" className="space-y-4">
+                    {/* Stats Grid */}
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                        {statsCards.map((stat, index) => (
+                            <Card key={index} data-slot="card" className="shadow-sm">
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <CardTitle className="text-sm font-medium">
+                                        {stat.title}
+                                    </CardTitle>
+                                    <stat.icon className="h-4 w-4 text-muted-foreground" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">{stat.value}</div>
+                                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                                        <span className={stat.trend === 'up' ? "text-green-500 font-medium" : "text-red-500 font-medium"}>
+                                            {stat.change}
+                                        </span>
+                                        {stat.description}
+                                    </p>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                        {/* Main Chart */}
+                        <Card className="col-span-4 shadow-sm">
+                            <CardHeader>
+                                <CardTitle>نمو الإيرادات</CardTitle>
+                                <CardDescription>
+                                    عرض للإيرادات الشهرية للعام الحالي
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="pl-2">
+                                <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
+                                    <AreaChart data={chartData}>
+                                        <defs>
+                                            <linearGradient id="fillRevenue" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="var(--color-revenue)" stopOpacity={0.8} />
+                                                <stop offset="95%" stopColor="var(--color-revenue)" stopOpacity={0.1} />
+                                            </linearGradient>
+                                        </defs>
+
+                                        <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                                        <XAxis
+                                            dataKey="month"
+                                            tickLine={false}
+                                            axisLine={false}
+                                            tickMargin={8}
+                                        />
+                                        <ChartTooltip
+                                            cursor={false}
+                                            content={<ChartTooltipContent indicator="dot" hideLabel />}
+                                        />
+                                        <Area
+                                            dataKey="revenue"
+                                            type="natural"
+                                            fill="url(#fillRevenue)"
+                                            stroke="var(--color-revenue)"
+                                            strokeWidth={2}
+                                            fillOpacity={0.4}
+                                        />
+                                    </AreaChart>
+                                </ChartContainer>
+                            </CardContent>
+                        </Card>
+
+                        {/* Recent Sales / Top Merchants (Side Card) */}
+                        <Card className="col-span-3 shadow-sm">
+                            <CardHeader>
+                                <CardTitle>أفضل التجار</CardTitle>
+                                <CardDescription>
+                                    أعلى 5 تجار تحقيقاً للمبيعات هذا الشهر
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-8">
+                                    {[
+                                        { name: 'متجر الإلكترونيات', email: 'tech_store@example.com', sales: 'EGP 124k', initials: 'ES', color: 'bg-blue-100 text-blue-600' },
+                                        { name: 'أزياء الموضة', email: 'fashion_hub@example.com', sales: 'EGP 98k', initials: 'FM', color: 'bg-pink-100 text-pink-600' },
+                                        { name: 'بيت الرياضة', email: 'sports_house@example.com', sales: 'EGP 85k', initials: 'SH', color: 'bg-orange-100 text-orange-600' },
+                                        { name: 'عالم التقنية', email: 'tech_world@example.com', sales: 'EGP 62k', initials: 'TW', color: 'bg-cyan-100 text-cyan-600' },
+                                        { name: 'مجوهرات الماس', email: 'diamond_jewelry@example.com', sales: 'EGP 54k', initials: 'DJ', color: 'bg-indigo-100 text-indigo-600' },
+                                    ].map((merchant, i) => (
+                                        <div key={i} className="flex items-center">
+                                            <Avatar className="h-9 w-9">
+                                                <AvatarFallback className={merchant.color}>{merchant.initials}</AvatarFallback>
+                                            </Avatar>
+                                            <div className="mr-4 space-y-1">
+                                                <p className="text-sm font-medium leading-none">{merchant.name}</p>
+                                                <p className="text-sm text-muted-foreground">{merchant.email}</p>
+                                            </div>
+                                            <div className="mr-auto font-medium">{merchant.sales}</div>
+                                        </div>
+                                    ))}
                                 </div>
-                                <div className={`flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full ${stat.trend === 'up' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
-                                    {stat.change}
-                                    {stat.trend === 'up' ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* Recent Registrations Table */}
+                    <Card className="shadow-sm">
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <div className="grid gap-2">
+                                <CardTitle>طلبات التسجيل الجديدة</CardTitle>
+                                <CardDescription>
+                                    قائمة بالتجار الجدد بانتظار الموافقة.
+                                </CardDescription>
                             </div>
-                            <div>
-                                <p className="text-sm font-medium text-slate-500">{stat.title}</p>
-                                <h3 className="text-2xl font-bold text-slate-900 mt-1">{stat.value}</h3>
-                            </div>
+                            <Button size="sm" className="gap-1">
+                                عرض الكل
+                                <ArrowUpRight className="h-4 w-4" />
+                            </Button>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="text-right">التاجر</TableHead>
+                                        <TableHead className="text-right">النشاط</TableHead>
+                                        <TableHead className="text-right hidden md:table-cell">التاريخ</TableHead>
+                                        <TableHead className="text-right">الحالة</TableHead>
+                                        <TableHead className="text-right">الإجراء</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {[
+                                        { name: 'سامي للأدوات', email: 'sami@example.com', type: 'أدوات منزلية', date: '2023-12-25', status: 'pending' },
+                                        { name: 'بوتيك سندريلا', email: 'cinderella@example.com', type: 'ملابس', date: '2023-12-24', status: 'pending' },
+                                        { name: 'تك ستور', email: 'tech@example.com', type: 'إلكترونيات', date: '2023-12-23', status: 'approved' },
+                                        { name: 'هايبر ماركت', email: 'hyper@example.com', type: 'سوبر ماركت', date: '2023-12-22', status: 'pending' },
+                                        { name: 'كتب ومراجع', email: 'books@example.com', type: 'مكتبة', date: '2023-12-21', status: 'approved' },
+                                    ].map((row, i) => (
+                                        <TableRow key={i}>
+                                            <TableCell>
+                                                <div className="font-medium">{row.name}</div>
+                                                <div className="text-xs text-muted-foreground md:hidden">{row.email}</div>
+                                            </TableCell>
+                                            <TableCell className="hidden md:table-cell">{row.type}</TableCell>
+                                            <TableCell className="table-cell md:hidden">
+                                                <div className="flex flex-col">
+                                                    <span>{row.type}</span>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="hidden md:table-cell">{row.date}</TableCell>
+                                            <TableCell>
+                                                {row.status === 'pending' ? (
+                                                    <Badge variant="outline" className="bg-yellow-50 text-yellow-600 border-yellow-200">بانتظار الموافقة</Badge>
+                                                ) : (
+                                                    <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">مقبول</Badge>
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button aria-haspopup="true" size="icon" variant="ghost">
+                                                            <MoreHorizontal className="h-4 w-4" />
+                                                            <span className="sr-only">Toggle menu</span>
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end">
+                                                        <DropdownMenuLabel>إجراءات</DropdownMenuLabel>
+                                                        <DropdownMenuItem>مراجعة الطلب</DropdownMenuItem>
+                                                        <DropdownMenuItem>مراسلة التاجر</DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem className="text-red-600">رفض الطلب</DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
                         </CardContent>
                     </Card>
-                ))}
-            </div>
+                </TabsContent>
 
-            {/* Operational & Risk Insights */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Order Status Breakdown */}
-                <Card className="lg:col-span-2 border-slate-100 shadow-sm">
-                    <CardHeader>
-                        <CardTitle className="text-lg">حالة الطلبات الحالية</CardTitle>
-                        <CardDescription>متابعة سير العمليات والطلبات النشطة</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {orderStats.map((item, i) => (
-                                <div key={i} className={`flex items-center gap-4 p-4 rounded-lg border ${item.border} ${item.bg}`}>
-                                    <div className={`p-2 rounded-full ${item.color} bg-white/60`}>
-                                        <item.icon size={20} />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-slate-600 font-medium">{item.label}</p>
-                                        <p className={`text-xl font-bold ${item.color}`}>{item.count}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Risk Indicators */}
-                <Card className="border-slate-100 shadow-sm">
-                    <CardHeader>
-                        <CardTitle className="text-lg">مؤشرات المخاطر</CardTitle>
-                        <CardDescription>المرتجعات والنزاعات</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            {riskStats.map((risk, i) => (
-                                <div key={i} className="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition-colors">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`p-2 rounded-lg ${risk.bg} ${risk.color}`}>
-                                            <risk.icon size={18} />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-medium text-slate-900">{risk.label}</p>
-                                            <p className="text-xs text-slate-500">معدل: {risk.rate}</p>
-                                        </div>
-                                    </div>
-                                    <span className="text-lg font-bold text-slate-700">{risk.value}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-
-            {/* Main Charts & Tables */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-                {/* Revenue Chart */}
-                <Card className="lg:col-span-2 border-slate-100 shadow-sm">
-                    <CardHeader>
-                        <CardTitle className="text-xl">نمو الإيرادات</CardTitle>
-                        <CardDescription>تحليل الأداء المالي للمنصة خلال الأشهر الماضية</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="h-[300px]">
-                            <Line data={revenueChartData} options={chartOptions} />
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Top Merchants */}
-                <Card className="border-slate-100 shadow-sm">
-                    <CardHeader>
-                        <CardTitle className="text-xl">أفضل التجار</CardTitle>
-                        <CardDescription>التجار الأكثر مبيعاً هذا الشهر</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-6">
-                            {[
-                                { name: 'متجر الإلكترونيات', sales: 'EGP 124k', initials: 'ES', color: 'bg-blue-100 text-blue-600' },
-                                { name: 'أزياء الموضة', sales: 'EGP 98k', initials: 'FM', color: 'bg-pink-100 text-pink-600' },
-                                { name: 'بيت الرياضة', sales: 'EGP 85k', initials: 'SH', color: 'bg-orange-100 text-orange-600' },
-                                { name: 'عالم التقنية', sales: 'EGP 62k', initials: 'TW', color: 'bg-cyan-100 text-cyan-600' },
-                                { name: 'مجوهرات الماس', sales: 'EGP 54k', initials: 'DJ', color: 'bg-indigo-100 text-indigo-600' },
-                            ].map((merchant, i) => (
-                                <div key={i} className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <Avatar className="h-9 w-9">
-                                            <AvatarFallback className={merchant.color}>{merchant.initials}</AvatarFallback>
-                                        </Avatar>
-                                        <div>
-                                            <p className="text-sm font-medium text-slate-900">{merchant.name}</p>
-                                            <p className="text-xs text-slate-500">1.2k مبيعات</p>
-                                        </div>
-                                    </div>
-                                    <span className="text-sm font-bold text-slate-700">{merchant.sales}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-
-            {/* Recent Registrations Table */}
-            <Card className="border-slate-100 shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <div>
-                        <CardTitle className="text-xl">طلبات التسجيل الجديدة</CardTitle>
-                        <CardDescription>تجار بانتظار الموافقة</CardDescription>
+                {/* Placeholders for other tabs */}
+                <TabsContent value="analytics" className="h-[400px] flex items-center justify-center border rounded-lg border-dashed">
+                    <div className="text-center text-muted-foreground">
+                        <Activity className="mx-auto h-10 w-10 opacity-50 mb-2" />
+                        <p>محتوى التحليلات قادم قريباً</p>
                     </div>
-                    <Button variant="outline" className="gap-2">
-                        عرض الكل
-                        <ArrowUpRight size={16} />
-                    </Button>
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="text-right">اسم التاجر</TableHead>
-                                <TableHead className="text-right">نوع المتجر</TableHead>
-                                <TableHead className="text-right">تاريخ الطلب</TableHead>
-                                <TableHead className="text-right">الحالة</TableHead>
-                                <TableHead className="text-right">الإجراء</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {[
-                                { name: 'سامي للأدوات', type: 'أدوات منزلية', date: '25 ديسمبر 2025', status: 'pending' },
-                                { name: 'بوتيك سندريلا', type: 'ملابس', date: '24 ديسمبر 2025', status: 'pending' },
-                                { name: ' تك ستور', type: 'إلكترونيات', date: '23 ديسمبر 2025', status: 'approved' },
-                            ].map((row, i) => (
-                                <TableRow key={i}>
-                                    <TableCell className="font-medium">{row.name}</TableCell>
-                                    <TableCell>{row.type}</TableCell>
-                                    <TableCell>{row.date}</TableCell>
-                                    <TableCell>
-                                        {row.status === 'pending' ? (
-                                            <Badge variant="outline" className="bg-yellow-50 text-yellow-600 border-yellow-200">بانتظار الموافقة</Badge>
-                                        ) : (
-                                            <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">تمت الموافقة</Badge>
-                                        )}
-                                    </TableCell>
-                                    <TableCell>
-                                        <Button variant="ghost" size="sm">مراجعة</Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
+                </TabsContent>
+                <TabsContent value="reports" className="h-[400px] flex items-center justify-center border rounded-lg border-dashed">
+                    <div className="text-center text-muted-foreground">
+                        <CreditCard className="mx-auto h-10 w-10 opacity-50 mb-2" />
+                        <p> التقارير المالية قادمة قريباً</p>
+                    </div>
+                </TabsContent>
+            </Tabs>
         </div>
     );
 }

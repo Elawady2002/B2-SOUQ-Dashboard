@@ -96,7 +96,7 @@ export default function AdminSettings() {
                             </div>
                             <div className="flex items-center justify-between p-4 border rounded-lg">
                                 <div className="flex items-center gap-3">
-                                    <DollarSign className="text-green-600" /> {/* DollarSign component is not imported but Settings is, let me swap icon or fix import. Wait, DollarSign IS NOT imported. I'll use Wallet instead */}
+
                                     <CreditCard className="text-green-600" />
                                     <div>
                                         <p className="font-medium">الدفع عند الاستلام (COD)</p>

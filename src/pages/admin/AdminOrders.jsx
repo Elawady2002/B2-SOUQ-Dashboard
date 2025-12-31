@@ -46,7 +46,7 @@ export default function AdminOrders() {
             </div>
 
             <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="grid w-full max-w-md grid-cols-2 mb-4">
+                <TabsList className="grid w-full max-w-md grid-cols-2 mb-4 ml-auto">
                     <TabsTrigger value="all">كل الطلبات</TabsTrigger>
                     <TabsTrigger value="new">طلبات جديدة</TabsTrigger>
                 </TabsList>
@@ -64,7 +64,7 @@ export default function AdminOrders() {
                         </div>
                     </div>
 
-                    <Table>
+                    <Table dir="rtl">
                         <TableHeader className="bg-slate-50">
                             <TableRow>
                                 <TableHead className="text-right">رقم الطلب</TableHead>
@@ -101,7 +101,7 @@ export default function AdminOrders() {
                                                     <MoreHorizontal size={16} />
                                                 </Button>
                                             </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
+                                            <DropdownMenuContent align="start">
                                                 <DropdownMenuLabel>إجراءات الطلب</DropdownMenuLabel>
                                                 <DropdownMenuSeparator />
                                                 <DropdownMenuItem className="gap-2 cursor-pointer">
