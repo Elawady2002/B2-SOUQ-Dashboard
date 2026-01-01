@@ -7,14 +7,28 @@ import {
     Activity,
     ArrowUpRight,
     CreditCard,
-    MoreHorizontal
+    MoreHorizontal,
+    Bell,
+    CheckCircle2,
+    AlertCircle,
+    Package,
+    Truck,
+    Clock
 } from 'lucide-react';
 import {
     Area,
     AreaChart,
+    Bar,
+    BarChart,
     CartesianGrid,
     XAxis,
-    ResponsiveContainer
+    YAxis,
+    Tooltip,
+    Legend,
+    ResponsiveContainer,
+    PieChart,
+    Pie,
+    Cell
 } from "recharts"
 
 import {
@@ -26,12 +40,7 @@ import {
     CardFooter,
     CardAction
 } from '@/components/ui/card';
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from "@/components/ui/tabs"
+
 import {
     ChartContainer,
     ChartTooltip,
@@ -56,6 +65,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import AdminReports from './AdminReports';
 
 export default function AdminHome() {
     // Recharts Data
@@ -76,6 +86,73 @@ export default function AdminHome() {
             color: "hsl(var(--primary))",
         },
     }
+
+    // Analytics Data
+    const visitsData = [
+        { name: 'السبت', visits: 4000, orders: 2400 },
+        { name: 'الأحد', visits: 3000, orders: 1398 },
+        { name: 'الاثنين', visits: 2000, orders: 9800 },
+        { name: 'الثلاثاء', visits: 2780, orders: 3908 },
+        { name: 'الأربعاء', visits: 1890, orders: 4800 },
+        { name: 'الخميس', visits: 2390, orders: 3800 },
+        { name: 'الجمعة', visits: 3490, orders: 4300 },
+    ];
+
+    const deviceData = [
+        { name: 'Desktop', value: 400, color: '#0088FE' },
+        { name: 'Mobile', value: 300, color: '#00C49F' },
+        { name: 'Tablet', value: 300, color: '#FFBB28' },
+        { name: 'Other', value: 200, color: '#FF8042' },
+    ];
+
+    // Notifications Data
+    const notifications = [
+        {
+            id: 1,
+            title: "طلب جديد #1234",
+            description: "تم استلام طلب جديد بقيمة 1,200 EGP",
+            time: "منذ 5 دقائق",
+            icon: ShoppingBag,
+            color: "text-blue-500",
+            bg: "bg-blue-100 placeholder:bg-blue-100"
+        },
+        {
+            id: 2,
+            title: "نفاد المخزون",
+            description: "تنبيه: المنتج 'سماعة بلوتوث' قارب على النفاد",
+            time: "منذ 2 ساعة",
+            icon: AlertCircle,
+            color: "text-red-500",
+            bg: "bg-red-100"
+        },
+        {
+            id: 3,
+            title: "تاجر جديد",
+            description: "سجل التاجر 'مكتبة النور' في المنصة",
+            time: "منذ 4 ساعات",
+            icon: Users,
+            color: "text-green-500",
+            bg: "bg-green-100"
+        },
+        {
+            id: 4,
+            title: "تحديث النظام",
+            description: "تم تحديث النظام بنجاح إلى النسخة 2.0",
+            time: "منذ يوم واحد",
+            icon: CheckCircle2,
+            color: "text-purple-500",
+            bg: "bg-purple-100"
+        },
+        {
+            id: 5,
+            title: "مرتجع جديد",
+            description: "تم طلب إرجاع للمنتج #9988",
+            time: "منذ يومين",
+            icon: Package,
+            color: "text-orange-500",
+            bg: "bg-orange-100"
+        }
+    ];
 
     // Stats Data
     const statsCards = [
@@ -127,39 +204,38 @@ export default function AdminHome() {
                 </div>
             </div>
 
-            <Tabs defaultValue="overview" className="space-y-4">
-                <TabsList className="ml-auto">
-                    <TabsTrigger value="overview">نظرة عامة</TabsTrigger>
-                    <TabsTrigger value="analytics">التحليلات</TabsTrigger>
-                    <TabsTrigger value="reports">التقارير</TabsTrigger>
-                    <TabsTrigger value="notifications">التنبيهات</TabsTrigger>
-                </TabsList>
-                <TabsContent value="overview" className="space-y-4">
-                    {/* Stats Grid */}
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                        {statsCards.map((stat, index) => (
-                            <Card key={index} data-slot="card" className="shadow-sm">
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-sm font-medium">
-                                        {stat.title}
-                                    </CardTitle>
-                                    <stat.icon className="h-4 w-4 text-muted-foreground" />
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="text-2xl font-bold">{stat.value}</div>
-                                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                                        <span className={stat.trend === 'up' ? "text-green-500 font-medium" : "text-red-500 font-medium"}>
-                                            {stat.change}
-                                        </span>
-                                        {stat.description}
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
+            <div className="space-y-8">
 
+                {/* Section: Overview Stats */}
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    {statsCards.map((stat, index) => (
+                        <Card key={index} data-slot="card" className="shadow-sm">
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">
+                                    {stat.title}
+                                </CardTitle>
+                                <stat.icon className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">{stat.value}</div>
+                                <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                                    <span className={stat.trend === 'up' ? "text-green-500 font-medium" : "text-red-500 font-medium"}>
+                                        {stat.change}
+                                    </span>
+                                    {stat.description}
+                                </p>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+
+                {/* Section: Analytics */}
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold tracking-tight">التحليلات والأداء</h3>
+                    </div>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                        {/* Main Chart */}
+                        {/* Revenue Chart */}
                         <Card className="col-span-4 shadow-sm">
                             <CardHeader>
                                 <CardTitle>نمو الإيرادات</CardTitle>
@@ -201,7 +277,7 @@ export default function AdminHome() {
                             </CardContent>
                         </Card>
 
-                        {/* Recent Sales / Top Merchants (Side Card) */}
+                        {/* Top Merchants */}
                         <Card className="col-span-3 shadow-sm">
                             <CardHeader>
                                 <CardTitle>أفضل التجار</CardTitle>
@@ -233,98 +309,194 @@ export default function AdminHome() {
                             </CardContent>
                         </Card>
                     </div>
+                </div>
 
-                    {/* Recent Registrations Table */}
-                    <Card className="shadow-sm">
-                        <CardHeader className="flex flex-row items-center justify-between">
-                            <Button size="sm" className="gap-1">
-                                عرض الكل
-                                <ArrowUpRight className="h-4 w-4" />
-                            </Button>
-                            <div className="grid gap-2 text-right">
-                                <CardTitle>طلبات التسجيل الجديدة</CardTitle>
-                                <CardDescription>
-                                    قائمة بالتجار الجدد بانتظار الموافقة.
-                                </CardDescription>
-                            </div>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                    {/* Visits Chart */}
+                    <Card className="col-span-4 shadow-sm">
+                        <CardHeader>
+                            <CardTitle>الزيارات مقابل الطلبات</CardTitle>
+                            <CardDescription>مقارنة أداء الأسبوع الحالي</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead className="text-right">التاجر</TableHead>
-                                        <TableHead className="text-right">النشاط</TableHead>
-                                        <TableHead className="text-right hidden md:table-cell">التاريخ</TableHead>
-                                        <TableHead className="text-right">الحالة</TableHead>
-                                        <TableHead className="text-right">الإجراء</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {[
-                                        { name: 'سامي للأدوات', email: 'sami@example.com', type: 'أدوات منزلية', date: '2023-12-25', status: 'pending' },
-                                        { name: 'بوتيك سندريلا', email: 'cinderella@example.com', type: 'ملابس', date: '2023-12-24', status: 'pending' },
-                                        { name: 'تك ستور', email: 'tech@example.com', type: 'إلكترونيات', date: '2023-12-23', status: 'approved' },
-                                        { name: 'هايبر ماركت', email: 'hyper@example.com', type: 'سوبر ماركت', date: '2023-12-22', status: 'pending' },
-                                        { name: 'كتب ومراجع', email: 'books@example.com', type: 'مكتبة', date: '2023-12-21', status: 'approved' },
-                                    ].map((row, i) => (
-                                        <TableRow key={i}>
-                                            <TableCell>
-                                                <div className="font-medium">{row.name}</div>
-                                                <div className="text-xs text-muted-foreground md:hidden">{row.email}</div>
-                                            </TableCell>
-                                            <TableCell className="hidden md:table-cell">{row.type}</TableCell>
-                                            <TableCell className="table-cell md:hidden">
-                                                <div className="flex flex-col">
-                                                    <span>{row.type}</span>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell className="hidden md:table-cell">{row.date}</TableCell>
-                                            <TableCell>
-                                                {row.status === 'pending' ? (
-                                                    <Badge variant="outline" className="bg-yellow-50 text-yellow-600 border-yellow-200">بانتظار الموافقة</Badge>
-                                                ) : (
-                                                    <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">مقبول</Badge>
-                                                )}
-                                            </TableCell>
-                                            <TableCell>
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button aria-haspopup="true" size="icon" variant="ghost">
-                                                            <MoreHorizontal className="h-4 w-4" />
-                                                            <span className="sr-only">Toggle menu</span>
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuLabel>إجراءات</DropdownMenuLabel>
-                                                        <DropdownMenuItem>مراجعة الطلب</DropdownMenuItem>
-                                                        <DropdownMenuItem>مراسلة التاجر</DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem className="text-red-600">رفض الطلب</DropdownMenuItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                            <div className="h-[350px]">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={visitsData}>
+                                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                                        <XAxis dataKey="name" />
+                                        <YAxis />
+                                        <Tooltip
+                                            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                        />
+                                        <Legend />
+                                        <Bar dataKey="visits" name="الزيارات" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                                        <Bar dataKey="orders" name="الطلبات" fill="#10b981" radius={[4, 4, 0, 0]} />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
                         </CardContent>
                     </Card>
-                </TabsContent>
 
-                {/* Placeholders for other tabs */}
-                <TabsContent value="analytics" className="h-[400px] flex items-center justify-center border rounded-lg border-dashed">
-                    <div className="text-center text-muted-foreground">
-                        <Activity className="mx-auto h-10 w-10 opacity-50 mb-2" />
-                        <p>محتوى التحليلات قادم قريباً</p>
+                    {/* Device Usage */}
+                    <Card className="col-span-3 shadow-sm">
+                        <CardHeader>
+                            <CardTitle>الأجهزة المستخدمة</CardTitle>
+                            <CardDescription>توزيع المستخدمين حسب نوع الجهاز</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="h-[350px]">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={deviceData}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={60}
+                                            outerRadius={100}
+                                            fill="#8884d8"
+                                            paddingAngle={5}
+                                            dataKey="value"
+                                        >
+                                            {deviceData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                        <Legend verticalAlign="bottom" height={36} />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Section: Reports */}
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold tracking-tight">التقارير المالية</h3>
                     </div>
-                </TabsContent>
-                <TabsContent value="reports" className="h-[400px] flex items-center justify-center border rounded-lg border-dashed">
-                    <div className="text-center text-muted-foreground">
-                        <CreditCard className="mx-auto h-10 w-10 opacity-50 mb-2" />
-                        <p> التقارير المالية قادمة قريباً</p>
+                    <AdminReports />
+                </div>
+
+                {/* Section: Activity & Notifications */}
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold tracking-tight">النشاطات والتنبيهات</h3>
                     </div>
-                </TabsContent>
-            </Tabs>
+                    <div className="grid gap-4 md:grid-cols-2">
+                        {/* Recent Registrations Table */}
+                        <Card className="shadow-sm">
+                            <CardHeader className="flex flex-row items-center justify-between">
+                                <Button size="sm" className="gap-1">
+                                    عرض الكل
+                                    <ArrowUpRight className="h-4 w-4" />
+                                </Button>
+                                <div className="grid gap-2 text-right">
+                                    <CardTitle>طلبات التسجيل الجديدة</CardTitle>
+                                    <CardDescription>
+                                        قائمة بالتجار الجدد بانتظار الموافقة.
+                                    </CardDescription>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead className="text-right">التاجر</TableHead>
+                                            <TableHead className="text-right">النشاط</TableHead>
+                                            <TableHead className="text-right hidden md:table-cell">التاريخ</TableHead>
+                                            <TableHead className="text-right">الحالة</TableHead>
+                                            <TableHead className="text-right">الإجراء</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {[
+                                            { name: 'سامي للأدوات', email: 'sami@example.com', type: 'أدوات منزلية', date: '2023-12-25', status: 'pending' },
+                                            { name: 'بوتيك سندريلا', email: 'cinderella@example.com', type: 'ملابس', date: '2023-12-24', status: 'pending' },
+                                            { name: 'تك ستور', email: 'tech@example.com', type: 'إلكترونيات', date: '2023-12-23', status: 'approved' },
+                                            { name: 'هايبر ماركت', email: 'hyper@example.com', type: 'سوبر ماركت', date: '2023-12-22', status: 'pending' },
+                                            { name: 'كتب ومراجع', email: 'books@example.com', type: 'مكتبة', date: '2023-12-21', status: 'approved' },
+                                        ].map((row, i) => (
+                                            <TableRow key={i}>
+                                                <TableCell>
+                                                    <div className="font-medium">{row.name}</div>
+                                                    <div className="text-xs text-muted-foreground md:hidden">{row.email}</div>
+                                                </TableCell>
+                                                <TableCell className="hidden md:table-cell">{row.type}</TableCell>
+                                                <TableCell className="table-cell md:hidden">
+                                                    <div className="flex flex-col">
+                                                        <span>{row.type}</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="hidden md:table-cell">{row.date}</TableCell>
+                                                <TableCell>
+                                                    {row.status === 'pending' ? (
+                                                        <Badge variant="outline" className="bg-yellow-50 text-yellow-600 border-yellow-200">بانتظار الموافقة</Badge>
+                                                    ) : (
+                                                        <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">مقبول</Badge>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button aria-haspopup="true" size="icon" variant="ghost">
+                                                                <MoreHorizontal className="h-4 w-4" />
+                                                                <span className="sr-only">Toggle menu</span>
+                                                            </Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end">
+                                                            <DropdownMenuLabel>إجراءات</DropdownMenuLabel>
+                                                            <DropdownMenuItem>مراجعة الطلب</DropdownMenuItem>
+                                                            <DropdownMenuItem>مراسلة التاجر</DropdownMenuItem>
+                                                            <DropdownMenuSeparator />
+                                                            <DropdownMenuItem className="text-red-600">رفض الطلب</DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </CardContent>
+                        </Card>
+
+                        {/* Notifications */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>مركز التنبيهات</CardTitle>
+                                <CardDescription>آخر النشاطات والتحديثات في النظام</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-4">
+                                    {notifications.map((notification) => (
+                                        <div
+                                            key={notification.id}
+                                            className="flex items-start gap-4 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+                                        >
+                                            <div className={`p-2 rounded-full ${notification.bg}`}>
+                                                <notification.icon className={`h-5 w-5 ${notification.color}`} />
+                                            </div>
+                                            <div className="flex-1 space-y-1">
+                                                <div className="flex items-center justify-between">
+                                                    <p className="font-medium text-sm">{notification.title}</p>
+                                                    <span className="text-xs text-muted-foreground">{notification.time}</span>
+                                                </div>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {notification.description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </CardContent>
+                            <CardFooter>
+                                <Button variant="ghost" className="w-full">عرض كل التنبيهات</Button>
+                            </CardFooter>
+                        </Card>
+                    </div>
+                </div>
+
+            </div>
         </div>
     );
 }
