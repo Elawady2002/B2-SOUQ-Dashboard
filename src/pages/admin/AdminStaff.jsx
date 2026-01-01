@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
     Users,
     UserPlus,
@@ -46,8 +47,27 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function AdminStaff() {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const activeSheet = searchParams.get('sheet');
+
     const [searchTerm, setSearchTerm] = useState('');
-    const [showAddStaffSheet, setShowAddStaffSheet] = useState(false);
+    const [selectedStaff, setSelectedStaff] = useState(null);
+
+    const openSheet = (sheet, staff = null) => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set('sheet', sheet);
+        if (staff) {
+            setSelectedStaff(staff);
+        }
+        setSearchParams(newParams);
+    };
+
+    const closeSheet = () => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.delete('sheet');
+        setSearchParams(newParams);
+        setTimeout(() => setSelectedStaff(null), 300);
+    };
 
     // Mock Staff Data
     const staffMembers = [
@@ -64,6 +84,167 @@ export default function AdminStaff() {
         'Operations': 'bg-orange-100 text-orange-700',
     };
 
+    const renderSheetContent = () => {
+        if (activeSheet === 'add_staff') {
+            return (
+                <SheetContent side="left" className="w-[400px] sm:w-[540px]">
+                    <SheetHeader>
+                        <SheetTitle className="text-right">إضافة موظف إداري جديد</SheetTitle>
+                        <SheetDescription className="text-right">
+                            قم بإدخال بيانات الموظف الجديد وتحديد الصلاحيات الممنوحة له.
+                        </SheetDescription>
+                    </SheetHeader>
+                    <div className="grid gap-4 py-8 px-6 md:px-6" dir="rtl">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right col-span-1">
+                                الاسم
+                            </Label>
+                            <Input id="name" placeholder="الاسم الكامل" className="col-span-3 text-right" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="email" className="text-right col-span-1">
+                                البريد
+                            </Label>
+                            <Input id="email" type="email" placeholder="example@b2souq.com" className="col-span-3 text-right" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="role" className="text-right col-span-1">
+                                الدور
+                            </Label>
+                            <Select>
+                                <SelectTrigger className="col-span-3">
+                                    <SelectValue placeholder="اختر الدور الوظيفي" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="admin">Super Admin</SelectItem>
+                                    <SelectItem value="support">Customer Support</SelectItem>
+                                    <SelectItem value="finance">Finance Manager</SelectItem>
+                                    <SelectItem value="operations">Operations Specialist</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="2fa" className="text-right col-span-1">
+                                الأمان
+                            </Label>
+                            <div className="col-span-3 flex items-center gap-2">
+                                <input type="checkbox" id="2fa" className="rounded border-gray-300" checked readOnly />
+                                <span className="text-sm text-slate-600">تفعيل المصادقة الثنائية (2FA) تلقائياً</span>
+                            </div>
+                        </div>
+                    </div>
+                    <SheetFooter>
+                        <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700 w-full" onClick={() => { alert("تم إضافة الموظف"); closeSheet(); }}>إرسال دعوة الانضمام</Button>
+                    </SheetFooter>
+                </SheetContent>
+            );
+        }
+
+        if (!selectedStaff) return null;
+
+        if (activeSheet === 'edit_permissions') {
+            return (
+                <SheetContent side="left" className="w-[400px] sm:w-[540px]">
+                    <SheetHeader>
+                        <SheetTitle className="text-right">تعديل الصلاحيات</SheetTitle>
+                        <SheetDescription className="text-right">
+                            تعديل الدور الوظيفي والصلاحيات للموظف <span className="font-bold">{selectedStaff.name}</span>.
+                        </SheetDescription>
+                    </SheetHeader>
+                    <div className="grid gap-6 py-8 px-6 md:px-6" dir="rtl">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label className="text-right col-span-1">الدور الحالي</Label>
+                            <Select defaultValue="support">
+                                <SelectTrigger className="col-span-3">
+                                    <SelectValue placeholder={selectedStaff.role} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="admin">Super Admin</SelectItem>
+                                    <SelectItem value="support">Customer Support</SelectItem>
+                                    <SelectItem value="finance">Finance Manager</SelectItem>
+                                    <SelectItem value="operations">Operations Specialist</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-4">
+                            <Label className="text-right block">صلاحيات إضافية</Label>
+                            <div className="flex items-center gap-2">
+                                <input type="checkbox" id="p1" className="rounded border-gray-300" defaultChecked />
+                                <Label htmlFor="p1" className="text-sm font-normal">إدارة المستخدمين</Label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <input type="checkbox" id="p2" className="rounded border-gray-300" />
+                                <Label htmlFor="p2" className="text-sm font-normal">الوصول للتقارير المالية</Label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <input type="checkbox" id="p3" className="rounded border-gray-300" defaultChecked />
+                                <Label htmlFor="p3" className="text-sm font-normal">تعديل المحتوى</Label>
+                            </div>
+                        </div>
+                    </div>
+                    <SheetFooter>
+                        <Button onClick={() => { alert("تم حفظ التعديلات"); closeSheet(); }} className="bg-blue-600 text-white hover:bg-blue-700 w-full">حفظ التغييرات</Button>
+                    </SheetFooter>
+                </SheetContent>
+            );
+        }
+
+        if (activeSheet === 'activity_log') {
+            return (
+                <SheetContent side="left" className="w-[400px] sm:w-[540px]">
+                    <SheetHeader>
+                        <SheetTitle className="text-right">سجل النشاط</SheetTitle>
+                        <SheetDescription className="text-right">
+                            آخر نشاطات الموظف <span className="font-bold">{selectedStaff.name}</span> على النظام.
+                        </SheetDescription>
+                    </SheetHeader>
+                    <div className="py-8 px-6 md:px-6 space-y-4" dir="rtl">
+                        {[1, 2, 3, 4].map((_, i) => (
+                            <div key={i} className="flex gap-3 pb-4 border-b last:border-0 border-slate-100">
+                                <Activity size={18} className="text-blue-500 mt-1" />
+                                <div>
+                                    <p className="text-sm font-medium text-slate-900">قام بتحديث حالة الطلب #123{i}5</p>
+                                    <p className="text-xs text-slate-500">منذ {i + 2} ساعات</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <SheetFooter>
+                        <Button variant="outline" onClick={closeSheet} className="w-full">إغلاق</Button>
+                    </SheetFooter>
+                </SheetContent>
+            );
+        }
+
+        if (activeSheet === 'disable_account') {
+            return (
+                <SheetContent side="left" className="w-[400px] sm:w-[540px]">
+                    <SheetHeader>
+                        <SheetTitle className="text-right text-red-600 flex items-center gap-2 justify-end">
+                            <XCircle size={24} />
+                            تعطيل الحساب
+                        </SheetTitle>
+                        <SheetDescription className="text-right">
+                            هل أنت متأكد من رغبتك في تعطيل حساب الموظف <span className="font-bold">{selectedStaff.name}</span>؟
+                        </SheetDescription>
+                    </SheetHeader>
+                    <div className="py-8 px-6 md:px-6" dir="rtl">
+                        <div className="bg-red-50 p-4 rounded-lg border border-red-100 text-red-800 text-sm">
+                            <p className="font-bold mb-1">تحذير:</p>
+                            ستفقد الموظف إمكانية الوصول للنظام فوراً. يمكن إعادة تفعيل الحساب لاحقاً من قبل الأدمن فقط.
+                        </div>
+                    </div>
+                    <SheetFooter className="flex-col gap-2">
+                        <Button variant="destructive" onClick={() => { alert("تم تعطيل الحساب"); closeSheet(); }} className="w-full bg-red-600 hover:bg-red-700">تأكيد التعطيل</Button>
+                        <Button variant="ghost" onClick={closeSheet} className="w-full">إلغاء</Button>
+                    </SheetFooter>
+                </SheetContent>
+            );
+        }
+
+        return null;
+    }
+
     return (
         <div className="space-y-6" dir="rtl">
             <div className="flex justify-between items-center">
@@ -71,7 +252,7 @@ export default function AdminStaff() {
                     <h1 className="text-3xl font-bold text-slate-900">إدارة الموظفين والصلاحيات</h1>
                     <p className="text-slate-500 mt-1">فريق عمل المنصة وإدارة الأدوار.</p>
                 </div>
-                <Button onClick={() => setShowAddStaffSheet(true)} className="bg-blue-600 hover:bg-blue-700 gap-2">
+                <Button onClick={() => openSheet('add_staff')} className="bg-blue-600 hover:bg-blue-700 gap-2">
                     <UserPlus size={18} />
                     إضافة موظف جديد
                 </Button>
@@ -84,7 +265,7 @@ export default function AdminStaff() {
                             <Search className="absolute right-2.5 top-2.5 h-4 w-4 text-slate-400" />
                             <Input
                                 placeholder="ابحث بالاسم أو الدور..."
-                                className="pr-9"
+                                className="pr-9 text-right"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -99,7 +280,7 @@ export default function AdminStaff() {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <Table>
+                    <Table dir="rtl">
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="text-right">الموظف</TableHead>
@@ -167,14 +348,14 @@ export default function AdminStaff() {
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
-                                                <DropdownMenuItem className="gap-2">
+                                                <DropdownMenuItem onClick={() => openSheet('edit_permissions', staff)} className="gap-2 cursor-pointer">
                                                     <Lock size={14} /> تعديل الصلاحيات
                                                 </DropdownMenuItem>
-                                                <DropdownMenuItem className="gap-2">
+                                                <DropdownMenuItem onClick={() => openSheet('activity_log', staff)} className="gap-2 cursor-pointer">
                                                     <Activity size={14} /> سجل النشاط
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
-                                                <DropdownMenuItem className="gap-2 text-red-600">
+                                                <DropdownMenuItem onClick={() => openSheet('disable_account', staff)} className="gap-2 text-red-600 cursor-pointer">
                                                     تعطيل الحساب
                                                 </DropdownMenuItem>
                                             </DropdownMenuContent>
@@ -187,58 +368,8 @@ export default function AdminStaff() {
                 </CardContent>
             </Card>
 
-            {/* Add Staff Sheet */}
-            <Sheet open={showAddStaffSheet} onOpenChange={setShowAddStaffSheet}>
-                <SheetContent side="left" className="w-[400px] sm:w-[540px]">
-                    <SheetHeader>
-                        <SheetTitle className="text-right">إضافة موظف إداري جديد</SheetTitle>
-                        <SheetDescription className="text-right">
-                            قم بإدخال بيانات الموظف الجديد وتحديد الصلاحيات الممنوحة له.
-                        </SheetDescription>
-                    </SheetHeader>
-                    <div className="grid gap-4 py-8" dir="rtl">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right col-span-1">
-                                الاسم
-                            </Label>
-                            <Input id="name" placeholder="الاسم الكامل" className="col-span-3" />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="email" className="text-right col-span-1">
-                                البريد
-                            </Label>
-                            <Input id="email" type="email" placeholder="example@b2souq.com" className="col-span-3" />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="role" className="text-right col-span-1">
-                                الدور
-                            </Label>
-                            <Select>
-                                <SelectTrigger className="col-span-3">
-                                    <SelectValue placeholder="اختر الدور الوظيفي" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="admin">Super Admin</SelectItem>
-                                    <SelectItem value="support">Customer Support</SelectItem>
-                                    <SelectItem value="finance">Finance Manager</SelectItem>
-                                    <SelectItem value="operations">Operations Specialist</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="2fa" className="text-right col-span-1">
-                                الأمان
-                            </Label>
-                            <div className="col-span-3 flex items-center gap-2">
-                                <input type="checkbox" id="2fa" className="rounded border-gray-300" checked readOnly />
-                                <span className="text-sm text-slate-600">تفعيل المصادقة الثنائية (2FA) تلقائياً</span>
-                            </div>
-                        </div>
-                    </div>
-                    <SheetFooter>
-                        <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700 w-full">إرسال دعوة الانضمام</Button>
-                    </SheetFooter>
-                </SheetContent>
+            <Sheet open={!!activeSheet} onOpenChange={(open) => !open && closeSheet()}>
+                {renderSheetContent()}
             </Sheet>
         </div>
     );

@@ -5,18 +5,19 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetDescription,
+    SheetFooter,
+} from '@/components/ui/sheet';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 
 export default function AdminReturns() {
     const [selectedReturn, setSelectedReturn] = useState(null);
+    const [activeSheet, setActiveSheet] = useState(null); // 'decision'
 
     // Mock Data
     const returns = [
@@ -25,6 +26,44 @@ export default function AdminReturns() {
         { id: '#RET-903', order: '#ORD-5400', customer: 'كريم سامي', merchant: 'بيت الرياضة', reason: 'تغيير رأي', status: 'rejected', decision: null },
         { id: '#RET-904', order: '#ORD-5350', customer: 'علي يوسف', merchant: 'عالم التقنية', reason: 'منتج خاطئ', status: 'pending', decision: null },
     ];
+
+    const handleDecisionClick = (item) => {
+        setSelectedReturn(item);
+        setActiveSheet('decision');
+    };
+
+    const renderSheetContent = () => {
+        if (activeSheet === 'decision' && selectedReturn) {
+            return (
+                <SheetContent side="left" className="sm:max-w-md">
+                    <SheetHeader>
+                        <SheetTitle className="text-right">اتخاذ قرار في المرتجع {selectedReturn.id}</SheetTitle>
+                        <SheetDescription className="text-right">
+                            الرجاء مراجعة سبب الارجاع واتخاذ القرار المناسب (قبول مع استرجاع/استبدال أو رفض).
+                        </SheetDescription>
+                    </SheetHeader>
+                    <div className="grid gap-6 py-6 px-6 md:px-6" dir="rtl">
+                        <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                            <p className="text-sm font-medium mb-1 text-slate-900">سبب العميل:</p>
+                            <p className="text-sm text-slate-600">{selectedReturn.reason}</p>
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="notes" className="text-right">ملاحظات الإدارة</Label>
+                            <Textarea id="notes" placeholder="اكتب سبب القرار هنا..." rows={4} className="text-right" />
+                        </div>
+                    </div>
+                    <SheetFooter className="flex-col gap-3 sm:flex-col sm:space-x-0">
+                        <div className="flex gap-2 w-full">
+                            <Button className="bg-blue-600 hover:bg-blue-700 flex-1" onClick={() => { alert("تم قبول الاستبدال"); setActiveSheet(null); }}>استبدال</Button>
+                            <Button className="bg-green-600 hover:bg-green-700 flex-1" onClick={() => { alert("تم قبول الاسترجاع"); setActiveSheet(null); }}>استرجاع مبلغ</Button>
+                        </div>
+                        <Button variant="destructive" className="w-full" onClick={() => { alert("تم رفض الطلب"); setActiveSheet(null); }}>رفض الطلب</Button>
+                    </SheetFooter>
+                </SheetContent>
+            );
+        }
+        return null;
+    };
 
     return (
         <div className="space-y-6" dir="rtl">
@@ -38,15 +77,15 @@ export default function AdminReturns() {
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="p-4 border-b border-slate-200">
                     <div className="relative max-w-sm">
-                        <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4" />
                         <Input
                             placeholder="بحث في المرتجعات..."
-                            className="pr-9 border-slate-200 focus:border-blue-500 focus:ring-blue-100"
+                            className="pl-9 border-slate-200 focus:border-blue-500 focus:ring-blue-100 text-right"
                         />
                     </div>
                 </div>
 
-                <Table>
+                <Table dir="rtl">
                     <TableHeader className="bg-slate-50">
                         <TableRow>
                             <TableHead className="text-right">رقم المرتجع</TableHead>
@@ -82,39 +121,10 @@ export default function AdminReturns() {
                                 </TableCell>
                                 <TableCell>
                                     {item.status === 'pending' ? (
-                                        <Dialog>
-                                            <DialogTrigger asChild>
-                                                <Button size="sm" variant="outline" className="gap-2" onClick={() => setSelectedReturn(item)}>
-                                                    <AlertOctagon size={14} />
-                                                    اتخاذ قرار
-                                                </Button>
-                                            </DialogTrigger>
-                                            <DialogContent className="sm:max-w-[425px]">
-                                                <DialogHeader>
-                                                    <DialogTitle>اتخاذ قرار في المرتجع {item.id}</DialogTitle>
-                                                    <DialogDescription>
-                                                        الرجاء مراجعة سبب الارجاع واتخاذ القرار المناسب (قبول مع استرجاع/استبدال أو رفض).
-                                                    </DialogDescription>
-                                                </DialogHeader>
-                                                <div className="grid gap-4 py-4">
-                                                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                                                        <p className="text-sm font-medium mb-1">سبب العميل:</p>
-                                                        <p className="text-sm text-slate-600">{item.reason}</p>
-                                                    </div>
-                                                    <div className="grid gap-2">
-                                                        <label htmlFor="notes" className="text-sm font-medium">ملاحظات الإدارة</label>
-                                                        <Textarea id="notes" placeholder="اكتب سبب القرار هنا..." />
-                                                    </div>
-                                                </div>
-                                                <DialogFooter className="flex-col sm:flex-row gap-2">
-                                                    <Button variant="destructive" className="sm:w-auto w-full">رفض الطلب</Button>
-                                                    <div className="flex gap-2 w-full sm:w-auto">
-                                                        <Button className="bg-blue-600 hover:bg-blue-700 flex-1">استبدال</Button>
-                                                        <Button className="bg-green-600 hover:bg-green-700 flex-1">استرجاع مبلغ</Button>
-                                                    </div>
-                                                </DialogFooter>
-                                            </DialogContent>
-                                        </Dialog>
+                                        <Button size="sm" variant="outline" className="gap-2" onClick={() => handleDecisionClick(item)}>
+                                            <AlertOctagon size={14} />
+                                            اتخاذ قرار
+                                        </Button>
                                     ) : (
                                         <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400">
                                             <FileText size={16} />
@@ -126,6 +136,11 @@ export default function AdminReturns() {
                     </TableBody>
                 </Table>
             </div>
+
+            {/* Decision Sheet */}
+            <Sheet open={!!activeSheet} onOpenChange={(open) => !open && setActiveSheet(null)}>
+                {renderSheetContent()}
+            </Sheet>
         </div>
     );
 }

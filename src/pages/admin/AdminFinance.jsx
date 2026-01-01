@@ -21,8 +21,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetDescription,
+    SheetFooter,
+} from '@/components/ui/sheet';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+
 export default function AdminFinance() {
     const [activeTab, setActiveTab] = useState('withdrawals');
+    const [activeSheet, setActiveSheet] = useState(null); // 'transfer_commissions', 'approve_request', 'reject_request'
+    const [selectedRequest, setSelectedRequest] = useState(null);
 
     // Mock Data
     const withdrawals = [
@@ -37,6 +51,134 @@ export default function AdminFinance() {
         { id: 3, merchant: 'سامي للأدوات', available: 'EGP 1,500', pending: 'EGP 300', total_withdrawn: 'EGP 5,000' },
     ];
 
+    const handleActionClick = (request, sheetType) => {
+        setSelectedRequest(request);
+        setActiveSheet(sheetType);
+    };
+
+    const renderSheetContent = () => {
+        if (activeSheet === 'transfer_commissions') {
+            return (
+                <SheetContent side="left" className="sm:max-w-md">
+                    <SheetHeader>
+                        <SheetTitle className="text-right">تحويل عمولات</SheetTitle>
+                        <SheetDescription className="text-right">
+                            إجراء تحويل مالي جديد لتاجر أو شريك.
+                        </SheetDescription>
+                    </SheetHeader>
+                    <div className="grid gap-6 py-6 px-6 md:px-6" dir="rtl">
+                        <div className="grid gap-2">
+                            <Label className="text-right">التاجر المستفيد</Label>
+                            <Select>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="اختر التاجر" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="1">متجر الإلكترونيات</SelectItem>
+                                    <SelectItem value="2">أزياء الموضة</SelectItem>
+                                    <SelectItem value="3">بيت الرياضة</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="grid gap-2">
+                            <Label className="text-right">المبلغ (EGP)</Label>
+                            <Input type="number" placeholder="0.00" className="text-right" />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label className="text-right">ملاحظات التحويل</Label>
+                            <Textarea placeholder="أضف ملاحظات..." className="text-right" />
+                        </div>
+                    </div>
+                    <SheetFooter>
+                        <Button onClick={() => { alert("تم بدء التحويل"); setActiveSheet(null); }} className="w-full bg-emerald-600 hover:bg-emerald-700">تأكيد التحويل</Button>
+                    </SheetFooter>
+                </SheetContent>
+            );
+        }
+
+        if (activeSheet === 'approve_request' && selectedRequest) {
+            return (
+                <SheetContent side="left" className="w-[400px] sm:w-[540px]">
+                    <SheetHeader>
+                        <div className="flex items-center gap-2 mb-2 text-green-600">
+                            <CheckCircle size={24} />
+                            <SheetTitle className="text-right">موافقة على طلب سحب</SheetTitle>
+                        </div>
+                        <SheetDescription className="text-right">
+                            مراجعة وتأكيد طلب السحب رقم {selectedRequest.id}.
+                        </SheetDescription>
+                    </SheetHeader>
+                    <div className="py-8 px-6 md:px-6 space-y-6" dir="rtl">
+                        <div className="bg-slate-50 p-4 rounded-lg space-y-3">
+                            <div className="flex justify-between">
+                                <span className="text-slate-500">التاجر</span>
+                                <span className="font-medium">{selectedRequest.merchant}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-slate-500">طريقة الدفع</span>
+                                <span className="font-medium">{selectedRequest.method}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-slate-500">تفاصيل الحساب</span>
+                                <span className="font-mono">{selectedRequest.account}</span>
+                            </div>
+                        </div>
+                        <div className="flex justify-between items-center border p-4 rounded-lg bg-green-50 border-green-100">
+                            <span className="text-green-800 font-bold">مبلغ التحويل</span>
+                            <span className="text-xl font-bold text-green-700">{selectedRequest.amount}</span>
+                        </div>
+                    </div>
+                    <SheetFooter className="gap-2 flex-col">
+                        <Button className="w-full bg-green-600 hover:bg-green-700" onClick={() => { alert("تمت الموافقة والتحويل"); setActiveSheet(null); }}>تأكيد وإتمام التحويل</Button>
+                        <Button variant="outline" className="w-full" onClick={() => setActiveSheet(null)}>إلغاء</Button>
+                    </SheetFooter>
+                </SheetContent>
+            );
+        }
+
+        if (activeSheet === 'reject_request' && selectedRequest) {
+            return (
+                <SheetContent side="left" className="w-[400px] sm:w-[540px]">
+                    <SheetHeader>
+                        <div className="flex items-center gap-2 mb-2 text-red-600">
+                            <XCircle size={24} />
+                            <SheetTitle className="text-right">رفض طلب سحب</SheetTitle>
+                        </div>
+                        <SheetDescription className="text-right">
+                            يرجى تحديد سبب رفض طلب السحب {selectedRequest.id}.
+                        </SheetDescription>
+                    </SheetHeader>
+                    <div className="py-8 px-6 md:px-6 space-y-6" dir="rtl">
+                        <div className="grid gap-2">
+                            <Label className="text-right">سبب الرفض</Label>
+                            <Select>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="اختر سبباً" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="insufficient_funds">رصيد غير كافي</SelectItem>
+                                    <SelectItem value="incorrect_details">بيانات الدفع غير صحيحة</SelectItem>
+                                    <SelectItem value="suspicious_activity">نشاط مشبوه</SelectItem>
+                                    <SelectItem value="other">أخرى</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="grid gap-2">
+                            <Label className="text-right">ملاحظات إضافية للتاجر</Label>
+                            <Textarea placeholder="اكتب توضيحاً للتاجر..." rows={4} className="text-right" />
+                        </div>
+                    </div>
+                    <SheetFooter className="gap-2 flex-col">
+                        <Button variant="destructive" className="w-full" onClick={() => { alert("تم رفض الطلب"); setActiveSheet(null); }}>تأكيد الرفض</Button>
+                        <Button variant="outline" className="w-full" onClick={() => setActiveSheet(null)}>إلغاء</Button>
+                    </SheetFooter>
+                </SheetContent>
+            );
+        }
+
+        return null;
+    }
+
     return (
         <div className="space-y-6" dir="rtl">
             <div className="flex flex-col md:flex-row justify-between gap-4 md:items-center">
@@ -44,17 +186,17 @@ export default function AdminFinance() {
                     <h1 className="text-3xl font-bold text-slate-900">المالية والمدفوعات</h1>
                     <p className="text-slate-500 mt-1">إدارة المحافظ، طلبات السحب، وعمولات المنصة.</p>
                 </div>
-                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2">
+                <Button onClick={() => setActiveSheet('transfer_commissions')} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2">
                     <DollarSign size={18} />
                     تحويل عمولات
                 </Button>
             </div>
 
             <Tabs defaultValue="withdrawals" value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="grid w-full max-w-md grid-cols-3 mb-4">
-                    <TabsTrigger value="withdrawals">طلبات السحب</TabsTrigger>
-                    <TabsTrigger value="wallets">محافظ التجار</TabsTrigger>
+                <TabsList className="grid w-full max-w-md grid-cols-3 mb-4 ml-auto">
                     <TabsTrigger value="earnings">أرباح المنصة</TabsTrigger>
+                    <TabsTrigger value="wallets">محافظ التجار</TabsTrigger>
+                    <TabsTrigger value="withdrawals">طلبات السحب</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="withdrawals">
@@ -64,7 +206,7 @@ export default function AdminFinance() {
                             <CardDescription>مراجعة والموافقة على طلبات تحويل الأرباح للتجار</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <Table>
+                            <Table dir="rtl">
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead className="text-right">رقم الطلب</TableHead>
@@ -104,10 +246,10 @@ export default function AdminFinance() {
                                                     <DropdownMenuContent align="end">
                                                         <DropdownMenuLabel>إجراءات</DropdownMenuLabel>
                                                         <DropdownMenuSeparator />
-                                                        <DropdownMenuItem className="gap-2 text-green-600 cursor-pointer">
+                                                        <DropdownMenuItem onClick={() => handleActionClick(w, 'approve_request')} className="gap-2 text-green-600 cursor-pointer">
                                                             <CheckCircle size={14} /> موافقة وتحويل
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem className="gap-2 text-red-600 cursor-pointer">
+                                                        <DropdownMenuItem onClick={() => handleActionClick(w, 'reject_request')} className="gap-2 text-red-600 cursor-pointer">
                                                             <XCircle size={14} /> رفض الطلب
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
@@ -128,7 +270,7 @@ export default function AdminFinance() {
                             <CardDescription>نظرة عامة على الأرصدة القابلة للسحب والمعلقة لكل تاجر.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <Table>
+                            <Table dir="rtl">
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead className="text-right">التاجر</TableHead>
@@ -182,6 +324,11 @@ export default function AdminFinance() {
                     </Card>
                 </TabsContent>
             </Tabs>
+
+            {/* Action Sheets */}
+            <Sheet open={!!activeSheet} onOpenChange={(open) => !open && setActiveSheet(null)}>
+                {renderSheetContent()}
+            </Sheet>
         </div>
     );
 }

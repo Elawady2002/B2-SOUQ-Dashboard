@@ -17,7 +17,7 @@ export default function AdminSettings() {
             </div>
 
             <Tabs defaultValue="general" className="w-full">
-                <TabsList className="grid w-full max-w-2xl grid-cols-4 mb-4">
+                <TabsList className="grid w-full max-w-2xl grid-cols-4 mb-4 ml-auto">
                     <TabsTrigger value="general">عامة</TabsTrigger>
                     <TabsTrigger value="payment">الدفع</TabsTrigger>
                     <TabsTrigger value="shipping">الشحن</TabsTrigger>
@@ -27,18 +27,18 @@ export default function AdminSettings() {
                 <TabsContent value="general">
                     <Card>
                         <CardHeader>
-                            <CardTitle>الإعدادات العامة</CardTitle>
-                            <CardDescription>العملات، اللغات، والضرائب.</CardDescription>
+                            <CardTitle className="text-right">الإعدادات العامة</CardTitle>
+                            <CardDescription className="text-right">العملات، اللغات، والضرائب.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4 max-w-lg">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label>العملة الافتراضية</Label>
+                                    <Label className="text-right block">العملة الافتراضية</Label>
                                     <Select defaultValue="EGP">
-                                        <SelectTrigger>
+                                        <SelectTrigger dir="rtl">
                                             <SelectValue placeholder="اختر العملة" />
                                         </SelectTrigger>
-                                        <SelectContent>
+                                        <SelectContent dir="rtl">
                                             <SelectItem value="EGP">الجنيه المصري (EGP)</SelectItem>
                                             <SelectItem value="USD">الدولار الأمريكي (USD)</SelectItem>
                                             <SelectItem value="SAR">الريال السعودي (SAR)</SelectItem>
@@ -46,12 +46,12 @@ export default function AdminSettings() {
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>اللغة الافتراضية</Label>
+                                    <Label className="text-right block">اللغة الافتراضية</Label>
                                     <Select defaultValue="ar">
-                                        <SelectTrigger>
+                                        <SelectTrigger dir="rtl">
                                             <SelectValue placeholder="اختر اللغة" />
                                         </SelectTrigger>
-                                        <SelectContent>
+                                        <SelectContent dir="rtl">
                                             <SelectItem value="ar">العربية</SelectItem>
                                             <SelectItem value="en">English</SelectItem>
                                         </SelectContent>
@@ -59,10 +59,10 @@ export default function AdminSettings() {
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <Label>نسبة الضريبة (%)</Label>
-                                <Input type="number" defaultValue="14" />
+                                <Label className="text-right block">نسبة الضريبة (%)</Label>
+                                <Input type="number" defaultValue="14" className="text-right" />
                             </div>
-                            <Button>حفظ التغييرات</Button>
+                            <Button className="w-full sm:w-auto">حفظ التغييرات</Button>
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -70,14 +70,14 @@ export default function AdminSettings() {
                 <TabsContent value="payment">
                     <Card>
                         <CardHeader>
-                            <CardTitle>بوابات الدفع</CardTitle>
-                            <CardDescription>تفعيل وتعطيل طرق الدفع المتاحة.</CardDescription>
+                            <CardTitle className="text-right">بوابات الدفع</CardTitle>
+                            <CardDescription className="text-right">تفعيل وتعطيل طرق الدفع المتاحة.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <div className="flex items-center justify-between p-4 border rounded-lg">
                                 <div className="flex items-center gap-3">
                                     <CreditCard className="text-blue-600" />
-                                    <div>
+                                    <div className="text-right">
                                         <p className="font-medium">Stripe / Visa / Mastercard</p>
                                         <p className="text-sm text-slate-500">الدفع بالبطاقات البنكية</p>
                                     </div>
@@ -87,7 +87,7 @@ export default function AdminSettings() {
                             <div className="flex items-center justify-between p-4 border rounded-lg">
                                 <div className="flex items-center gap-3">
                                     <Settings className="text-red-600" />
-                                    <div>
+                                    <div className="text-right">
                                         <p className="font-medium">Vodafone Cash (Integration)</p>
                                         <p className="text-sm text-slate-500">الدفع عبر المحافظ الإلكترونية</p>
                                     </div>
@@ -98,7 +98,7 @@ export default function AdminSettings() {
                                 <div className="flex items-center gap-3">
 
                                     <CreditCard className="text-green-600" />
-                                    <div>
+                                    <div className="text-right">
                                         <p className="font-medium">الدفع عند الاستلام (COD)</p>
                                         <p className="text-sm text-slate-500">تحصيل المبلغ عند التوصيل</p>
                                     </div>
@@ -112,14 +112,14 @@ export default function AdminSettings() {
                 <TabsContent value="shipping">
                     <Card>
                         <CardHeader>
-                            <CardTitle>شركات الشحن</CardTitle>
-                            <CardDescription>إدارة التكامل مع شركات الشحن.</CardDescription>
+                            <CardTitle className="text-right">شركات الشحن</CardTitle>
+                            <CardDescription className="text-right">إدارة التكامل مع شركات الشحن.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <div className="flex items-center justify-between p-4 border rounded-lg">
                                 <div className="flex items-center gap-3">
                                     <Truck className="text-orange-600" />
-                                    <div>
+                                    <div className="text-right">
                                         <p className="font-medium">Bosta</p>
                                         <p className="text-sm text-slate-500">الشحن المحلي السريع</p>
                                     </div>
@@ -129,7 +129,7 @@ export default function AdminSettings() {
                             <div className="flex items-center justify-between p-4 border rounded-lg">
                                 <div className="flex items-center gap-3">
                                     <Truck className="text-yellow-600" />
-                                    <div>
+                                    <div className="text-right">
                                         <p className="font-medium">Aramex</p>
                                         <p className="text-sm text-slate-500">الشحن الدولي</p>
                                     </div>
@@ -143,26 +143,26 @@ export default function AdminSettings() {
                 <TabsContent value="email">
                     <Card>
                         <CardHeader>
-                            <CardTitle>إعدادات البريد (SMTP)</CardTitle>
-                            <CardDescription>تكوين خادم البريد لإرسال الإشعارات.</CardDescription>
+                            <CardTitle className="text-right">إعدادات البريد (SMTP)</CardTitle>
+                            <CardDescription className="text-right">تكوين خادم البريد لإرسال الإشعارات.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4 max-w-lg">
                             <div className="space-y-2">
-                                <Label>SMTP Host</Label>
-                                <Input placeholder="smtp.example.com" />
+                                <Label className="text-right block">SMTP Host</Label>
+                                <Input placeholder="smtp.example.com" className="text-right" />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label>Port</Label>
-                                    <Input placeholder="587" />
+                                    <Label className="text-right block">Port</Label>
+                                    <Input placeholder="587" className="text-right" />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Encryption</Label>
+                                    <Label className="text-right block">Encryption</Label>
                                     <Select defaultValue="tls">
-                                        <SelectTrigger>
+                                        <SelectTrigger dir="rtl">
                                             <SelectValue />
                                         </SelectTrigger>
-                                        <SelectContent>
+                                        <SelectContent dir="rtl">
                                             <SelectItem value="tls">TLS</SelectItem>
                                             <SelectItem value="ssl">SSL</SelectItem>
                                         </SelectContent>
@@ -170,14 +170,14 @@ export default function AdminSettings() {
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <Label>Username</Label>
-                                <Input placeholder="email@domain.com" />
+                                <Label className="text-right block">Username</Label>
+                                <Input placeholder="email@domain.com" className="text-right" />
                             </div>
                             <div className="space-y-2">
-                                <Label>Password</Label>
-                                <Input type="password" placeholder="********" />
+                                <Label className="text-right block">Password</Label>
+                                <Input type="password" placeholder="********" className="text-right" />
                             </div>
-                            <Button>جرب الإتصال</Button>
+                            <Button className="w-full sm:w-auto">جرب الإتصال</Button>
                         </CardContent>
                     </Card>
                 </TabsContent>

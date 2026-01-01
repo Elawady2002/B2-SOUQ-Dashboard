@@ -21,7 +21,7 @@ export default function AdminSupport() {
     return (
         <div className="h-[calc(100vh-2rem)] flex flex-col gap-4" dir="rtl">
             <div className="flex justify-between items-center">
-                <div>
+                <div className="text-right">
                     <h1 className="text-2xl font-bold text-slate-900">الدعم الفني</h1>
                     <p className="text-slate-500">متابعة تذاكر الدعم ورسائل المستخدمين.</p>
                 </div>
@@ -36,8 +36,8 @@ export default function AdminSupport() {
                 <div className="w-1/3 bg-white rounded-xl border border-slate-200 flex flex-col shadow-sm">
                     <div className="p-4 border-b border-slate-200">
                         <div className="relative mb-3">
-                            <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4" />
-                            <Input placeholder="بحث في التذاكر..." className="pr-9 bg-slate-50 border-slate-200" />
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4" />
+                            <Input placeholder="بحث في التذاكر..." className="pl-9 text-right bg-slate-50 border-slate-200" />
                         </div>
                         <Tabs defaultValue="all" className="w-full">
                             <TabsList className="grid w-full grid-cols-3 h-8">
@@ -145,7 +145,7 @@ export default function AdminSupport() {
 
                             <div className="p-4 border-t border-slate-200 bg-white">
                                 <div className="flex gap-2">
-                                    <Input placeholder="كتب رد..." className="flex-1" />
+                                    <Input placeholder="كتب رد..." className="flex-1 text-right" />
                                     <Button size="icon" className="bg-blue-600"><MessageSquare size={18} /></Button>
                                 </div>
                             </div>

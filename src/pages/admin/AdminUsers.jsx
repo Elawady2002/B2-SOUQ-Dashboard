@@ -73,20 +73,20 @@ export default function AdminUsers() {
                             <Search className="absolute right-2.5 top-2.5 h-4 w-4 text-slate-400" />
                             <Input
                                 placeholder="ابحث بالاسم أو البريد..."
-                                className="pr-9"
+                                className="pr-9 text-right"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
                         <Select>
-                            <SelectTrigger className="w-[150px]">
+                            <SelectTrigger className="w-[150px] text-right" dir="rtl">
                                 <SelectValue placeholder="التصنيف" />
                             </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">الكل</SelectItem>
-                                <SelectItem value="vip">عميل مميز (VIP)</SelectItem>
-                                <SelectItem value="normal">عادي</SelectItem>
-                                <SelectItem value="high_risk">عالي المخاطر</SelectItem>
+                            <SelectContent dir="rtl">
+                                <SelectItem value="all" className="text-right">الكل</SelectItem>
+                                <SelectItem value="vip" className="text-right">عميل مميز (VIP)</SelectItem>
+                                <SelectItem value="normal" className="text-right">عادي</SelectItem>
+                                <SelectItem value="high_risk" className="text-right">عالي المخاطر</SelectItem>
                             </SelectContent>
                         </Select>
                         <Button variant="outline" className="gap-2">
@@ -99,7 +99,7 @@ export default function AdminUsers() {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <Table>
+                    <Table dir="rtl">
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="text-right">المستخدم</TableHead>

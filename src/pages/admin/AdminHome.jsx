@@ -128,7 +128,7 @@ export default function AdminHome() {
             </div>
 
             <Tabs defaultValue="overview" className="space-y-4">
-                <TabsList>
+                <TabsList className="ml-auto">
                     <TabsTrigger value="overview">نظرة عامة</TabsTrigger>
                     <TabsTrigger value="analytics">التحليلات</TabsTrigger>
                     <TabsTrigger value="reports">التقارير</TabsTrigger>
@@ -237,16 +237,16 @@ export default function AdminHome() {
                     {/* Recent Registrations Table */}
                     <Card className="shadow-sm">
                         <CardHeader className="flex flex-row items-center justify-between">
-                            <div className="grid gap-2">
+                            <Button size="sm" className="gap-1">
+                                عرض الكل
+                                <ArrowUpRight className="h-4 w-4" />
+                            </Button>
+                            <div className="grid gap-2 text-right">
                                 <CardTitle>طلبات التسجيل الجديدة</CardTitle>
                                 <CardDescription>
                                     قائمة بالتجار الجدد بانتظار الموافقة.
                                 </CardDescription>
                             </div>
-                            <Button size="sm" className="gap-1">
-                                عرض الكل
-                                <ArrowUpRight className="h-4 w-4" />
-                            </Button>
                         </CardHeader>
                         <CardContent>
                             <Table>

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
     Search,
     Filter,
@@ -47,12 +48,45 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function AdminMerchants() {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const activeTab = searchParams.get('tab') || 'active';
+    const activeSheet = searchParams.get('sheet');
+
+    // Keeping data state local for now
     const [searchTerm, setSearchTerm] = useState('');
-    const [activeTab, setActiveTab] = useState('active');
     const [selectedMerchant, setSelectedMerchant] = useState(null);
-    const [activeSheet, setActiveSheet] = useState(null); // 'message_all', 'profile', 'kyc', 'wallet', 'violation'
+
+    const setTab = (tab) => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set('tab', tab);
+        setSearchParams(newParams);
+    };
+
+    const openSheet = (sheet, merchant = null) => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set('sheet', sheet);
+        if (merchant) {
+            setSelectedMerchant(merchant);
+        }
+        setSearchParams(newParams);
+    };
+
+    const closeSheet = () => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.delete('sheet');
+        setSearchParams(newParams);
+        setTimeout(() => setSelectedMerchant(null), 300);
+    };
 
     // Mock Data
     const merchants = [
@@ -69,11 +103,6 @@ export default function AdminMerchants() {
         (activeTab === 'banned' && m.status === 'banned')
     );
 
-    const handleActionClick = (merchant, sheetType) => {
-        setSelectedMerchant(merchant);
-        setActiveSheet(sheetType);
-    };
-
     const renderSheetContent = () => {
         if (activeSheet === 'message_all') {
             return (
@@ -87,24 +116,26 @@ export default function AdminMerchants() {
                             سيتم إرسال هذه الرسالة إلى جميع التجار النشطين في المنصة عبر البريد الإلكتروني والإشعارات.
                         </SheetDescription>
                     </SheetHeader>
-                    <div className="grid gap-6 py-4">
+                    {/* Added px-6 for padding */}
+                    <div className="grid gap-6 py-4 px-6 md:px-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="subject" className="text-sm font-medium text-slate-700">عنوان الرسالة</Label>
-                            <Input id="subject" placeholder="مثال: تحديثات هامة بخصوص السياسات الجديدة" className="h-10" />
+                            <Label htmlFor="subject" className="text-sm font-medium text-slate-700 text-right">عنوان الرسالة</Label>
+                            <Input id="subject" placeholder="مثال: تحديثات هامة بخصوص السياسات الجديدة" className="h-10 text-right" />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="message" className="text-sm font-medium text-slate-700">نص الرسالة</Label>
-                            <Textarea id="message" placeholder="اكتب نص الرسالة هنا..." rows={12} className="resize-none" />
+                            <Label htmlFor="message" className="text-sm font-medium text-slate-700 text-right">نص الرسالة</Label>
+                            <Textarea id="message" placeholder="اكتب نص الرسالة هنا..." rows={12} className="resize-none text-right" />
                         </div>
                     </div>
                     <SheetFooter className="mt-4">
-                        <Button type="submit" onClick={() => { alert("تم إرسال الرسالة بنجاح!"); setActiveSheet(null); }} className="w-full bg-blue-600 hover:bg-blue-700 h-11 text-lg">
+                        <Button type="submit" onClick={() => { alert("تم إرسال الرسالة بنجاح!"); closeSheet(); }} className="w-full bg-blue-600 hover:bg-blue-700 h-11 text-lg">
                             <Send className="ml-2 h-4 w-4" /> إرسال الرسالة
                         </Button>
                     </SheetFooter>
                 </SheetContent>
             );
         }
+
 
         if (!selectedMerchant) return null;
 
@@ -264,12 +295,12 @@ export default function AdminMerchants() {
                     </SheetHeader>
                     <div className="grid gap-6 py-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="v_title" className="text-sm font-medium text-slate-700">نوع المخالفة</Label>
-                            <Input id="v_title" placeholder="مثال: بيع منتجات مقلدة" className="h-10" />
+                            <Label htmlFor="v_title" className="text-sm font-medium text-slate-700 text-right">نوع المخالفة</Label>
+                            <Input id="v_title" placeholder="مثال: بيع منتجات مقلدة" className="h-10 text-right" />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="v_desc" className="text-sm font-medium text-slate-700">تفاصيل المخالفة</Label>
-                            <Textarea id="v_desc" placeholder="اشرح تفاصيل المخالفة والأدلة..." rows={6} className="resize-none" />
+                            <Label htmlFor="v_desc" className="text-sm font-medium text-slate-700 text-right">تفاصيل المخالفة</Label>
+                            <Textarea id="v_desc" placeholder="اشرح تفاصيل المخالفة والأدلة..." rows={6} className="resize-none text-right" />
                         </div>
                         <div className="grid gap-2">
                             <Label className="text-sm font-medium text-slate-700">الإجراء المتخذ</Label>
@@ -280,7 +311,7 @@ export default function AdminMerchants() {
                         </div>
                     </div>
                     <SheetFooter className="mt-4">
-                        <Button type="submit" onClick={() => { alert("تم تسجيل المخالفة!"); setActiveSheet(null); }} className="w-full bg-red-600 hover:bg-red-700 h-11 text-lg">
+                        <Button type="submit" onClick={() => { alert("تم تسجيل المخالفة!"); closeSheet(); }} className="w-full bg-red-600 hover:bg-red-700 h-11 text-lg">
                             تسجيل المخالفة
                         </Button>
                     </SheetFooter>
@@ -298,12 +329,12 @@ export default function AdminMerchants() {
                     <p className="text-slate-500 mt-1">مراجعة طلبات الانضمام، مراقبة المحافظ وسجلات المخالفات.</p>
                 </div>
                 {/* Button actions handled by state now, no wrapper needed */}
-                <Button onClick={() => setActiveSheet('message_all')} className="gap-2 bg-blue-600 hover:bg-blue-700 text-white">
+                <Button onClick={() => openSheet('message_all')} className="gap-2 bg-blue-600 hover:bg-blue-700 text-white">
                     <Mail size={16} /> مراسلة الجميع
                 </Button>
             </div>
 
-            <Tabs defaultValue="active" value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <Tabs defaultValue="active" value={activeTab} onValueChange={setTab} className="w-full">
                 <TabsList className="grid max-w-md grid-cols-3 mb-4 ml-auto">
                     <TabsTrigger value="banned">المحظورين</TabsTrigger>
                     <TabsTrigger value="pending">طلبات الانضمام (KYC)</TabsTrigger>
@@ -317,7 +348,7 @@ export default function AdminMerchants() {
                                 <Search className="absolute right-2.5 top-2.5 h-4 w-4 text-slate-400" />
                                 <Input
                                     placeholder="بحث عن تاجر..."
-                                    className="pr-9"
+                                    className="pr-9 text-right"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
@@ -393,19 +424,19 @@ export default function AdminMerchants() {
                                                         <MoreHorizontal className="h-4 w-4" />
                                                     </Button>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="start">
+                                                <DropdownMenuContent align="end">
                                                     <DropdownMenuLabel>إجراءات</DropdownMenuLabel>
-                                                    <DropdownMenuItem onClick={() => handleActionClick(merchant, 'profile')} className="gap-2 cursor-pointer">
+                                                    <DropdownMenuItem onClick={() => openSheet('profile', merchant)} className="gap-2 cursor-pointer">
                                                         <Eye size={14} /> الملف الشخصي
                                                     </DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => handleActionClick(merchant, 'kyc')} className="gap-2 cursor-pointer">
+                                                    <DropdownMenuItem onClick={() => openSheet('kyc', merchant)} className="gap-2 cursor-pointer">
                                                         <FileText size={14} /> مستندات KYC
                                                     </DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => handleActionClick(merchant, 'wallet')} className="gap-2 cursor-pointer">
+                                                    <DropdownMenuItem onClick={() => openSheet('wallet', merchant)} className="gap-2 cursor-pointer">
                                                         <Wallet size={14} /> سجل المحفظة
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
-                                                    <DropdownMenuItem onClick={() => handleActionClick(merchant, 'violation')} className="gap-2 text-red-600 cursor-pointer">
+                                                    <DropdownMenuItem onClick={() => openSheet('violation', merchant)} className="gap-2 text-red-600 cursor-pointer">
                                                         <AlertTriangle size={14} /> تسجيل مخالفة
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
@@ -420,9 +451,11 @@ export default function AdminMerchants() {
             </Tabs>
 
             {/* Controlled Sheet for all actions */}
-            <Sheet open={!!activeSheet} onOpenChange={(open) => !open && setActiveSheet(null)}>
+            <Sheet open={!!activeSheet} onOpenChange={(open) => !open && closeSheet()}>
                 {renderSheetContent()}
             </Sheet>
+
+
         </div>
     );
 }

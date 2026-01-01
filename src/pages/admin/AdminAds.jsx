@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Filter, CheckCircle, XCircle, MoreHorizontal, Megaphone, Ticket, Settings, TrendingUp } from 'lucide-react';
+import { Search, Filter, CheckCircle, XCircle, MoreHorizontal, Megaphone, Ticket, Settings, TrendingUp, Image } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -28,10 +28,10 @@ export default function AdminAds() {
             </div>
 
             <Tabs defaultValue="campaigns" value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="grid w-full max-w-md grid-cols-3 mb-4">
-                    <TabsTrigger value="campaigns">حملات التجار</TabsTrigger>
-                    <TabsTrigger value="coupons">الكوبونات</TabsTrigger>
+                <TabsList className="grid w-full max-w-md grid-cols-3 mb-4 ml-auto">
                     <TabsTrigger value="settings">إعدادات التسعير</TabsTrigger>
+                    <TabsTrigger value="coupons">الكوبونات</TabsTrigger>
+                    <TabsTrigger value="campaigns">حملات التجار</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="campaigns" className="space-y-6">
@@ -44,8 +44,11 @@ export default function AdminAds() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {campaigns.map((ad) => (
                             <Card key={ad.id} className="border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                                <div className={`h-32 w-full ${ad.image} rounded-t-xl flex items-center justify-center`}>
-                                    <span className="text-slate-500 font-medium">Banner Placeholder</span>
+                                <div className={`h-32 w-full ${ad.image} rounded-t-xl flex flex-col items-center justify-center gap-2 border-b border-slate-100`}>
+                                    <div className="bg-white/50 p-2 rounded-full backdrop-blur-sm">
+                                        <Image size={24} className="text-slate-500 opacity-75" />
+                                    </div>
+                                    <span className="text-slate-600 font-medium text-sm">معاينة الإعلان</span>
                                 </div>
                                 <CardContent className="p-5">
                                     <div className="flex justify-between items-start mb-3">
@@ -123,11 +126,11 @@ export default function AdminAds() {
                         <CardContent className="space-y-4 max-w-md">
                             <div className="space-y-2">
                                 <Label>سعر النقرة (CPC) - EGP</Label>
-                                <Input type="number" defaultValue="5.00" />
+                                <Input type="number" defaultValue="5.00" className="text-right" />
                             </div>
                             <div className="space-y-2">
                                 <Label>سعر الـ 1000 ظهور (CPM) - EGP</Label>
-                                <Input type="number" defaultValue="25.00" />
+                                <Input type="number" defaultValue="25.00" className="text-right" />
                             </div>
                             <Button>حفظ التغييرات</Button>
                         </CardContent>
