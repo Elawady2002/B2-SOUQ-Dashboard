@@ -108,22 +108,24 @@ export default function AdminProducts() {
 
             case 'stock':
                 return (
-                    <div className="space-y-6">
-                        <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 mb-6">
-                            <div className="flex items-center gap-3 mb-2">
-                                <Package className="text-blue-600" size={24} />
-                                <h3 className="font-bold text-lg text-slate-900">سجل المخزون</h3>
-                            </div>
-                             <div className="space-y-2">
-                                <Label className="text-right block">الكمية الحالية</Label>
-                                <Input type="number" defaultValue={selectedProduct.stock} className="text-right" />
+                    <>
+                        <div className="space-y-6">
+                            <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 mb-6">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <Package className="text-blue-600" size={24} />
+                                    <h3 className="font-bold text-lg text-slate-900">سجل المخزون</h3>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label className="text-right block">الكمية الحالية</Label>
+                                    <Input type="number" defaultValue={selectedProduct.stock} className="text-right" />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                     <SheetFooter className="gap-2 flex-col">
-                        <Button onClick={() => { alert("تم تحديث المخزون"); closeSheet(); }} className="w-full">حفظ التغييرات</Button>
-                        <Button variant="outline" className="w-full" onClick={closeSheet}>إلغاء</Button>
-                    </SheetFooter>
+                        <SheetFooter className="gap-2 flex-col">
+                            <Button onClick={() => { alert("تم تحديث المخزون"); closeSheet(); }} className="w-full">حفظ التغييرات</Button>
+                            <Button variant="outline" className="w-full" onClick={closeSheet}>إلغاء</Button>
+                        </SheetFooter>
+                    </>
                 );
 
             case 'approve':
